@@ -1,0 +1,59 @@
+# Scala and Java compiled files
+*.class
+*.log
+
+# SBT-specific
+.cache/
+.history/
+.lib/
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+
+# Scala-IDE specific
+.scala_dependencies
+.worksheet
+
+# IntelliJ IDEA specific
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+.idea_modules/
+
+# VS Code specific
+.vscode/
+
+# macOS specific
+.DS_Store
+
+# Windows specific
+Thumbs.db
+
+# Metals (Scala language server) specific
+.metals/
+.bloop/
+project/metals.sbt
+
+# Scala 3 specific
+.tasty
+
+# Bloop specific
+.bsp/
+
+# Other common ignores
+*.swp
+*~
+
+# Logs
+logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Optional: Ignore all .env files (for environment variables)
+.env*
