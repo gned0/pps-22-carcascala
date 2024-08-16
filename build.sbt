@@ -6,7 +6,7 @@ lazy val root = (project in file("."))
   .settings(
     name := "pps-22-carcascala",
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.18" % Test,
-    
+
     // ScalaFX related dependencies
     libraryDependencies += "org.scalafx" %% "scalafx" % "16.0.0-R24",
     libraryDependencies ++= {
