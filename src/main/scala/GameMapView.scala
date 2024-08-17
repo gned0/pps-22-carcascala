@@ -13,11 +13,14 @@ import scalafx.scene.paint.Color.{Black, Grey}
 import scalafx.scene.layout.BorderStrokeStyle.Dashed
 import scalafx.scene.layout.CornerRadii.Empty
 import scalafx.scene.layout.BorderWidths.Default
+import scalafx.geometry.Pos.Center
 
 class GameMapView extends GridPane with Observer[GameMap] with Subject[GameMapView] {
   private val mapSize = 5 // 5x5 grid for simplicity
   private var _lastPosition: Position = Position(0, 0)
   private var _tilesPlaced: Map[Position, Region] = Map()
+
+  this.alignment = Center
 
   val x = 2
   val y = 2
