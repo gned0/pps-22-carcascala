@@ -1,3 +1,7 @@
+.placedTile {
+    -fx-border-color: red;
+}
+
 .placeholderTile {
     -fx-border-style: solid;
 }
