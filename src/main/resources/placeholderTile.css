@@ -1,0 +1,8 @@
+.placeholderTile {
+    -fx-border-style: solid;
+}
+
+.placeholderTile:hover {
+    -fx-background-color: #e0e0e0;
+    -fx-cursor: hand;
+}
