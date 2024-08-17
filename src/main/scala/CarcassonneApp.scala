@@ -5,7 +5,8 @@ import scalafx.scene.Scene
 object CarcassonneApp extends JFXApp3:
   override def start(): Unit =
     val model = new GameMap()
-    val view = new ObserverGameMapView()
+    val view = new GameMapView()
+    model.addObserver(view)
     val controller = new GameMapController(model, view)
     controller.initialize()
 

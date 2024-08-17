@@ -1,12 +1,12 @@
 
-class GameMapController(model: GameMap, view: ObserverGameMapView) extends Observer[GameMapView]:
+class GameMapController(model: GameMap, view: GameMapView) extends Observer[GameMapView]:
 
   def initialize(): Unit =
   // Set up the view to listen for tile click events and place a tile
   view.addObserver(this)
 
   override def receiveUpdate(subject: GameMapView): Unit =
-    placeTile(subject.lastTilePlacedPosition)
+    placeTile(subject.lastTilePlacedPosition.get)
 
   def placeTile(position: Position): Unit =
   // Here, we place a tile in the model when a position is clicked in the view

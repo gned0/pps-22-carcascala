@@ -14,29 +14,49 @@ import scalafx.scene.layout.BorderStrokeStyle.Dashed
 import scalafx.scene.layout.CornerRadii.Empty
 import scalafx.scene.layout.BorderWidths.Default
 
-class GameMapView extends GridPane {
+class GameMapView extends GridPane with Observer[GameMap] with Subject[GameMapView] {
   private val mapSize = 5 // 5x5 grid for simplicity
-  private var _lastPosition = Position(0, 0)
+  private var _lastPosition: Position = Position(0, 0)
+  private var _tilesPlaced: Map[Position, Region] = Map()
 
-  // Create a 5x5 grid of buttons
-  for x <- 0 until mapSize do
-    for y <- 0 until mapSize do
-      val placeholderTile = new Region {
-        prefWidth = 100
-        prefHeight = 100
-        styleClass += "placeholderTile"
-      }
-      add(placeholderTile, x, y) // Add the button to the grid
+  val x = 2
+  val y = 2
 
-      // Region action when clicked
-      placeholderTile.onMouseClicked = _ => notifyTileClick(Position(x, y))
+  val placeholderTile = new Region {
+    prefWidth = 100
+    prefHeight = 100
+    styleClass += "placeholderTile"
+  }
+  add(placeholderTile, x, y) // Add the button to the grid
 
-  def lastTilePlacedPosition: Position = _lastPosition
+  // Region action when clicked
+  placeholderTile.onMouseClicked = _ => tileClicked(Position(x, y), placeholderTile)
+
+
+  def lastTilePlacedPosition: Option[Position] = Option.apply(_lastPosition)
+  def tileClicked(position: Position, placedTile: Region): Unit =
+    if _tilesPlaced.isEmpty then
+      _lastPosition = position
+      _tilesPlaced = _tilesPlaced + (position -> placedTile)
+      notifyTileClick(position)
+    else
+      for (positionCollected <- _tilesPlaced.keys) do
+        positionCollected match
+          case p if p == position =>
+            log("Tile already placed there")
+          case Position(_, _) =>
+            _lastPosition = position
+            _tilesPlaced = _tilesPlaced + (position -> placedTile)
+            notifyTileClick(position)
+
+
   def notifyTileClick(position: Position): Unit =
-  // Placeholder for controller to handle tile placement
     log(s"Tile placed at $position")
-    _lastPosition = position
-    log("x: " + _lastPosition.x + " - y:" + _lastPosition.y)
+    notifyObservers()
+
+  override def receiveUpdate(subject: GameMap): Unit =
+    log("Model Updated")
+
 
   def log(string: String): Unit =
     print(s"VIEW - " + string + "\n")
