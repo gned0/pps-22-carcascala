@@ -7,6 +7,7 @@ import scalafx.Includes.* // Include helpers to minimize verbosity
 
 object CarcassonneApp extends JFXApp3:
 
+  // TODO Think if this needs changing
   // Initial mouse position
   private var initialX = 0.0
   private var initialY = 0.0
