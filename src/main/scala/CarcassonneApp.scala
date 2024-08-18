@@ -1,11 +1,22 @@
 import scalafx.application.*
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
-import scalafx.scene.input.MouseEvent
+import scalafx.scene.input.{MouseEvent, ScrollEvent}
 import scalafx.scene.layout.{Region, StackPane}
 import scalafx.Includes.*
 
 object CarcassonneApp extends JFXApp3:
+
+  // Variables to track the initial mouse position
+  var initialX = 0.0
+  var initialY = 0.0
+
+  // Variable to track the zoom level
+  var zoomFactor = 1.0
+  val zoomIncrement = 0.1 // Zoom step size
+  val minZoom = 0.5 // Minimum zoom level
+  val maxZoom = 4.0 // Maximum zoom level
+
   override def start(): Unit =
     val model = new GameMap()
     val view = new GameMapView()
@@ -16,10 +27,6 @@ object CarcassonneApp extends JFXApp3:
     // Disable resizing of GridPane within the StackPane
     view.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
     view.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
-
-    // Variables to track the initial mouse position
-    var initialX = 0.0
-    var initialY = 0.0
 
     // Wrap the view inside a StackPane for translation (dragging)
     val containerPane = new StackPane()
@@ -48,6 +55,23 @@ object CarcassonneApp extends JFXApp3:
       // Update the initial position for the next drag event
       initialX = event.sceneX
       initialY = event.sceneY
+    }
+
+    // Event handler for mouse scroll to zoom in and out
+    containerPane.onScroll = (event: ScrollEvent) => {
+      // Zoom in or out depending on scroll direction
+      val delta = event.deltaY
+      if delta > 0 then
+        zoomFactor = Math.min(zoomFactor + zoomIncrement, maxZoom) // Zoom in
+      else
+        zoomFactor = Math.max(zoomFactor - zoomIncrement, minZoom) // Zoom out
+
+      // Apply the zoom (scaling) to the StackPane
+      containerPane.scaleX = zoomFactor
+      containerPane.scaleY = zoomFactor
+
+      // Prevent the event from propagating further
+      event.consume()
     }
 
     stage = new JFXApp3.PrimaryStage:
