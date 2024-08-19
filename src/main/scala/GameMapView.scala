@@ -76,7 +76,8 @@ class GameMapView extends GridPane with Observer[GameMap] with Subject[GameMapVi
   override def receiveUpdate(subject: GameMap): Unit =
     log("Model Updated")
 
-  def lastTilePlacedPosition: Option[Position] = Some(_lastPositionTilePlaced)
+  def getTilesPlaced: Option[Map[Position, Region]] = Some(_tilesPlaced)
+  def getLastTilePlacedPosition: Option[Position] = Some(_lastPositionTilePlaced)
 
   def log(string: String): Unit =
     println(s"VIEW - $string")
