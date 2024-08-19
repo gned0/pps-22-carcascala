@@ -2,7 +2,7 @@ import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 import scalafx.scene.layout.Region
 
-class GameMapViewSuit extends AnyFunSuite with Matchers:
+class GameMapViewSuite extends AnyFunSuite with Matchers:
 
   test("Initial placeholder tile creation") {
     val view = GameMapView()
