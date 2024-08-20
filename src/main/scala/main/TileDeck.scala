@@ -1,3 +1,5 @@
+package main
+
 import play.api.libs.json.{Json, OFormat}
 
 import scala.io.Source

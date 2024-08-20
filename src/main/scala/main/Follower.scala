@@ -1,3 +1,5 @@
+package main
+
 /**
  * Represents a follower in the game.
  *

@@ -1,3 +1,5 @@
+package main
+
 /**
  * Represents the different types of edges that can be found on a tile.
  *

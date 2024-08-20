@@ -1,3 +1,6 @@
+package main
+
+import observers.Subject
 import scalafx.application.JFXApp3
 import scalafx.scene.Scene
 import scalafx.scene.layout.{GridPane, Region}

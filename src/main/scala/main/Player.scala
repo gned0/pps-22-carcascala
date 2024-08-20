@@ -1,3 +1,5 @@
+package main
+
 /**
  * Represents the different colors that a player can choose.
  */

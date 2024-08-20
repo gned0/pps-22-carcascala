@@ -1,9 +1,12 @@
+package main
+
+import main.CarcassonneApp.stage
+import scalafx.Includes.*
 import scalafx.application.*
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
 import scalafx.scene.input.{MouseEvent, ScrollEvent}
-import scalafx.scene.layout.{Region, StackPane}
-import scalafx.Includes.* // Include helpers to minimize verbosity
+import scalafx.scene.layout.{Region, StackPane} // Include helpers to minimize verbosity
 
 object CarcassonneApp extends JFXApp3:
 
@@ -62,5 +65,5 @@ object CarcassonneApp extends JFXApp3:
     stage = new JFXApp3.PrimaryStage:
       title = "Carcassonne Map"
       scene = new Scene(600, 600):
-        stylesheets.add(getClass.getResource("placeholderTile.css").toExternalForm)
+        stylesheets.add(getClass.getResource("../placeholderTile.css").toExternalForm)
         root = containerPane

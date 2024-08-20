@@ -1,3 +1,6 @@
+package main
+
+import observers.Observer
 import scalafx.scene.layout.Region
 class GameMapController(model: GameMap, view: GameMapView) extends Observer[GameMapView]:
 

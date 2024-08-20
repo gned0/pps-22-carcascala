@@ -1,3 +1,4 @@
+package main
 /**
  * Represents a position on the game map.
  *
@@ -9,7 +10,7 @@ case class Position(x: Int, y: Int)
 /**
  * Represents the game map, which holds the placed tiles.
  *
- * This class extends `Subject[GameMap]`, meaning it can notify observers of changes.
+ * This class extends `observers.Subject[GameMap]`, meaning it can notify observers of changes.
  */
 class GameMap:
   private var tiles: Map[Position, GameTile] = Map()

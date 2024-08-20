@@ -1,3 +1,4 @@
+import observers.Observer
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 import scalafx.scene.layout.Region
@@ -19,7 +20,7 @@ class GameMapViewSuite extends AnyFunSuite with Matchers:
     view.getChildren.size should be(5) // 1 initial + 4 new placeholders
   }
 
-  test("Observer notification on tile click") {
+  test("observers.Observer notification on tile click") {
     val view = GameMapView()
     var notified = false
     val observer = new Observer[GameMapView] {
