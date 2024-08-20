@@ -1,5 +1,5 @@
 import mainApplication._
-import observers.Observer
+import observers.ObserverGameView
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 import scalafx.scene.layout.Region

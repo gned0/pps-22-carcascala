@@ -1,4 +1,7 @@
 package mainApplication
+
+import observers.SubjectGameMap
+
 /**
  * Represents a position on the game map.
  *
@@ -12,7 +15,7 @@ case class Position(x: Int, y: Int)
  *
  * This class extends `observers.Subject[GameMap]`, meaning it can notify observers of changes.
  */
-class GameMap:
+class GameMap extends SubjectGameMap[GameMap]:
   private var tiles: Map[Position, GameTile] = Map()
 
   /**
@@ -24,12 +27,15 @@ class GameMap:
    */
   def placeTile(tile: GameTile, position: Position): Unit =
     if tiles.contains(position) then
+      notifyIsTilePlaced(false, this.getTileMap, position)
       throw IllegalArgumentException(s"Tile already placed at position $position")
 
     if isValidPlacement(tile, position) then
       tiles = tiles + (position -> tile)
+      notifyIsTilePlaced(true, this.getTileMap, position)
       log("Tile placed")
     else
+      notifyIsTilePlaced(false, this.getTileMap, position)
       throw IllegalArgumentException(s"Invalid tile placement at position $position")
 
   /**

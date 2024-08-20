@@ -1,6 +1,6 @@
 package mainApplication
 
-import observers.Subject
+import observers.{ObserverGameMap, SubjectGameView}
 import scalafx.application.JFXApp3
 import scalafx.scene.Scene
 import scalafx.scene.layout.{GridPane, Region}
@@ -10,9 +10,10 @@ import scalafx.scene.input.{MouseButton, MouseEvent}
 import scalafx.scene.paint.Color.{Black, Grey}
 import scalafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}
 
-class GameMapView extends GridPane with Subject[GameMapView]:
+class GameMapView extends GridPane with SubjectGameView[GameMapView] with ObserverGameMap[GameMap]:
   private val mapSize = 5 // 5x5 grid for simplicity
   private var _lastPositionTilePlaced: Position = Position(0, 0)
+  private var _lastTilePlaced: Region = new Region()
 
   this.alignment = Pos.Center
 
@@ -21,18 +22,6 @@ class GameMapView extends GridPane with Subject[GameMapView]:
   val y = 100
 
   createPlaceholderTile(Position(x, y))
-
-  def tileClicked(position: Position, placedTile: Region, tiles: Map[Position, GameTile]): Unit =
-    if tiles.isEmpty then
-      placeTile(position, placedTile, tiles)
-      createNewPlaceholders(tiles)
-    else
-      tiles.get(position) match
-        case Some(_) =>
-          log("Tile already placed there")
-        case None =>
-          placeTile(position, placedTile, tiles)
-          createNewPlaceholders(tiles)
 
   def placeTile(position: Position, placedTile: Region, tiles: Map[Position, GameTile]): Unit =
     _lastPositionTilePlaced = position
@@ -45,8 +34,6 @@ class GameMapView extends GridPane with Subject[GameMapView]:
     )
     // Replace the tile that has been just removed with new attributes
     this.add(placedTile, position.x, position.y)
-    notifyTileClick(position)
-
 
   def createNewPlaceholders(tiles: Map[Position, GameTile]): Unit =
     for
@@ -70,14 +57,27 @@ class GameMapView extends GridPane with Subject[GameMapView]:
         checkClickedTile(position, this)
       add(this, position.x, position.y)
 
-  def notifyTileClick(position: Position): Unit =
-    log(s"Tile placed at $position")
-    notifyObservers()
-
-  def checkClickedTile(position: Position, region: Region): Unit =
-    notifyGetTileMap(position, region)
+  def checkClickedTile(position: Position, placedTile: Region): Unit =
+    _lastTilePlaced = placedTile
+    notifyTilePlacementAttempt(position)
 
   def getLastTilePlacedPosition: Option[Position] = Some(_lastPositionTilePlaced)
+  def getLastTilePlaced: Option[Region] = Some(_lastTilePlaced)
+
+  override def isTilePlaced(isTilePlaced: Boolean,
+                            tilesOption: Option[Map[Position, GameTile]],
+                            position: Position): Unit =
+    println(isTilePlaced)
+    val tiles = tilesOption.get
+    if isTilePlaced then
+      if tiles.isEmpty then
+        placeTile(position, getLastTilePlaced.get, tiles)
+        createNewPlaceholders(tiles)
+      else
+        placeTile(position, getLastTilePlaced.get, tiles)
+        createNewPlaceholders(tiles)
+
+    println(tiles)
 
   def log(string: String): Unit =
     println(s"VIEW - $string")

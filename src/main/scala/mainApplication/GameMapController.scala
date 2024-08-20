@@ -1,8 +1,8 @@
 package mainApplication
 
-import observers.Observer
+import observers.ObserverGameView
 import scalafx.scene.layout.Region
-class GameMapController(model: GameMap, view: GameMapView) extends Observer[GameMapView]:
+class GameMapController(model: GameMap, view: GameMapView) extends ObserverGameView[GameMapView]:
 
   def initialize(): Unit =
   // Set up the view to listen for tile click events and place a tile
@@ -17,11 +17,9 @@ class GameMapController(model: GameMap, view: GameMapView) extends Observer[Game
     catch
       case e: IllegalArgumentException => println(e.getMessage)
 
-  override def receiveUpdate(subject: GameMapView): Unit =
-    placeTile(subject.getLastTilePlacedPosition.get)
 
-  override def receiveModelMapTile(position: Position, region: Region): Unit =
-    view.tileClicked(position, region, model.getTileMap.get)
+  override def receiveTilePlacementAttempt(position: Position): Unit =
+    placeTile(position)
     
 
   def log(string: String): Unit =

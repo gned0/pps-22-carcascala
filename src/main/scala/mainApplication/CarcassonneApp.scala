@@ -24,6 +24,7 @@ object CarcassonneApp extends JFXApp3:
   override def start(): Unit =
     val model = GameMap()
     val view = GameMapView()
+    model.addObserver(view)
     val controller = GameMapController(model, view)
     controller.initialize()
 
