@@ -11,7 +11,7 @@ case class Position(x: Int, y: Int)
  *
  * This class extends `Subject[GameMap]`, meaning it can notify observers of changes.
  */
-class GameMap extends Subject[GameMap]:
+class GameMap:
   private var tiles: Map[Position, GameTile] = Map()
 
   /**
@@ -28,7 +28,6 @@ class GameMap extends Subject[GameMap]:
     if isValidPlacement(tile, position) then
       tiles = tiles + (position -> tile)
       log("Tile placed")
-      notifyObservers()
     else
       throw IllegalArgumentException(s"Invalid tile placement at position $position")
 

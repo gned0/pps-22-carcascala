@@ -7,10 +7,9 @@ import scalafx.scene.input.{MouseButton, MouseEvent}
 import scalafx.scene.paint.Color.{Black, Grey}
 import scalafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}
 
-class GameMapView extends GridPane with Observer[GameMap] with Subject[GameMapView]:
+class GameMapView extends GridPane with Subject[GameMapView]:
   private val mapSize = 5 // 5x5 grid for simplicity
   private var _lastPositionTilePlaced: Position = Position(0, 0)
-  private var _tilesPlaced: Map[Position, Region] = Map()
 
   this.alignment = Pos.Center
 
@@ -20,24 +19,23 @@ class GameMapView extends GridPane with Observer[GameMap] with Subject[GameMapVi
 
   createPlaceholderTile(Position(x, y))
 
-  def tileClicked(position: Position, placedTile: Region): Unit =
-    if _tilesPlaced.isEmpty then
-      placeTile(position, placedTile)
-      createNewPlaceholders()
+  def tileClicked(position: Position, placedTile: Region, tiles: Map[Position, GameTile]): Unit =
+    if tiles.isEmpty then
+      placeTile(position, placedTile, tiles)
+      createNewPlaceholders(tiles)
     else
-      _tilesPlaced.get(position) match
+      tiles.get(position) match
         case Some(_) =>
           log("Tile already placed there")
         case None =>
-          placeTile(position, placedTile)
-          createNewPlaceholders()
+          placeTile(position, placedTile, tiles)
+          createNewPlaceholders(tiles)
 
-  private def placeTile(position: Position, placedTile: Region): Unit =
+  def placeTile(position: Position, placedTile: Region, tiles: Map[Position, GameTile]): Unit =
     _lastPositionTilePlaced = position
     placedTile.styleClass.clear()
     placedTile.styleClass += "placedTile"
     placedTile.onMouseClicked = null
-    _tilesPlaced = _tilesPlaced + (position -> placedTile)
     // Remove the old placeholder
     this.getChildren.removeIf(node =>
       getColumnIndex(node) == position.x && getRowIndex(node) == position.y
@@ -47,16 +45,16 @@ class GameMapView extends GridPane with Observer[GameMap] with Subject[GameMapVi
     notifyTileClick(position)
 
 
-  def createNewPlaceholders(): Unit =
+  def createNewPlaceholders(tiles: Map[Position, GameTile]): Unit =
     for
       posX <- Seq(_lastPositionTilePlaced.x - 1, _lastPositionTilePlaced.x + 1)
-      if !_tilesPlaced.contains(Position(posX, _lastPositionTilePlaced.y))
+      if !tiles.contains(Position(posX, _lastPositionTilePlaced.y))
     do
       val placeholderTile = createPlaceholderTile(Position(posX, _lastPositionTilePlaced.y))
 
     for
       posY <- Seq(_lastPositionTilePlaced.y - 1, _lastPositionTilePlaced.y + 1)
-      if !_tilesPlaced.contains(Position(_lastPositionTilePlaced.x, posY))
+      if !tiles.contains(Position(_lastPositionTilePlaced.x, posY))
     do
       val placeholderTile = createPlaceholderTile(Position(_lastPositionTilePlaced.x, posY))
 
@@ -66,17 +64,16 @@ class GameMapView extends GridPane with Observer[GameMap] with Subject[GameMapVi
       prefHeight = 100
       styleClass += "placeholderTile"
       onMouseClicked = (event: MouseEvent) => if event.button == MouseButton.Primary then
-        tileClicked(position, this)
+        checkClickedTile(position, this)
       add(this, position.x, position.y)
 
   def notifyTileClick(position: Position): Unit =
     log(s"Tile placed at $position")
     notifyObservers()
 
-  override def receiveUpdate(subject: GameMap): Unit =
-    log("Model Updated")
+  def checkClickedTile(position: Position, region: Region): Unit =
+    notifyGetTileMap(position, region)
 
-  def getTilesPlaced: Option[Map[Position, Region]] = Some(_tilesPlaced)
   def getLastTilePlacedPosition: Option[Position] = Some(_lastPositionTilePlaced)
 
   def log(string: String): Unit =
