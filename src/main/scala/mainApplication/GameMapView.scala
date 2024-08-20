@@ -48,7 +48,7 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
     do
       val placeholderTile = createPlaceholderTile(Position(_lastPositionTilePlaced.x, posY))
 
-  private def createPlaceholderTile(position: Position): Region =
+  def createPlaceholderTile(position: Position): Region =
     new Region:
       prefWidth = 100
       prefHeight = 100

@@ -18,8 +18,11 @@ object CarcassonneApp extends JFXApp3:
   // Zoom level
   private var zoomFactor = 1.0
   private val zoomIncrement = 0.1 // Zoom step size
-  private val minZoom = 0.5       // Minimum zoom level
+  private val minZoom = 0.5       // Mini mum zoom level
   private val maxZoom = 4.0       // Maximum zoom level
+
+  private val containerPane = StackPane()
+
 
   override def start(): Unit =
     val model = GameMap()
@@ -31,7 +34,7 @@ object CarcassonneApp extends JFXApp3:
     view.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
     view.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
 
-    val containerPane = StackPane()
+
     containerPane.getChildren.add(view)
 
     containerPane.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
@@ -68,3 +71,6 @@ object CarcassonneApp extends JFXApp3:
       scene = new Scene(600, 600):
         stylesheets.add(getClass.getResource("../placeholderTile.css").toExternalForm)
         root = containerPane
+
+  def getContainerPane: StackPane = containerPane
+  def getZoomFactor: Double = zoomFactor

@@ -1,37 +1,70 @@
-import mainApplication._
+import mainApplication.{GameMapView, GameTile, Position}
 import observers.ObserverGameView
 import org.scalatest.funsuite.AnyFunSuite
-import org.scalatest.matchers.should.Matchers
-import scalafx.scene.layout.Region
+import org.scalatest.matchers.should.Matchers.shouldBe
+import scalafx.scene.layout.GridPane.{getColumnIndex, getRowIndex, sfxGridPane2jfx}
+import scalafx.scene.layout.{GridPane, Region}
+import scalafx.Includes.jfxNode2sfx
+import scalafx.scene.SceneIncludes.jfxNode2sfx
 
-class GameMapViewSuite extends AnyFunSuite with Matchers:
 
-  test("Initial placeholder tile creation") {
+class GameMapViewSuite extends AnyFunSuite:
+
+  test("createPlaceholderTile should create a tile with correct properties") {
     val view = GameMapView()
-    view.getChildren.size should be(1)
+    val position = Position(1, 1)
+    val placeholderTile = view.createPlaceholderTile(position)
+
+    placeholderTile.prefWidth.value shouldBe 100
+    placeholderTile.prefHeight.value shouldBe 100
+    placeholderTile.styleClass.contains("placeholderTile") shouldBe true
   }
 
-  test("Tile placement and placeholder creation") {
-    val model = GameMap()
+  test("placeTile should place a tile at the correct position") {
     val view = GameMapView()
-    val initialTile = new Region()
-//    view.tileClicked(Position(100, 100), initialTile, model)
+    val position = Position(1, 1)
+    val placedTile = new Region()
+    val tiles = Map.empty[Position, GameTile]
 
-//    view.getTilesPlaced.get.size should be(1)
-//    view.getTilesPlaced.get.contains(Position(100, 100)) should be(true)
-//    view.getChildren.size should be(5) // 1 initial + 4 new placeholders
+    view.placeTile(position, placedTile, tiles)
+
+    view.getChildren.contains(placedTile) shouldBe true
   }
 
-  test("observers.Observer notification on tile click") {
+  test("createNewPlaceholders should create new placeholders around the last placed tile") {
     val view = GameMapView()
+    val position = Position(2, 2)
+    val placedTile = new Region()
+    val tiles = Map.empty[Position, GameTile]
+
+    view.placeTile(position, placedTile, tiles)
+    view.createNewPlaceholders(tiles)
+
+    val expectedPositions = Seq(Position(2, 2), Position(1, 2), Position(3, 2), Position(2, 1), Position(2, 3))
+    var expectedTiles: Seq[Position] = List()
+    view.getChildren.forEach(node =>
+      var pos = Position(GridPane.getColumnIndex(node), GridPane.getRowIndex(node))
+      if pos != Position(100, 100) then
+        expectedTiles = expectedTiles :+ pos
+    )
+
+    expectedTiles.foreach(tile =>
+      expectedPositions.contains(tile) shouldBe true
+    )
+  }
+
+  test("checkClickedTile should notify observers of tile placement attempt") {
+    val view = GameMapView()
+    val position = Position(1, 1)
+    val placedTile = new Region()
     var notified = false
-//    val observer = new Observer[GameMapView] {
-//      override def receiveUpdate(subject: GameMapView): Unit = notified = true
-//    }
-//    view.addObserver(observer)
 
-    val initialTile = new Region()
-//    view.tileClicked(Position(100, 100), initialTile)
+    view.addObserver(new ObserverGameView[GameMapView] {
+      override def receiveTilePlacementAttempt(pos: Position): Unit = {
+        notified = true
+      }
+    })
 
-//    notified should be(true)
+    view.checkClickedTile(position, placedTile)
+    notified shouldBe true
   }

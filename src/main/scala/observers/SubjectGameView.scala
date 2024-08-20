@@ -9,5 +9,7 @@ trait SubjectGameView[S] {
 
   def addObserver(observer: ObserverGameView[S]): Unit = observers = observer :: observers
 
+  def getObservers: List[ObserverGameView[S]] = observers
+
   def notifyTilePlacementAttempt(position: Position): Unit = observers.foreach(_.receiveTilePlacementAttempt(position))
 }
