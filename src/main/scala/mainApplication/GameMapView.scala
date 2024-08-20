@@ -10,19 +10,30 @@ import scalafx.scene.input.{MouseButton, MouseEvent}
 import scalafx.scene.paint.Color.{Black, Grey}
 import scalafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}
 
+/**
+ * The view for the game map.
+ * This class extends `GridPane` and implements `SubjectGameView` and `ObserverGameMap`.
+ */
 class GameMapView extends GridPane with SubjectGameView[GameMapView] with ObserverGameMap[GameMap]:
+
   private val mapSize = 5 // 5x5 grid for simplicity
   private var _lastPositionTilePlaced: Position = Position(0, 0)
   private var _lastTilePlaced: Region = new Region()
 
   this.alignment = Pos.Center
 
-  // TODO Temporary, rethink about optimal initial coordinates
+  // Initial coordinates for the placeholder tile
   val x = 100
   val y = 100
 
   createPlaceholderTile(Position(x, y))
 
+  /**
+   * Places a tile at the specified position in the view.
+   * @param position the position where the tile should be placed
+   * @param placedTile the tile to place
+   * @param tiles the current state of the game map tiles
+   */
   def placeTile(position: Position, placedTile: Region, tiles: Map[Position, GameTile]): Unit =
     _lastPositionTilePlaced = position
     placedTile.styleClass.clear()
@@ -35,6 +46,10 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
     // Replace the tile that has been just removed with new attributes
     this.add(placedTile, position.x, position.y)
 
+  /**
+   * Creates new placeholder tiles around the last placed tile.
+   * @param tiles the current state of the game map tiles
+   */
   def createNewPlaceholders(tiles: Map[Position, GameTile]): Unit =
     for
       posX <- Seq(_lastPositionTilePlaced.x - 1, _lastPositionTilePlaced.x + 1)
@@ -48,6 +63,11 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
     do
       val placeholderTile = createPlaceholderTile(Position(_lastPositionTilePlaced.x, posY))
 
+  /**
+   * Creates a placeholder tile at the specified position.
+   * @param position the position where the placeholder tile should be created
+   * @return the created placeholder tile
+   */
   def createPlaceholderTile(position: Position): Region =
     new Region:
       prefWidth = 100
@@ -57,13 +77,33 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
         checkClickedTile(position, this)
       add(this, position.x, position.y)
 
+  /**
+   * Checks the clicked tile and notifies observers of a tile placement attempt.
+   * @param position the position of the clicked tile
+   * @param placedTile the clicked tile
+   */
   def checkClickedTile(position: Position, placedTile: Region): Unit =
     _lastTilePlaced = placedTile
     notifyTilePlacementAttempt(position)
 
+  /**
+   * Returns the position of the last placed tile.
+   * @return the position of the last placed tile
+   */
   def getLastTilePlacedPosition: Option[Position] = Some(_lastPositionTilePlaced)
+
+  /**
+   * Returns the last placed tile.
+   * @return the last placed tile
+   */
   def getLastTilePlaced: Option[Region] = Some(_lastTilePlaced)
 
+  /**
+   * Called when a tile is placed on the game map.
+   * @param isTilePlaced whether the tile was successfully placed
+   * @param tilesOption the current state of the game map tiles
+   * @param position the position where the tile was placed
+   */
   override def isTilePlaced(isTilePlaced: Boolean,
                             tilesOption: Option[Map[Position, GameTile]],
                             position: Position): Unit =
@@ -79,5 +119,9 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
 
     println(tiles)
 
+  /**
+   * Logs a message to the console.
+   * @param string the message to log
+   */
   def log(string: String): Unit =
     println(s"VIEW - $string")

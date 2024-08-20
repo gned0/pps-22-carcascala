@@ -6,11 +6,14 @@ import scalafx.application.*
 import scalafx.geometry.Insets
 import scalafx.scene.Scene
 import scalafx.scene.input.{MouseEvent, ScrollEvent}
-import scalafx.scene.layout.{Region, StackPane} // Include helpers to minimize verbosity
+import scalafx.scene.layout.{Region, StackPane}
 
+/**
+ * The main application object for the Carcassonne game.
+ * This object extends `JFXApp3` to create a JavaFX application.
+ */
 object CarcassonneApp extends JFXApp3:
 
-  // TODO Think if this needs changing
   // Initial mouse position
   private var initialX = 0.0
   private var initialY = 0.0
@@ -18,12 +21,15 @@ object CarcassonneApp extends JFXApp3:
   // Zoom level
   private var zoomFactor = 1.0
   private val zoomIncrement = 0.1 // Zoom step size
-  private val minZoom = 0.5       // Mini mum zoom level
+  private val minZoom = 0.5       // Minimum zoom level
   private val maxZoom = 4.0       // Maximum zoom level
 
   private val containerPane = StackPane()
 
-
+  /**
+   * The main entry point for the JavaFX application.
+   * Initializes the model, view, and controller, and sets up the primary stage.
+   */
   override def start(): Unit =
     val model = GameMap()
     val view = GameMapView()
@@ -33,7 +39,6 @@ object CarcassonneApp extends JFXApp3:
 
     view.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
     view.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
-
 
     containerPane.getChildren.add(view)
 
@@ -72,5 +77,14 @@ object CarcassonneApp extends JFXApp3:
         stylesheets.add(getClass.getResource("../placeholderTile.css").toExternalForm)
         root = containerPane
 
+  /**
+   * Returns the container pane.
+   * @return the container pane
+   */
   def getContainerPane: StackPane = containerPane
+
+  /**
+   * Returns the current zoom factor.
+   * @return the zoom factor
+   */
   def getZoomFactor: Double = zoomFactor
