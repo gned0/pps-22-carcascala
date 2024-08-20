@@ -6,8 +6,9 @@ lazy val root = (project in file("."))
   .settings(
     name := "pps-22-carcascala",
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.18" % Test,
+    libraryDependencies += "com.typesafe.play" %% "play-json" % "2.10.0-RC5",
 
-    // ScalaFX related dependencies
+      // ScalaFX related dependencies
     libraryDependencies += "org.scalafx" %% "scalafx" % "16.0.0-R24",
     libraryDependencies ++= {
       // Determine OS version of JavaFX binaries
