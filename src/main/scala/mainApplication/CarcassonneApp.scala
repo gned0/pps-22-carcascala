@@ -1,6 +1,6 @@
-package main
+package mainApplication
 
-import main.CarcassonneApp.stage
+import mainApplication.CarcassonneApp.stage
 import scalafx.Includes.*
 import scalafx.application.*
 import scalafx.geometry.Insets

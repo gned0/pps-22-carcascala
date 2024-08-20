@@ -1,6 +1,6 @@
 package observers
 
-import main.Position
+import mainApplication.Position
 import scalafx.scene.layout.Region
 
 trait Observer[S] {

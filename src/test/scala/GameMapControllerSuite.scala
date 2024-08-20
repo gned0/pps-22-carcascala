@@ -1,3 +1,4 @@
+import mainApplication.{GameMap, GameMapView, GameMapController, Position}
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 import scalafx.scene.layout.Region
@@ -11,7 +12,7 @@ class GameMapControllerSuite extends AnyFunSuite with Matchers:
     controller.initialize()
 
     val position = Position(100, 100)
-    view.tileClicked(position, new Region())
+    view.tileClicked(position, new Region(), model.getTileMap.get)
 
     model.getTileMap.get.contains(position) should be(true)
   }
@@ -25,5 +26,5 @@ class GameMapControllerSuite extends AnyFunSuite with Matchers:
     // Simulate invalid placement
     val invalidPosition = Position(-1, -1)
 
-    an [IllegalArgumentException] should be thrownBy view.tileClicked(invalidPosition, new Region())
+    an [IllegalArgumentException] should be thrownBy view.tileClicked(invalidPosition, new Region(), model.getTileMap.get)
   }

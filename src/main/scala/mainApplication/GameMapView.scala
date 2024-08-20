@@ -1,4 +1,4 @@
-package main
+package mainApplication
 
 import observers.Subject
 import scalafx.application.JFXApp3

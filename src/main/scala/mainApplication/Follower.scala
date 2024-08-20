@@ -1,4 +1,4 @@
-package main
+package mainApplication
 
 /**
  * Represents a follower in the game.

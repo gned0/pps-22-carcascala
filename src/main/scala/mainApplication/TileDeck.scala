@@ -1,4 +1,4 @@
-package main
+package mainApplication
 
 import play.api.libs.json.{Json, OFormat}
 

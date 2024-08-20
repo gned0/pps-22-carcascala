@@ -1,4 +1,4 @@
-package main
+package mainApplication
 /**
  * Represents a position on the game map.
  *

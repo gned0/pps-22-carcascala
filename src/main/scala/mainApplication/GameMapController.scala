@@ -1,4 +1,4 @@
-package main
+package mainApplication
 
 import observers.Observer
 import scalafx.scene.layout.Region

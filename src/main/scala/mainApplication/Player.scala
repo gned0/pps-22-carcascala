@@ -1,4 +1,4 @@
-package main
+package mainApplication
 
 /**
  * Represents the different colors that a player can choose.
