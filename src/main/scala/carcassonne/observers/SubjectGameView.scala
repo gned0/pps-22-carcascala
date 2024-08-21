@@ -1,6 +1,6 @@
-package observers
+package carcassonne.observers
 
-import mainApplication.Position
+import carcassonne.model.Position
 import scalafx.scene.layout.Region
 
 /**

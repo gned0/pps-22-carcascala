@@ -1,11 +1,14 @@
-import mainApplication.{GameMapView, GameTile, Position}
-import observers.ObserverGameView
+package carcassonne.view
+
+import carcassonne.model.{GameTile, Position}
+import carcassonne.observers.ObserverGameView
+import carcassonne.view.GameMapView
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers.shouldBe
-import scalafx.scene.layout.GridPane.{getColumnIndex, getRowIndex, sfxGridPane2jfx}
-import scalafx.scene.layout.{GridPane, Region}
 import scalafx.Includes.jfxNode2sfx
 import scalafx.scene.SceneIncludes.jfxNode2sfx
+import scalafx.scene.layout.GridPane.{getColumnIndex, getRowIndex, sfxGridPane2jfx}
+import scalafx.scene.layout.{GridPane, Region}
 
 /**
  * Test suite for the `GameMapView` class.

@@ -1,6 +1,9 @@
-import mainApplication._
+package carcassonne.model
+
+import carcassonne.model.TileDeck
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
+
 import scala.util.Try
 
 class TileDeckSuite extends AnyFunSuite with Matchers {

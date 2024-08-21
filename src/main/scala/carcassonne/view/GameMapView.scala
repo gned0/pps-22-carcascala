@@ -1,14 +1,15 @@
-package mainApplication
+package carcassonne.view
 
-import observers.{ObserverGameMap, SubjectGameView}
-import scalafx.application.JFXApp3
-import scalafx.scene.Scene
-import scalafx.scene.layout.{GridPane, Region}
-import scalafx.geometry.{Insets, Pos}
+import carcassonne.model.{GameMap, GameTile, Position}
+import carcassonne.observers.{ObserverGameMap, SubjectGameView}
 import scalafx.Includes.*
+import scalafx.application.JFXApp3
+import scalafx.geometry.{Insets, Pos}
+import scalafx.scene.Scene
 import scalafx.scene.input.{MouseButton, MouseEvent}
-import scalafx.scene.paint.Color.{Black, Grey}
 import scalafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}
+import scalafx.scene.layout.{GridPane, Region}
+import scalafx.scene.paint.Color.{Black, Grey}
 
 /**
  * The view for the game map.

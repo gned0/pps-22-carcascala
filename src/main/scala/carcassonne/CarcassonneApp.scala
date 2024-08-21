@@ -1,6 +1,8 @@
-package mainApplication
+package carcassonne
 
-import mainApplication.CarcassonneApp.stage
+import carcassonne.controller.GameMapController
+import carcassonne.model.GameMap
+import carcassonne.view.GameMapView
 import scalafx.Includes.*
 import scalafx.application.*
 import scalafx.geometry.Insets

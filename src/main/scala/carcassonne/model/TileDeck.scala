@@ -1,7 +1,6 @@
-package mainApplication
+package carcassonne.model
 
 import play.api.libs.json.{Json, OFormat}
-
 import scala.io.Source
 import scala.util.Random
 

@@ -1,7 +1,6 @@
-package observers
+package carcassonne.observers
 
-import mainApplication._
-
+import carcassonne.model.{GameTile, Position}
 /**
  * A trait representing an observer for the game map.
  * @tparam S the type of the subject being observed

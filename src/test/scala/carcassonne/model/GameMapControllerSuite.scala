@@ -1,4 +1,8 @@
-import mainApplication.{GameMap, GameMapController, GameMapView, Position}
+package carcassonne.model
+
+import carcassonne.controller.GameMapController
+import carcassonne.model.{GameMap, Position}
+import carcassonne.view.GameMapView
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers.shouldBe
 

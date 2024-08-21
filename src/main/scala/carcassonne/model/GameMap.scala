@@ -1,7 +1,6 @@
-package mainApplication
+package carcassonne.model
 
-import observers.SubjectGameMap
-
+import carcassonne.observers.SubjectGameMap
 /**
  * Represents a position on the game map.
  *

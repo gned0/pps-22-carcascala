@@ -1,4 +1,4 @@
-package mainApplication
+package carcassonne.model
 
 /**
  * Represents the different colors that a player can choose.

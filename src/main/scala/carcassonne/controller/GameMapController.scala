@@ -1,6 +1,8 @@
-package mainApplication
+package carcassonne.controller
 
-import observers.ObserverGameView
+import carcassonne.model.{GameMap, GameTile, Position}
+import carcassonne.observers.ObserverGameView
+import carcassonne.view.GameMapView
 import scalafx.scene.layout.Region
 
 /**

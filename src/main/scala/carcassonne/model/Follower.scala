@@ -1,4 +1,4 @@
-package mainApplication
+package carcassonne.model
 
 /**
  * Represents a follower in the game.

@@ -1,4 +1,6 @@
-import mainApplication._
+package carcassonne.model
+
+import carcassonne.model.{EdgeType, GameTile}
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
