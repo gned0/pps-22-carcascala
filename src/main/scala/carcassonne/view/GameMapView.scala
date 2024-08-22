@@ -28,7 +28,6 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
   val y = 100
 
   createPlaceholderTile(Position(x, y))
-
   /**
    * Places a tile at the specified position in the view.
    * @param position the position where the tile should be placed
