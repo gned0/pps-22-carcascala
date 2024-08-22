@@ -107,7 +107,6 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
   override def isTilePlaced(isTilePlaced: Boolean,
                             tilesOption: Option[Map[Position, GameTile]],
                             position: Position): Unit =
-    println(isTilePlaced)
     val tiles = tilesOption.get
     if isTilePlaced then
       if tiles.isEmpty then
@@ -116,12 +115,3 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
       else
         placeTile(position, getLastTilePlaced.get, tiles)
         createNewPlaceholders(tiles)
-
-    println(tiles)
-
-  /**
-   * Logs a message to the console.
-   * @param string the message to log
-   */
-  def log(string: String): Unit =
-    println(s"VIEW - $string")

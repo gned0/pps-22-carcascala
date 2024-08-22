@@ -1,6 +1,7 @@
 package carcassonne.model
 
 import carcassonne.observers.SubjectGameMap
+import carcassonne.util.Logger
 /**
  * Represents a position on the game map.
  *
@@ -32,7 +33,7 @@ class GameMap extends SubjectGameMap[GameMap]:
     if isValidPlacement(tile, position) then
       tiles = tiles + (position -> tile)
       notifyIsTilePlaced(true, this.getTileMap, position)
-      log("Tile placed")
+      Logger.log(s"MODEL", s"Tile placed")
     else
       notifyIsTilePlaced(false, this.getTileMap, position)
       throw IllegalArgumentException(s"Invalid tile placement at position $position")
@@ -52,14 +53,6 @@ class GameMap extends SubjectGameMap[GameMap]:
    * @return An `Option` containing a `Map` of `Position` to `GameTile`.
    */
   def getTileMap: Option[Map[Position, GameTile]] = Option.apply(this.tiles)
-
-  /**
-   * Logs a message with a specific format.
-   *
-   * @param string The message to log.
-   */
-  def log(string: String): Unit =
-    print(s"MODEL - " + string + "\n")
 
   /**
    * Validates whether a tile can be placed at the specified position.

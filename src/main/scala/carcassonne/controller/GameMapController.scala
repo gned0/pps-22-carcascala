@@ -2,6 +2,7 @@ package carcassonne.controller
 
 import carcassonne.model.{GameMap, GameTile, Position}
 import carcassonne.observers.ObserverGameView
+import carcassonne.util.Logger
 import carcassonne.view.GameMapView
 import scalafx.scene.layout.Region
 
@@ -26,7 +27,7 @@ class GameMapController(model: GameMap, view: GameMapView) extends ObserverGameV
     try
       val tile = GameTile.startTile // Create a new tile
       model.placeTile(tile, position)
-      log(s"Placed tile at $position")
+      Logger.log(s"CONTROLLER", s"Placed tile at $position")
     catch
       case e: IllegalArgumentException => println(e.getMessage)
 
@@ -36,10 +37,3 @@ class GameMapController(model: GameMap, view: GameMapView) extends ObserverGameV
    */
   override def receiveTilePlacementAttempt(position: Position): Unit =
     placeTile(position)
-
-  /**
-   * Logs a message to the console.
-   * @param string the message to log
-   */
-  def log(string: String): Unit =
-    print(s"CONTROLLER - " + string + "\n")
