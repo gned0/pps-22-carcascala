@@ -1,6 +1,6 @@
 package carcassonne.model
 
-private object GameMatch:
+object GameMatch:
   private val MinPlayers = 2
 
 class GameMatch(players: List[Player], map: GameMap, deck: TileDeck):

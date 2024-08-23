@@ -1,7 +1,7 @@
 package carcassonne
 
 import carcassonne.controller.GameMapController
-import carcassonne.model.GameMap
+import carcassonne.model.{Color, GameMap, GameMatch, Player, TileDeck}
 import carcassonne.view.{GameMapView, StarterView}
 import scalafx.Includes.*
 import scalafx.application.*
@@ -9,6 +9,7 @@ import scalafx.geometry.Insets
 import scalafx.scene.Scene
 import scalafx.scene.input.{MouseEvent, ScrollEvent}
 import scalafx.scene.layout.{Region, StackPane}
+import carcassonne.model._
 
 /**
  * The main application object for the Carcassonne game.
@@ -36,7 +37,12 @@ object CarcassonneApp extends JFXApp3:
     val model = GameMap()
     val view = GameMapView()
 
+
     def switchToGameView(): Unit =
+      val deck = TileDeck()
+      val game = GameMatch(List(Player(0, "test", 0, 0, Color.Red), Player(1, "test2", 0, 0, Color.Blue)), model, TileDeck())
+
+      game.play()
       containerPane.children = view
 
     val starterView = StarterView(() => switchToGameView())
