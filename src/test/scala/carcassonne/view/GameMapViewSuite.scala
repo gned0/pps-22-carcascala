@@ -1,6 +1,6 @@
 package carcassonne.view
 
-import carcassonne.model.{GameTile, Position}
+import carcassonne.model.{EdgeType, GameTile, Position}
 import carcassonne.observers.ObserverGameView
 import carcassonne.view.GameMapView
 import org.scalatest.funsuite.AnyFunSuite
@@ -9,6 +9,7 @@ import scalafx.Includes.jfxNode2sfx
 import scalafx.scene.SceneIncludes.jfxNode2sfx
 import scalafx.scene.layout.GridPane.{getColumnIndex, getRowIndex, sfxGridPane2jfx}
 import scalafx.scene.layout.{GridPane, Region}
+import scalafx.scene.text.Text
 
 /**
  * Test suite for the `GameMapView` class.
@@ -77,12 +78,28 @@ class GameMapViewSuite extends AnyFunSuite:
     val placedTile = new Region()
     var notified = false
 
-//    view.addObserver(new ObserverGameView[GameMapView] {
-//      override def receiveTilePlacementAttempt(pos: Position): Unit = {
-//        notified = true
-//      }
-//    })
+    view.addObserver(new ObserverGameView[GameMapView] {
+      override def receiveTilePlacementAttempt(gameTile: GameTile, pos: Position): Unit = {
+        notified = true
+      }
+    })
 
     view.checkClickedTile(position, placedTile)
     notified shouldBe true
+  }
+
+
+  /**
+   * Test to verify that the `isTilePlaced` method updates the view correctly when a tile is placed.
+   */
+  test("isTilePlaced should update the view correctly when a tile is placed") {
+    val view = GameMapView()
+    val position = Position(1, 1)
+    val tiles = Map(position -> GameTile(EdgeType.City, EdgeType.Road, EdgeType.Field, EdgeType.Road))
+
+    val sizeBeforePlacement = view.getChildren.size()
+
+    view.isTilePlaced(true, Some(tiles), position)
+
+    view.getChildren.size != sizeBeforePlacement
   }

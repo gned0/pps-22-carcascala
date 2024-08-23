@@ -104,6 +104,8 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
    */
   def getLastTilePlaced: Option[Region] = Some(_lastTilePlaced)
 
+  def getDrawnTilePane: Option[GridPane] = Some(drawnTilePane)
+
   override def tileDrawn(tileDrawn: GameTile): Unit =
 //    this.getScene.getChildren.add(drawnTilePane)
     _drawnTile = tileDrawn
