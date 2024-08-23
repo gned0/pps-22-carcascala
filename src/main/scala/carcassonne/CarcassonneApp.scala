@@ -2,7 +2,7 @@ package carcassonne
 
 import carcassonne.controller.GameMapController
 import carcassonne.model.GameMap
-import carcassonne.view.GameMapView
+import carcassonne.view.{GameMapView, StarterView}
 import scalafx.Includes.*
 import scalafx.application.*
 import scalafx.geometry.Insets
@@ -35,6 +35,11 @@ object CarcassonneApp extends JFXApp3:
   override def start(): Unit =
     val model = GameMap()
     val view = GameMapView()
+
+    def switchToGameView(): Unit =
+      containerPane.children = view
+
+    val starterView = StarterView(() => switchToGameView())
     model.addObserver(view)
     val controller = GameMapController(model, view)
     controller.initialize()
@@ -42,7 +47,7 @@ object CarcassonneApp extends JFXApp3:
     view.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
     view.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
 
-    containerPane.getChildren.add(view)
+    containerPane.children = starterView
 
     containerPane.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
     containerPane.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
