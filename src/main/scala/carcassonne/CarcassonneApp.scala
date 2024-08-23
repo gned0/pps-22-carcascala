@@ -34,24 +34,22 @@ object CarcassonneApp extends JFXApp3:
    * Initializes the model, view, and controller, and sets up the primary stage.
    */
   override def start(): Unit =
-    val model = GameMap()
-    val view = GameMapView()
-
-
     def switchToGameView(): Unit =
-      val deck = TileDeck()
-      val game = GameMatch(List(Player(0, "test", 0, 0, Color.Red), Player(1, "test2", 0, 0, Color.Blue)), model, TileDeck())
+      val view = GameMapView()
+      view.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
+      view.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
 
-      game.play()
+      val deck = TileDeck()
+      val model = GameMap()
+      val controller = GameMapController(model, view)
+      controller.initialize()
+      val game = GameMatch(List(Player(0, "test", 0, 0, Color.Red), Player(1, "test2", 0, 0, Color.Blue)), model, TileDeck())
+      game.addObserver(view)
+
       containerPane.children = view
+      game.play()
 
     val starterView = StarterView(() => switchToGameView())
-    model.addObserver(view)
-    val controller = GameMapController(model, view)
-    controller.initialize()
-
-    view.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
-    view.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
 
     containerPane.children = starterView
 

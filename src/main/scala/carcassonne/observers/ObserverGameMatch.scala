@@ -5,7 +5,7 @@ import carcassonne.model.{GameTile, Position}
  * A trait representing an observer for the game map.
  * @tparam S the type of the subject being observed
  */
-trait ObserverGameMap[S]:
+trait ObserverGameMatch[S]:
 
   /**
    * Called when a tile is placed on the game map.
@@ -16,3 +16,5 @@ trait ObserverGameMap[S]:
   def isTilePlaced(isTilePlaced: Boolean,
                    tiles: Option[Map[Position, GameTile]],
                    position: Position): Unit
+
+  def tileDrawn(tileDrawn: GameTile): Unit

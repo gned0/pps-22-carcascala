@@ -1,7 +1,7 @@
 package carcassonne.view
 
-import carcassonne.model.{GameMap, GameTile, Position}
-import carcassonne.observers.{ObserverGameMap, SubjectGameView}
+import carcassonne.model.{GameMap, GameMatch, GameTile, Position}
+import carcassonne.observers.{ObserverGameMatch, SubjectGameView}
 import scalafx.Includes.*
 import scalafx.application.JFXApp3
 import scalafx.geometry.{Insets, Pos}
@@ -10,16 +10,25 @@ import scalafx.scene.input.{MouseButton, MouseEvent}
 import scalafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}
 import scalafx.scene.layout.{GridPane, Region}
 import scalafx.scene.paint.Color.{Black, Grey}
+import scalafx.scene.text.Text
 
 /**
  * The view for the game map.
  * This class extends `GridPane` and implements `SubjectGameView` and `ObserverGameMap`.
  */
-class GameMapView extends GridPane with SubjectGameView[GameMapView] with ObserverGameMap[GameMap]:
+class GameMapView extends GridPane with SubjectGameView[GameMapView] with ObserverGameMatch[GameMatch]:
 
   private val mapSize = 5 // 5x5 grid for simplicity
   private var _lastPositionTilePlaced: Position = Position(0, 0)
   private var _lastTilePlaced: Region = new Region()
+
+  private val drawnTilePane = GridPane()
+  drawnTilePane.add(new Text("North Border: "), 10, 10)
+  drawnTilePane.add(new Text("East Border: "), 11, 11)
+  drawnTilePane.add(new Text("South Border: "), 10, 12)
+  drawnTilePane.add(new Text("West Border: "), 9, 9)
+  drawnTilePane.alignment = Pos.CenterRight
+  drawnTilePane.mouseTransparent = true
 
   this.alignment = Pos.Center
 
@@ -98,8 +107,17 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
    */
   def getLastTilePlaced: Option[Region] = Some(_lastTilePlaced)
 
+  override def tileDrawn(tileDrawn: GameTile): Unit =
+    this.getScene.getChildren.add(drawnTilePane)
+    drawnTilePane.getChildren.clear()
+    drawnTilePane.add(new Text(s"North Border: \n${tileDrawn.north}"), 10, 10)
+    drawnTilePane.add(new Text(s"East Border: \n${tileDrawn.east}"), 11, 11)
+    drawnTilePane.add(new Text(s"South Border: \n${tileDrawn.south}"), 10, 12)
+    drawnTilePane.add(new Text(s"West Border: \n${tileDrawn.west}"), 9, 11)
+
   /**
    * Called when a tile is placed on the game map.
+   *
    * @param isTilePlaced whether the tile was successfully placed
    * @param tilesOption the current state of the game map tiles
    * @param position the position where the tile was placed

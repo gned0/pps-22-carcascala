@@ -5,22 +5,22 @@ import carcassonne.model.{GameTile, Position}
  * A trait representing a subject in the observer pattern for the game map.
  * @tparam S the type of the subject
  */
-trait SubjectGameMap[S]:
+trait SubjectGameMatch[S]:
   this: S =>
 
-  private var observers: List[ObserverGameMap[S]] = Nil
+  private var observers: List[ObserverGameMatch[S]] = Nil
 
   /**
    * Adds an observer to the subject.
    * @param observer the observer to add
    */
-  def addObserver(observer: ObserverGameMap[S]): Unit = observers = observer :: observers
+  def addObserver(observer: ObserverGameMatch[S]): Unit = observers = observer :: observers
 
   /**
    * Returns the list of observers.
    * @return the list of observers
    */
-  def getObservers: List[ObserverGameMap[S]] = observers
+  def getObservers: List[ObserverGameMatch[S]] = observers
 
   /**
    * Notifies all observers that a tile has been placed.
@@ -32,3 +32,6 @@ trait SubjectGameMap[S]:
                          tiles: Option[Map[Position, GameTile]],
                          position: Position): Unit =
     observers.foreach(_.isTilePlaced(isTilePlaced, tiles, position))
+    
+  def notifyTileDrawn(tileDrawn: GameTile): Unit =
+    observers.foreach(_.tileDrawn(tileDrawn))
