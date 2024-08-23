@@ -21,12 +21,9 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
   private val mapSize = 5 // 5x5 grid for simplicity
   private var _lastPositionTilePlaced: Position = Position(0, 0)
   private var _lastTilePlaced: Region = new Region()
+  private var _drawnTile: GameTile = GameTile.startTile
 
   private val drawnTilePane = GridPane()
-  drawnTilePane.add(new Text("North Border: "), 10, 10)
-  drawnTilePane.add(new Text("East Border: "), 11, 11)
-  drawnTilePane.add(new Text("South Border: "), 10, 12)
-  drawnTilePane.add(new Text("West Border: "), 9, 9)
   drawnTilePane.alignment = Pos.CenterRight
   drawnTilePane.mouseTransparent = true
 
@@ -93,7 +90,7 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
    */
   def checkClickedTile(position: Position, placedTile: Region): Unit =
     _lastTilePlaced = placedTile
-    notifyTilePlacementAttempt(position)
+    notifyTilePlacementAttempt(_drawnTile, position)
 
   /**
    * Returns the position of the last placed tile.
@@ -108,12 +105,16 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
   def getLastTilePlaced: Option[Region] = Some(_lastTilePlaced)
 
   override def tileDrawn(tileDrawn: GameTile): Unit =
-    this.getScene.getChildren.add(drawnTilePane)
+//    this.getScene.getChildren.add(drawnTilePane)
+    _drawnTile = tileDrawn
     drawnTilePane.getChildren.clear()
     drawnTilePane.add(new Text(s"North Border: \n${tileDrawn.north}"), 10, 10)
     drawnTilePane.add(new Text(s"East Border: \n${tileDrawn.east}"), 11, 11)
     drawnTilePane.add(new Text(s"South Border: \n${tileDrawn.south}"), 10, 12)
     drawnTilePane.add(new Text(s"West Border: \n${tileDrawn.west}"), 9, 11)
+
+  def addDrawnTilePane(): Unit =
+    this.getScene.getChildren.add(drawnTilePane)
 
   /**
    * Called when a tile is placed on the game map.

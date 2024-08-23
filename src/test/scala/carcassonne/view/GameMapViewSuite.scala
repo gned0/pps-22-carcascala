@@ -77,11 +77,11 @@ class GameMapViewSuite extends AnyFunSuite:
     val placedTile = new Region()
     var notified = false
 
-    view.addObserver(new ObserverGameView[GameMapView] {
-      override def receiveTilePlacementAttempt(pos: Position): Unit = {
-        notified = true
-      }
-    })
+//    view.addObserver(new ObserverGameView[GameMapView] {
+//      override def receiveTilePlacementAttempt(pos: Position): Unit = {
+//        notified = true
+//      }
+//    })
 
     view.checkClickedTile(position, placedTile)
     notified shouldBe true

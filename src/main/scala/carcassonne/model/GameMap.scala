@@ -25,13 +25,14 @@ class GameMap:
    * @param position The `Position` where the tile should be placed.
    * @throws IllegalArgumentException if a tile is already placed at the position or if the placement is invalid.
    */
-  def placeTile(tile: GameTile, position: Position): Unit =
+  def placeTile(tile: GameTile, position: Position): Boolean =
     if tiles.contains(position) then
       throw IllegalArgumentException(s"Tile already placed at position $position")
 
     if isValidPlacement(tile, position) then
       tiles = tiles + (position -> tile)
       Logger.log(s"MODEL", s"Tile placed")
+      true
     else
       throw IllegalArgumentException(s"Invalid tile placement at position $position")
 

@@ -40,14 +40,16 @@ object CarcassonneApp extends JFXApp3:
       view.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
 
       val deck = TileDeck()
-      val model = GameMap()
-      val controller = GameMapController(model, view)
+      val map = GameMap()
+      val game = GameMatch(List(Player(0, "test", 0, 0, Color.Red), Player(1, "test2", 0, 0, Color.Blue)), map, TileDeck())
+      val controller = GameMapController(game, view)
       controller.initialize()
-      val game = GameMatch(List(Player(0, "test", 0, 0, Color.Red), Player(1, "test2", 0, 0, Color.Blue)), model, TileDeck())
+
       game.addObserver(view)
 
       containerPane.children = view
       game.play()
+      view.addDrawnTilePane()
 
     val starterView = StarterView(() => switchToGameView())
 

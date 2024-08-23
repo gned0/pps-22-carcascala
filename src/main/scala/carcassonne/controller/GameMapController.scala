@@ -1,6 +1,6 @@
 package carcassonne.controller
 
-import carcassonne.model.{GameMap, GameTile, Position}
+import carcassonne.model.{GameMap, GameMatch, GameTile, Position}
 import carcassonne.observers.ObserverGameView
 import carcassonne.util.Logger
 import carcassonne.view.GameMapView
@@ -11,7 +11,7 @@ import scalafx.scene.layout.Region
  * @param model the game map model
  * @param view the game map view
  */
-class GameMapController(model: GameMap, view: GameMapView) extends ObserverGameView[GameMapView]:
+class GameMapController(model: GameMatch, view: GameMapView) extends ObserverGameView[GameMapView]:
 
   /**
    * Initializes the controller by setting up the view to listen for tile click events.
@@ -23,10 +23,9 @@ class GameMapController(model: GameMap, view: GameMapView) extends ObserverGameV
    * Places a tile at the specified position in the model.
    * @param position the position where the tile should be placed
    */
-  def placeTile(position: Position): Unit =
+  def placeTile(gameTile: GameTile, position: Position): Unit =
     try
-      val tile = GameTile.startTile // Create a new tile
-      model.placeTile(tile, position)
+      model.placeTile(gameTile, position)
       Logger.log(s"CONTROLLER", s"Placed tile at $position")
     catch
       case e: IllegalArgumentException => println(e.getMessage)
@@ -35,5 +34,5 @@ class GameMapController(model: GameMap, view: GameMapView) extends ObserverGameV
    * Called when a tile placement attempt is made.
    * @param position the position where the tile placement was attempted
    */
-  override def receiveTilePlacementAttempt(position: Position): Unit =
-    placeTile(position)
+  override def receiveTilePlacementAttempt(gameTile: GameTile, position: Position): Unit =
+    placeTile(gameTile, position)

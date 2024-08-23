@@ -18,16 +18,26 @@ class GameMatch(players: List[Player], map: GameMap, deck: TileDeck) extends Sub
   private def isGameOver: Boolean = deck.isEmpty
 
   private def takeTurn(): Unit =
-    val tile = deck.draw()
-    notifyTileDrawn(tile.get)
+    if deck.isEmpty then
+      gameEnded()
+    else
+      val tile = deck.draw()
+      notifyTileDrawn(tile.get)
     // map.placeTile(tile.get, Position(userInput))
     // map.placeFollower(Position(userInput)
     // scoring.computeScore(map)
 
 //    endTurn()
 
+  def placeTile(gameTile: GameTile, position: Position): Unit =
+    val isTilePlaced = map.placeTile(gameTile, position)
+    notifyIsTilePlaced(isTilePlaced, map.getTileMap, position)
+
+    endTurn()
+    takeTurn()
+
   def play(): Unit =
-      takeTurn()
+    takeTurn()
 
   def gameEnded(): Unit =
     println("Game over! Final scores:")

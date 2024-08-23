@@ -1,6 +1,8 @@
 package carcassonne.model
 
+import carcassonne.util.Logger
 import play.api.libs.json.{Json, OFormat}
+
 import scala.io.Source
 import scala.util.Random
 
@@ -52,8 +54,11 @@ class TileDeck {
       case Nil => None
       case head :: tail =>
         tiles = tail
+        Logger.log(s"TILEDECK", s"Card Drawn")
+        Logger.log(s"TILEDECK", s"$head")
         Some(head)
     }
+
   }
 
   /**
@@ -78,6 +83,7 @@ class TileDeck {
         EdgeType.valueOf(config.west)
       )
     }
+    Logger.log(s"TILEDECK", s"Deck initiliazed")
   }
 
   /**

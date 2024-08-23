@@ -1,6 +1,6 @@
 package carcassonne.observers
 
-import carcassonne.model.Position
+import carcassonne.model.{GameTile, Position}
 import scalafx.scene.layout.Region
 
 /**
@@ -13,4 +13,4 @@ trait ObserverGameView[S]:
    * Called when a tile placement attempt is made.
    * @param position the position where the tile placement was attempted
    */
-  def receiveTilePlacementAttempt(position: Position): Unit
+  def receiveTilePlacementAttempt(gameTile: GameTile, position: Position): Unit

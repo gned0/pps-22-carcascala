@@ -1,6 +1,6 @@
 package carcassonne.observers
 
-import carcassonne.model.Position
+import carcassonne.model.{GameTile, Position}
 import scalafx.scene.layout.Region
 
 /**
@@ -28,4 +28,4 @@ trait SubjectGameView[S]:
    * Notifies all observers of a tile placement attempt.
    * @param position the position where the tile placement was attempted
    */
-  def notifyTilePlacementAttempt(position: Position): Unit = observers.foreach(_.receiveTilePlacementAttempt(position))
+  def notifyTilePlacementAttempt(gameTile: GameTile, position: Position): Unit = observers.foreach(_.receiveTilePlacementAttempt(gameTile, position))
