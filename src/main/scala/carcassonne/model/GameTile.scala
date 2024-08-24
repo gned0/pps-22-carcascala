@@ -1,14 +1,6 @@
 package carcassonne.model
 
-/**
- * Represents the different types of edges that can be found on a tile.
- *
- * `City`: A city segment.
- * `Road`: A road segment.
- * `Field`: A field segment.
- */
-enum EdgeType:
-  case City, Road, Field
+import play.api.libs.json.{Format, JsResult, JsValue, Json}
 
 /**
  * Represents a tile in the game.
@@ -33,7 +25,25 @@ case class GameTile(north: EdgeType,
   def rotate: GameTile = GameTile(west, north, east, south,  meeplePositions, imgPath)
 
 object GameTile:
+  implicit val gameTileFormat: Format[GameTile] = new Format[GameTile] {
+    def reads(json: JsValue): JsResult[GameTile] = for {
+      north <- (json \ "north").validate[EdgeType]
+      east <- (json \ "east").validate[EdgeType]
+      south <- (json \ "south").validate[EdgeType]
+      west <- (json \ "west").validate[EdgeType]
+      meeplePositions <- (json \ "meeplePositions").validate[Map[String, String]]
+      imgPath <- (json \ "imagePath").validate[String]
+    } yield GameTile(north, east, south, west, meeplePositions, imgPath)
 
+    def writes(gameTile: GameTile): JsValue = Json.obj(
+      "north" -> gameTile.north,
+      "east" -> gameTile.east,
+      "south" -> gameTile.south,
+      "west" -> gameTile.west,
+      "meeplePositions" -> gameTile.meeplePositions,
+      "imagePath" -> gameTile.imgPath
+    )
+  }
   /**
    * The starting tile of the game, with specific edges as per the game rules:
    * - North: `City`

@@ -1,15 +1,15 @@
 [
-  {"north": "City", "east": "Road", "south": "Field", "west": "Road", "matrix":  {
+  {"north": "City", "east": "Road", "south": "Field", "west": "Road", "meeplePositions":  {
     "NW": "Field", "N": "City", "NE": "Field",
     "W": "Road", "C": "Road", "E": "Road",
     "SW": "Field", "S": "Field", "SE": "Field"
   }, "imagePath":  "CastleSideRoad.png"},
-  {"north": "Field", "east": "Road", "south": "Field", "west": "Road", "matrix":  {
+  {"north": "Field", "east": "Road", "south": "Field", "west": "Road", "meeplePositions":  {
     "NW": "Field", "N": "Field", "NE": "Field",
     "W": "Road", "C": "Road", "E": "Road",
     "SW": "Field", "S": "Field", "SE": "Field"
   }, "imagePath":  "HorizontalRoad.png"},
-  {"north": "Field", "east": "Field", "south": "Road", "west": "Road", "matrix":  {
+  {"north": "Field", "east": "Field", "south": "Road", "west": "Road", "meeplePositions":  {
     "NW": "Field", "N": "Field", "NE": "Field",
     "W": "Road", "C": "Road", "E": "Field",
     "SW": "Field", "S": "Road", "SE": "Field"
