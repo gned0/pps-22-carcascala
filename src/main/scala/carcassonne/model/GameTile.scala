@@ -18,14 +18,19 @@ enum EdgeType:
  * @param south The edge type on the southern side of the tile.
  * @param west The edge type on the western side of the tile.
  */
-case class GameTile(north: EdgeType, east: EdgeType, south: EdgeType, west: EdgeType,  meeplePositions: Map[String, String]):
+case class GameTile(north: EdgeType,
+                    east: EdgeType,
+                    south: EdgeType,
+                    west: EdgeType,
+                    meeplePositions: Map[String, String],
+                    imgPath: String):
 
   /**
    * Rotates the tile 90 degrees clockwise.
    *
    * @return A new `GameTile` instance with edges rotated clockwise.
    */
-  def rotate: GameTile = GameTile(west, north, east, south,  meeplePositions: Map[String, String])
+  def rotate: GameTile = GameTile(west, north, east, south,  meeplePositions, imgPath)
 
 object GameTile:
 
@@ -40,4 +45,4 @@ object GameTile:
     "NW" -> "Field", "N"-> "City", "NE"-> "Field",
     "W"-> "Road", "C"-> "Road", "E"-> "Road",
     "SW"-> "Field", "S"-> "Field", "SE"-> "Field"
-  ))
+  ), imgPath = "CastleSideRoad.png")
