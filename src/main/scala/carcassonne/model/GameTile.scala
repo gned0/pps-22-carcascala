@@ -55,4 +55,6 @@ object GameTile:
     "NW" -> "Field", "N"-> "City", "NE"-> "Field",
     "W"-> "Road", "C"-> "Road", "E"-> "Road",
     "SW"-> "Field", "S"-> "Field", "SE"-> "Field"
-  ), imgPath = "CastleSideRoad.png")
+  ), "CastleSideRoad.png")
+
+  var meeplePosition: Option[String] = None

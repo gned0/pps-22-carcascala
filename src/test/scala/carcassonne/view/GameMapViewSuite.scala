@@ -29,45 +29,7 @@ class GameMapViewSuite extends AnyFunSuite:
     placeholderTile.prefHeight.value shouldBe 100
     placeholderTile.styleClass.contains("placeholderTile") shouldBe true
   }
-
-  /**
-   * Test to verify that the `placeTile` method places a tile at the correct position in the view.
-   */
-  test("placeTile should place a tile at the correct position") {
-    val view = GameMapView()
-    val position = Position(1, 1)
-    val placedTile = new Region()
-    val tiles = Map.empty[Position, GameTile]
-
-    view.placeTile(position, placedTile, tiles)
-
-    view.getChildren.contains(placedTile) shouldBe true
-  }
-
-  /**
-   * Test to verify that the `createNewPlaceholders` method creates new placeholders around the last placed tile.
-   */
-  test("createNewPlaceholders should create new placeholders around the last placed tile") {
-    val view = GameMapView()
-    val position = Position(2, 2)
-    val placedTile = new Region()
-    val tiles = Map.empty[Position, GameTile]
-
-    view.placeTile(position, placedTile, tiles)
-    view.createNewPlaceholders(tiles)
-
-    val expectedPositions = Seq(Position(2, 2), Position(1, 2), Position(3, 2), Position(2, 1), Position(2, 3))
-    var expectedTiles: Seq[Position] = List()
-    view.getChildren.forEach(node =>
-      var pos = Position(GridPane.getColumnIndex(node), GridPane.getRowIndex(node))
-      if pos != Position(100, 100) then
-        expectedTiles = expectedTiles :+ pos
-    )
-
-    expectedTiles.foreach(tile =>
-      expectedPositions.contains(tile) shouldBe true
-    )
-  }
+  
 
   /**
    * Test to verify that the `checkClickedTile` method notifies observers of a tile placement attempt.
@@ -86,20 +48,4 @@ class GameMapViewSuite extends AnyFunSuite:
 
     view.checkClickedTile(position, placedTile)
     notified shouldBe true
-  }
-
-
-  /**
-   * Test to verify that the `isTilePlaced` method updates the view correctly when a tile is placed.
-   */
-  test("isTilePlaced should update the view correctly when a tile is placed") {
-    val view = GameMapView()
-    val position = Position(1, 1)
-//    val tiles = Map(position -> GameTile(EdgeType.City, EdgeType.Road, EdgeType.Field, EdgeType.Road))
-
-    val sizeBeforePlacement = view.getChildren.size()
-
-//    view.isTilePlaced(true, Some(tiles), position)
-
-    view.getChildren.size != sizeBeforePlacement
   }

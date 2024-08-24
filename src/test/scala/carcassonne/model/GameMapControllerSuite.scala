@@ -33,9 +33,9 @@ class GameMapControllerSuite extends AnyFunSuite:
     val view = GameMapView()
     val controller = GameMapController(model, view)
     val position = Position(1, 1)
-//    val gameTile = GameTile(EdgeType.City, EdgeType.Road, EdgeType.Field, EdgeType.Road)
+    val gameTile = GameTile(EdgeType.City, EdgeType.Road, EdgeType.Field, EdgeType.Road, Map(), "test.png")
 
-//    controller.placeTile(gameTile, position)
+    controller.placeTile(gameTile, position)
     map.getTileMap.get.contains(position) shouldBe true
   }
 
@@ -48,8 +48,8 @@ class GameMapControllerSuite extends AnyFunSuite:
     val view = GameMapView()
     val controller = GameMapController(model, view)
     val position = Position(1, 1)
-//    val gameTile = GameTile(EdgeType.City, EdgeType.Road, EdgeType.Field, EdgeType.Road)
+    val gameTile = GameTile(EdgeType.City, EdgeType.Road, EdgeType.Field, EdgeType.Road, Map(), "test.png")
 
-//    controller.receiveTilePlacementAttempt(gameTile, position)
+    controller.receiveTilePlacementAttempt(gameTile, position)
     map.getTileMap.get.contains(position) shouldBe true
   }
