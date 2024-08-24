@@ -45,15 +45,20 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
    */
   def placeTile(position: Position, placedTile: Region, tiles: Map[Position, GameTile]): Unit =
     _lastPositionTilePlaced = position
+    val placedGameTile = tiles(position)
+    val imageView = new ImageView(new Image(getClass.getResource("../../tiles/" + placedGameTile.imgPath).toExternalForm))
+    imageView.fitWidth = 100
+    imageView.fitHeight = 100
+    imageView.preserveRatio = true
+
     placedTile.styleClass.clear()
-    placedTile.styleClass += "placedTile"
     placedTile.onMouseClicked = null
     // Remove the old placeholder
     this.getChildren.removeIf(node =>
       getColumnIndex(node) == position.x && getRowIndex(node) == position.y
     )
     // Replace the tile that has been just removed with new attributes
-    this.add(placedTile, position.x, position.y)
+    this.add(imageView, position.x, position.y)
 
   /**
    * Creates new placeholder tiles around the last placed tile.
@@ -112,7 +117,6 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
   override def tileDrawn(tileDrawn: GameTile): Unit =
     _drawnTile = tileDrawn
     drawnTilePane.getChildren.clear()
-    println()
     val imageView = new ImageView(new Image(getClass.getResource("../../tiles/" + tileDrawn.imgPath).toExternalForm))
     imageView.fitWidth = 100
     imageView.fitHeight = 100
