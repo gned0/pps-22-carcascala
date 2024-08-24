@@ -76,42 +76,17 @@ class TileDeck {
     val source = Source.fromFile(configFilePath)
     val jsonString = try source.mkString finally source.close()
 
-//    println(Json.parse(jsonString))
-
-    // Parse the JSON string
     val json: JsValue = Json.parse(jsonString)
 
-//    println(json)
-
-    // Convert the JSON to a list of GameTile objects
     val tilesResult: JsResult[List[GameTile]] = json.validate[List[GameTile]]
-    println(tilesResult)
 
     tilesResult match {
       case JsSuccess(tiles, _) =>
-        println("Successfully parsed tiles:")
-        tiles.foreach(println)
+        this.tiles = tiles
 
       case JsError(errors) =>
-        println("Failed to parse tiles:")
-        errors.foreach(println)
+        Logger.log(s"TILEDECK", s"Failed to parse tiles:")
     }
-//    println(tilesResult)
-
-//    // Parse the JSON into a list of TileConfig
-//    val tileConfigs = Json.parse(jsonString).as[List[TileConfig]]
-//
-//    // Convert TileConfig to GameTile and populate the deck
-//    tiles = tileConfigs.map { config =>
-//      GameTile(
-//        EdgeType.valueOf(config.north),
-//        EdgeType.valueOf(config.east),
-//        EdgeType.valueOf(config.south),
-//        EdgeType.valueOf(config.west),
-//        config.meeplePositions,
-//        config.imgPath
-//      )
-//    }
     Logger.log(s"TILEDECK", s"Deck initiliazed")
   }
 
