@@ -1,5 +1,17 @@
 [
-  {"north": "City", "east": "Road", "south": "Field", "west": "Road"},
-  {"north": "Field", "east": "City", "south": "Field", "west": "Road"},
-  {"north": "Road", "east": "Road", "south": "Field", "west": "Field"}
+  {"north": "City", "east": "Road", "south": "Field", "west": "Road", "matrix":  {
+    "NW": "Field", "N": "City", "NE": "Field",
+    "W": "Road", "C": "Road", "E": "Road",
+    "SW": "Field", "S": "Field", "SE": "Field"
+  }},
+  {"north": "Field", "east": "Road", "south": "Field", "west": "Road", "matrix":  {
+    "NW": "Field", "N": "Field", "NE": "Field",
+    "W": "Road", "C": "Road", "E": "Road",
+    "SW": "Field", "S": "Field", "SE": "Field"
+  }},
+  {"north": "Field", "east": "Field", "south": "Road", "west": "Road", "matrix":  {
+    "NW": "Field", "N": "Field", "NE": "Field",
+    "W": "Road", "C": "Road", "E": "Field",
+    "SW": "Field", "S": "Road", "SE": "Field"
+  }}
 ]
