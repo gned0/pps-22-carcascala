@@ -6,7 +6,7 @@ import play.api.libs.json.{Json, OFormat}
 import scala.io.Source
 import scala.util.Random
 
-private case class TileConfig(north: String, east: String, south: String, west: String)
+private case class TileConfig(north: String, east: String, south: String, west: String, meeplePositions: Map[String, String])
 
 object TileConfig {
   implicit val format: OFormat[TileConfig] = Json.format[TileConfig]
@@ -80,7 +80,8 @@ class TileDeck {
         EdgeType.valueOf(config.north),
         EdgeType.valueOf(config.east),
         EdgeType.valueOf(config.south),
-        EdgeType.valueOf(config.west)
+        EdgeType.valueOf(config.west),
+        config.meeplePositions
       )
     }
     Logger.log(s"TILEDECK", s"Deck initiliazed")

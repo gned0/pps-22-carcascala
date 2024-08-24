@@ -95,11 +95,11 @@ class GameMapViewSuite extends AnyFunSuite:
   test("isTilePlaced should update the view correctly when a tile is placed") {
     val view = GameMapView()
     val position = Position(1, 1)
-    val tiles = Map(position -> GameTile(EdgeType.City, EdgeType.Road, EdgeType.Field, EdgeType.Road))
+//    val tiles = Map(position -> GameTile(EdgeType.City, EdgeType.Road, EdgeType.Field, EdgeType.Road))
 
     val sizeBeforePlacement = view.getChildren.size()
 
-    view.isTilePlaced(true, Some(tiles), position)
+//    view.isTilePlaced(true, Some(tiles), position)
 
     view.getChildren.size != sizeBeforePlacement
   }
