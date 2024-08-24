@@ -2,13 +2,15 @@ package carcassonne.view
 
 import carcassonne.model.{GameMatch, GameTile, Position}
 import carcassonne.observers.{ObserverGameMatch, SubjectGameView}
+import carcassonne.util.Logger
 import javafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}
 import scalafx.geometry.Pos
 import scalafx.scene.input.{MouseButton, MouseEvent}
-import scalafx.scene.layout.{GridPane, Region, VBox}
+import scalafx.scene.layout.{GridPane, HBox, Region, VBox}
 import scalafx.scene.text.Text
 import scalafx.Includes.*
 import scalafx.event.EventIncludes.eventClosureWrapperWithParam
+import scalafx.scene.control.Button
 import scalafx.scene.image.{Image, ImageView}
 
 
@@ -21,7 +23,15 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
   private val mapSize = 5 // 5x5 grid for simplicity
   private var _lastPositionTilePlaced: Position = Position(0, 0)
   private var _lastTilePlaced: Region = new Region()
+
   private var _drawnTile: GameTile = GameTile.startTile
+  private var _drawnTileImage: ImageView = ImageView(new Image(getClass.getResource("../../tiles/" + GameTile.startTile.imgPath).toExternalForm))
+
+  private val rotateClockwise = Button("Clockwise")
+  rotateClockwise.onMouseClicked = _ => rotateDrawnTileClockwise()
+
+  private val rotateCounterClockwise = Button("Counter Clockwise")
+  rotateCounterClockwise.onMouseClicked = _ => rotateDrawnTileCounterClockwise()
 
   private val drawnTilePane = GridPane()
   drawnTilePane.alignment = Pos.CenterRight
@@ -46,10 +56,6 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
   def placeTile(position: Position, placedTile: Region, tiles: Map[Position, GameTile]): Unit =
     _lastPositionTilePlaced = position
     val placedGameTile = tiles(position)
-    val imageView = new ImageView(new Image(getClass.getResource("../../tiles/" + placedGameTile.imgPath).toExternalForm))
-    imageView.fitWidth = 100
-    imageView.fitHeight = 100
-    imageView.preserveRatio = true
 
     placedTile.styleClass.clear()
     placedTile.onMouseClicked = null
@@ -58,7 +64,7 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
       getColumnIndex(node) == position.x && getRowIndex(node) == position.y
     )
     // Replace the tile that has been just removed with new attributes
-    this.add(imageView, position.x, position.y)
+    this.add(_drawnTileImage, position.x, position.y)
 
   /**
    * Creates new placeholder tiles around the last placed tile.
@@ -100,6 +106,18 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
     _lastTilePlaced = placedTile
     notifyTilePlacementAttempt(_drawnTile, position)
 
+  def rotateDrawnTileClockwise(): Unit =
+    _drawnTile = _drawnTile.rotateClockwise
+    _drawnTileImage.rotate = _drawnTileImage.getRotate + 90
+    println(_drawnTile)
+    Logger.log(s"VIEW", "Drawn tile rotated clockwise")
+
+  def rotateDrawnTileCounterClockwise(): Unit =
+    _drawnTile = _drawnTile.rotateCounterClockwise
+    _drawnTileImage.rotate = _drawnTileImage.getRotate - 90
+    println(_drawnTile)
+    Logger.log(s"VIEW", "Drawn tile rotated counter clockwise")
+
   /**
    * Returns the position of the last placed tile.
    * @return the position of the last placed tile
@@ -117,16 +135,16 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
   override def tileDrawn(tileDrawn: GameTile): Unit =
     _drawnTile = tileDrawn
     drawnTilePane.getChildren.clear()
-    val imageView = new ImageView(new Image(getClass.getResource("../../tiles/" + tileDrawn.imgPath).toExternalForm))
-    imageView.fitWidth = 100
-    imageView.fitHeight = 100
-    imageView.preserveRatio = true
+    _drawnTileImage = new ImageView(new Image(getClass.getResource("../../tiles/" + tileDrawn.imgPath).toExternalForm))
+    _drawnTileImage.fitWidth = 100
+    _drawnTileImage.fitHeight = 100
+    _drawnTileImage.preserveRatio = true
 
     drawnTilePane.add(new Text(s"North Border: \n${tileDrawn.north}"), 10, 10)
     drawnTilePane.add(new Text(s"East Border: \n${tileDrawn.east}"), 11, 11)
     drawnTilePane.add(new Text(s"South Border: \n${tileDrawn.south}"), 10, 12)
     drawnTilePane.add(new Text(s"West Border: \n${tileDrawn.west}"), 9, 11)
-    drawnTilePane.add(imageView, 10, 11)
+    drawnTilePane.add(_drawnTileImage, 10, 11)
 
   def addDrawnTilePane(): Unit =
     val menuColumn = new VBox {
@@ -135,7 +153,13 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
 
       // Add some example buttons to the menu
       children = Seq(
-        drawnTilePane
+        drawnTilePane,
+        new HBox {
+          children = Seq(
+            rotateClockwise,
+            rotateCounterClockwise
+          )
+        }
       )
     }
     menuColumn.alignment = Pos.TopLeft

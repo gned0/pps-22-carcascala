@@ -22,7 +22,38 @@ case class GameTile(north: EdgeType,
    *
    * @return A new `GameTile` instance with edges rotated clockwise.
    */
-  def rotate: GameTile = GameTile(west, north, east, south,  meeplePositions, imgPath)
+  def rotateClockwise: GameTile = GameTile(west, north, east, south, rotateMatrixClockwise(meeplePositions), imgPath)
+
+  def rotateCounterClockwise: GameTile = GameTile(east, south, west, north, rotateMatrixCounterClockwise(meeplePositions), imgPath)
+
+  private def rotateMatrixClockwise(matrix: Map[String, String]): Map[String, String] = {
+    Map(
+      "NW" -> matrix("SW"),
+      "N" -> matrix("W"),
+      "NE" -> matrix("NW"),
+      "W" -> matrix("S"),
+      "C" -> matrix("C"),
+      "E" -> matrix("N"),
+      "SW" -> matrix("NE"),
+      "S" -> matrix("E"),
+      "SE" -> matrix("NE")
+    )
+  }
+
+  private def rotateMatrixCounterClockwise(matrix: Map[String, String]): Map[String, String] = {
+    Map(
+      "NW" -> matrix("NE"),
+      "N" -> matrix("E"),
+      "NE" -> matrix("SE"),
+      "W" -> matrix("N"),
+      "C" -> matrix("C"),
+      "E" -> matrix("S"),
+      "SW" -> matrix("NW"),
+      "S" -> matrix("W"),
+      "SE" -> matrix("SW")
+    )
+  }
+
 
 object GameTile:
   implicit val gameTileFormat: Format[GameTile] = new Format[GameTile] {
