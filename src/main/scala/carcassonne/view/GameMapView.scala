@@ -9,6 +9,7 @@ import scalafx.scene.layout.{GridPane, Region, VBox}
 import scalafx.scene.text.Text
 import scalafx.Includes.*
 import scalafx.event.EventIncludes.eventClosureWrapperWithParam
+import scalafx.scene.image.{Image, ImageView}
 
 
 /**
@@ -111,14 +112,21 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
   override def tileDrawn(tileDrawn: GameTile): Unit =
     _drawnTile = tileDrawn
     drawnTilePane.getChildren.clear()
+    println()
+    val imageView = new ImageView(new Image(getClass.getResource("../../tiles/" + tileDrawn.imgPath).toExternalForm))
+    imageView.fitWidth = 100
+    imageView.fitHeight = 100
+    imageView.preserveRatio = true
+
     drawnTilePane.add(new Text(s"North Border: \n${tileDrawn.north}"), 10, 10)
     drawnTilePane.add(new Text(s"East Border: \n${tileDrawn.east}"), 11, 11)
     drawnTilePane.add(new Text(s"South Border: \n${tileDrawn.south}"), 10, 12)
     drawnTilePane.add(new Text(s"West Border: \n${tileDrawn.west}"), 9, 11)
+    drawnTilePane.add(imageView, 10, 11)
 
   def addDrawnTilePane(): Unit =
     val menuColumn = new VBox {
-      prefWidth = 200 // Fixed width for the menu column
+      prefWidth = 250 // Fixed width for the menu column
       style = "-fx-background-color: darkgray;" // Background color for the menu column
 
       // Add some example buttons to the menu
@@ -126,6 +134,7 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
         drawnTilePane
       )
     }
+    menuColumn.alignment = Pos.TopLeft
     this.getScene.getChildren.add(menuColumn)
 
   /**

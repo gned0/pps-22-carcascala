@@ -92,7 +92,7 @@ object CarcassonneApp extends JFXApp3:
 
     stage = new JFXApp3.PrimaryStage:
       title = "Carcassonne Map"
-      scene = new Scene(800, 600):
+      scene = new Scene(850, 600):
         stylesheets.add(getClass.getResource("../placeholderTile.css").toExternalForm)
         root = containerPane
 
