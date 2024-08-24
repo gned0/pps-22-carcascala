@@ -76,7 +76,10 @@ class GameMapSuite extends AnyFunSuite with Matchers:
     val position1 = Position(0, 0)
     map.placeTile(tile1, position1)
 
-    val tile2 = GameTile(EdgeType.Road, EdgeType.City, EdgeType.Field, EdgeType.Road, Map(), "test.png").rotate.rotate
+    val tile2 = GameTile(EdgeType.Road, EdgeType.City, EdgeType.Field, EdgeType.Road, Map(    
+      "NW" -> "Field", "N" -> "Field", "NE" -> "Field",
+      "W" -> "Road", "C" -> "Road", "E" -> "Road",
+      "SW" -> "Field", "S" -> "Field", "SE" -> "Field"), "test.png").rotateClockwise.rotateClockwise
     val position2 = Position(0, 1) // South of position1, requires double rotation to match
 
     noException should be thrownBy map.placeTile(tile2, position2)

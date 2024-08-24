@@ -15,8 +15,11 @@ class GameTileSuite extends AnyFunSuite with Matchers:
   }
 
   test("A Tile should rotate correctly") {
-    val tile = GameTile(EdgeType.City, EdgeType.Road, EdgeType.Field, EdgeType.City, Map(), "test.png")
-    val rotatedTile = tile.rotate
+    val tile = GameTile(EdgeType.City, EdgeType.Road, EdgeType.Field, EdgeType.City, Map(    
+      "NW" -> "Field", "N" -> "Field", "NE" -> "Field",
+      "W" -> "Road", "C" -> "Road", "E" -> "Road",
+      "SW" -> "Field", "S" -> "Field", "SE" -> "Field"), "test.png")
+    val rotatedTile = tile.rotateClockwise
     rotatedTile.north shouldBe EdgeType.City
     rotatedTile.east shouldBe EdgeType.City
     rotatedTile.south shouldBe EdgeType.Road
