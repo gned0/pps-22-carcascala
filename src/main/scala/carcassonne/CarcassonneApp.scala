@@ -3,13 +3,13 @@ package carcassonne
 import carcassonne.controller.GameMapController
 import carcassonne.model.{Color, GameMap, GameMatch, Player, TileDeck}
 import carcassonne.view.{GameMapView, StarterView}
-import scalafx.Includes.*
-import scalafx.application.*
-import scalafx.geometry.Insets
+import scalafx.application.JFXApp3
 import scalafx.scene.Scene
 import scalafx.scene.input.{MouseEvent, ScrollEvent}
-import scalafx.scene.layout.{Region, StackPane}
-import carcassonne.model._
+import scalafx.scene.layout.{HBox, Region, StackPane}
+import scalafx.Includes.*
+import scalafx.event.EventIncludes.eventClosureWrapperWithParam
+import scalafx.scene.layout.Priority.Always
 
 /**
  * The main application object for the Carcassonne game.
@@ -27,7 +27,8 @@ object CarcassonneApp extends JFXApp3:
   private val minZoom = 0.5       // Minimum zoom level
   private val maxZoom = 4.0       // Maximum zoom level
 
-  private val containerPane = StackPane()
+  private val containerPane = HBox()
+  private val gameMapView = StackPane()
 
   /**
    * The main entry point for the JavaFX application.
@@ -47,46 +48,51 @@ object CarcassonneApp extends JFXApp3:
 
       game.addObserver(view)
 
-      containerPane.children = view
+
+      gameMapView.children = view
+      containerPane.children = gameMapView
+      HBox.setHgrow(gameMapView, Always)
       game.play()
       view.addDrawnTilePane()
 
     val starterView = StarterView(() => switchToGameView())
 
+
+
     containerPane.children = starterView
 
-    containerPane.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
-    containerPane.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
-    containerPane.setMaxSize(Double.MaxValue, Double.MaxValue)
+    gameMapView.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
+    gameMapView.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
+    gameMapView.setMaxSize(Double.MaxValue, Double.MaxValue)
 
-    containerPane.onMousePressed = (event: MouseEvent) =>
+    gameMapView.onMousePressed = (event: MouseEvent) =>
       initialX = event.sceneX
       initialY = event.sceneY
 
-    containerPane.onMouseDragged = (event: MouseEvent) =>
+    gameMapView.onMouseDragged = (event: MouseEvent) =>
       val offsetX = event.sceneX - initialX
       val offsetY = event.sceneY - initialY
 
-      containerPane.translateX = containerPane.translateX.value + offsetX
-      containerPane.translateY = containerPane.translateY.value + offsetY
+      gameMapView.translateX = gameMapView.translateX.value + offsetX
+      gameMapView.translateY = gameMapView.translateY.value + offsetY
 
       initialX = event.sceneX
       initialY = event.sceneY
 
-    containerPane.onScroll = (event: ScrollEvent) =>
+    gameMapView.onScroll = (event: ScrollEvent) =>
       zoomFactor = if event.deltaY > 0 then
         Math.min(zoomFactor + zoomIncrement, maxZoom) // Zoom in
       else
         Math.max(zoomFactor - zoomIncrement, minZoom) // Zoom out
 
-      containerPane.scaleX = zoomFactor
-      containerPane.scaleY = zoomFactor
+      gameMapView.scaleX = zoomFactor
+      gameMapView.scaleY = zoomFactor
 
       event.consume()
 
     stage = new JFXApp3.PrimaryStage:
       title = "Carcassonne Map"
-      scene = new Scene(600, 600):
+      scene = new Scene(800, 600):
         stylesheets.add(getClass.getResource("../placeholderTile.css").toExternalForm)
         root = containerPane
 
@@ -94,7 +100,7 @@ object CarcassonneApp extends JFXApp3:
    * Returns the container pane.
    * @return the container pane
    */
-  def getContainerPane: StackPane = containerPane
+  def getContainerPane: HBox = containerPane
 
   /**
    * Returns the current zoom factor.

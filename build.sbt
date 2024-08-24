@@ -9,7 +9,7 @@ lazy val root = (project in file("."))
     libraryDependencies += "com.typesafe.play" %% "play-json" % "2.10.0-RC5",
 
       // ScalaFX related dependencies
-    libraryDependencies += "org.scalafx" %% "scalafx" % "16.0.0-R24",
+    libraryDependencies += "org.scalafx" %% "scalafx" % "20.0.0-R31",
     libraryDependencies ++= {
       // Determine OS version of JavaFX binaries
       lazy val osName = System.getProperty("os.name") match {

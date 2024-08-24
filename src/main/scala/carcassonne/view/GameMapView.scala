@@ -1,16 +1,15 @@
 package carcassonne.view
 
-import carcassonne.model.{GameMap, GameMatch, GameTile, Position}
+import carcassonne.model.{GameMatch, GameTile, Position}
 import carcassonne.observers.{ObserverGameMatch, SubjectGameView}
-import scalafx.Includes.*
-import scalafx.application.JFXApp3
-import scalafx.geometry.{Insets, Pos}
-import scalafx.scene.Scene
+import javafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}
+import scalafx.geometry.Pos
 import scalafx.scene.input.{MouseButton, MouseEvent}
-import scalafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}
-import scalafx.scene.layout.{GridPane, Region}
-import scalafx.scene.paint.Color.{Black, Grey}
+import scalafx.scene.layout.{GridPane, Region, VBox}
 import scalafx.scene.text.Text
+import scalafx.Includes.*
+import scalafx.event.EventIncludes.eventClosureWrapperWithParam
+
 
 /**
  * The view for the game map.
@@ -26,6 +25,9 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
   private val drawnTilePane = GridPane()
   drawnTilePane.alignment = Pos.CenterRight
   drawnTilePane.mouseTransparent = true
+
+  this.prefWidth = 600
+  this.prefHeight = 400
 
   this.alignment = Pos.Center
 
@@ -107,7 +109,6 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
   def getDrawnTilePane: Option[GridPane] = Some(drawnTilePane)
 
   override def tileDrawn(tileDrawn: GameTile): Unit =
-//    this.getScene.getChildren.add(drawnTilePane)
     _drawnTile = tileDrawn
     drawnTilePane.getChildren.clear()
     drawnTilePane.add(new Text(s"North Border: \n${tileDrawn.north}"), 10, 10)
@@ -116,7 +117,16 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
     drawnTilePane.add(new Text(s"West Border: \n${tileDrawn.west}"), 9, 11)
 
   def addDrawnTilePane(): Unit =
-    this.getScene.getChildren.add(drawnTilePane)
+    val menuColumn = new VBox {
+      prefWidth = 200 // Fixed width for the menu column
+      style = "-fx-background-color: darkgray;" // Background color for the menu column
+
+      // Add some example buttons to the menu
+      children = Seq(
+        drawnTilePane
+      )
+    }
+    this.getScene.getChildren.add(menuColumn)
 
   /**
    * Called when a tile is placed on the game map.
