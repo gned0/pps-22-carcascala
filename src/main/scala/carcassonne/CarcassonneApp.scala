@@ -36,7 +36,7 @@ object CarcassonneApp extends JFXApp3:
    */
   override def start(): Unit =
     def switchToGameView(): Unit =
-      val view = GameMapView()
+      val view = GameMapView(() => switchToStarterView())
       view.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
       view.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
 
@@ -54,6 +54,10 @@ object CarcassonneApp extends JFXApp3:
       HBox.setHgrow(gameMapView, Always)
       game.play()
       view.addDrawnTilePane()
+
+    def switchToStarterView(): Unit =
+      val starterView = StarterView(() => switchToGameView())
+      containerPane.children = starterView
 
     val starterView = StarterView(() => switchToGameView())
 

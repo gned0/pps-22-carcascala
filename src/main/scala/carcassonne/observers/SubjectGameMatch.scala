@@ -1,6 +1,6 @@
 package carcassonne.observers
 
-import carcassonne.model.{GameTile, Position}
+import carcassonne.model.{GameTile, Player, Position}
 /**
  * A trait representing a subject in the observer pattern for the game map.
  * @tparam S the type of the subject
@@ -35,3 +35,6 @@ trait SubjectGameMatch[S]:
     
   def notifyTileDrawn(tileDrawn: GameTile): Unit =
     observers.foreach(_.tileDrawn(tileDrawn))
+    
+  def notifyGameEnded(players: List[Player]): Unit =
+    observers.foreach(_.gameEnded(players))  

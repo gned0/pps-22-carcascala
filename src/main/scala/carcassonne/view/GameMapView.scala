@@ -1,6 +1,6 @@
 package carcassonne.view
 
-import carcassonne.model.{GameMatch, GameTile, Position}
+import carcassonne.model.{GameMatch, GameTile, Player, Position}
 import carcassonne.observers.{ObserverGameMatch, SubjectGameView}
 import carcassonne.util.Logger
 import javafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}
@@ -18,7 +18,8 @@ import scalafx.scene.image.{Image, ImageView}
  * The view for the game map.
  * This class extends `GridPane` and implements `SubjectGameView` and `ObserverGameMap`.
  */
-class GameMapView extends GridPane with SubjectGameView[GameMapView] with ObserverGameMatch[GameMatch]:
+class GameMapView(onSwitchToStarterView: () => Unit) extends GridPane
+  with SubjectGameView[GameMapView] with ObserverGameMatch[GameMatch]:
 
   private val mapSize = 5 // 5x5 grid for simplicity
   private var _lastPositionTilePlaced: Position = Position(0, 0)
@@ -183,3 +184,7 @@ class GameMapView extends GridPane with SubjectGameView[GameMapView] with Observ
       else
         placeTile(position, getLastTilePlaced.get, tiles)
         createNewPlaceholders(tiles)
+
+  override def gameEnded(players: List[Player]): Unit =
+    GameEndView(players).popupStage.show()
+    onSwitchToStarterView()

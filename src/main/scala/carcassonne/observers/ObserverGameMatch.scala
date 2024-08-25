@@ -1,6 +1,6 @@
 package carcassonne.observers
 
-import carcassonne.model.{GameTile, Position}
+import carcassonne.model.{GameTile, Player, Position}
 /**
  * A trait representing an observer for the game map.
  * @tparam S the type of the subject being observed
@@ -18,3 +18,5 @@ trait ObserverGameMatch[S]:
                    position: Position): Unit
 
   def tileDrawn(tileDrawn: GameTile): Unit
+  
+  def gameEnded(players: List[Player]): Unit

@@ -40,6 +40,7 @@ class GameMatch(players: List[Player], map: GameMap, deck: TileDeck) extends Sub
     takeTurn()
 
   def gameEnded(): Unit =
+    notifyGameEnded(players)
     println("Game over! Final scores:")
     players.foreach(p => println(s"${p.name}: ${p.score}"))
 
