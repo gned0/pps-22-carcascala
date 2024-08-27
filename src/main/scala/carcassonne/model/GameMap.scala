@@ -2,6 +2,7 @@ package carcassonne.model
 
 import carcassonne.observers.SubjectGameMatch
 import carcassonne.util.Logger
+
 /**
  * Represents a position on the game map.
  *
@@ -31,7 +32,7 @@ class GameMap:
 
     if isValidPlacement(tile, position) then
       tiles = tiles + (position -> tile)
-      Logger.log(s"MODEL", s"Tile placed")
+      Logger.log("MODEL", s"Tile placed at $position")
       true
     else
       throw IllegalArgumentException(s"Invalid tile placement at position $position")
@@ -50,7 +51,7 @@ class GameMap:
    *
    * @return An `Option` containing a `Map` of `Position` to `GameTile`.
    */
-  def getTileMap: Option[Map[Position, GameTile]] = Option.apply(this.tiles)
+  def getTileMap: Option[Map[Position, GameTile]] = Option(this.tiles)
 
   /**
    * Validates whether a tile can be placed at the specified position.
@@ -60,13 +61,18 @@ class GameMap:
    * @return `true` if the placement is valid, `false` otherwise.
    */
   private def isValidPlacement(tile: GameTile, position: Position): Boolean =
+    // Define the relative positions of neighboring tiles and the corresponding segments to check
     val neighbors = List(
-      (Position(position.x, position.y - 1), tile.north, (gt: GameTile) => gt.south), // North neighbor
-      (Position(position.x + 1, position.y), tile.east, (gt: GameTile) => gt.west), // East neighbor
-      (Position(position.x, position.y + 1), tile.south, (gt: GameTile) => gt.north), // South neighbor
-      (Position(position.x - 1, position.y), tile.west, (gt: GameTile) => gt.east) // West neighbor
+      (Position(position.x, position.y - 1), TileSegment.N, TileSegment.S), // North neighbor
+      (Position(position.x + 1, position.y), TileSegment.E, TileSegment.W), // East neighbor
+      (Position(position.x, position.y + 1), TileSegment.S, TileSegment.N), // South neighbor
+      (Position(position.x - 1, position.y), TileSegment.W, TileSegment.E)  // West neighbor
     )
 
-    neighbors.forall { case (pos, tileEdge, getNeighborEdge) =>
-      tiles.get(pos).forall(neighborTile => getNeighborEdge(neighborTile) == tileEdge)
+    // Check that for each neighbor, if it exists, the segments match appropriately
+    neighbors.forall { case (pos, tileSegment, neighborSegment) =>
+      tiles.get(pos).forall { neighborTile =>
+        // Compare the segment types of the current tile and the neighbor tile
+        tile.segments(tileSegment) == neighborTile.segments(neighborSegment)
+      }
     }
