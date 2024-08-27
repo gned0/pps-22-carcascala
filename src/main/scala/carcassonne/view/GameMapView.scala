@@ -1,6 +1,6 @@
 package carcassonne.view
 
-import carcassonne.model.{GameMatch, GameTile, Player, Position}
+import carcassonne.model.{GameMatch, GameTile, Player, Position, TileSegment}
 import carcassonne.observers.{ObserverGameMatch, SubjectGameView}
 import carcassonne.util.Logger
 import javafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}
@@ -26,7 +26,7 @@ class GameMapView(onSwitchToStarterView: () => Unit) extends GridPane
   private var _lastTilePlaced: Region = new Region()
 
   private var _drawnTile: GameTile = GameTile.startTile
-  private var _drawnTileImage: ImageView = ImageView(new Image(getClass.getResource("../../tiles/" + GameTile.startTile.imgPath).toExternalForm))
+  private var _drawnTileImage: ImageView = ImageView(new Image(getClass.getResource("../../tiles/" + GameTile.startTile.imagePath).toExternalForm))
 
   private val rotateClockwise = Button("Clockwise")
   rotateClockwise.onMouseClicked = _ => rotateDrawnTileClockwise()
@@ -136,15 +136,15 @@ class GameMapView(onSwitchToStarterView: () => Unit) extends GridPane
   override def tileDrawn(tileDrawn: GameTile): Unit =
     _drawnTile = tileDrawn
     drawnTilePane.getChildren.clear()
-    _drawnTileImage = new ImageView(new Image(getClass.getResource("../../tiles/" + tileDrawn.imgPath).toExternalForm))
+    _drawnTileImage = new ImageView(new Image(getClass.getResource("../../tiles/" + tileDrawn.imagePath).toExternalForm))
     _drawnTileImage.fitWidth = 100
     _drawnTileImage.fitHeight = 100
     _drawnTileImage.preserveRatio = true
 
-    drawnTilePane.add(new Text(s"North Border: \n${tileDrawn.north}"), 10, 10)
-    drawnTilePane.add(new Text(s"East Border: \n${tileDrawn.east}"), 11, 11)
-    drawnTilePane.add(new Text(s"South Border: \n${tileDrawn.south}"), 10, 12)
-    drawnTilePane.add(new Text(s"West Border: \n${tileDrawn.west}"), 9, 11)
+    drawnTilePane.add(new Text(s"North Border: \n${tileDrawn.segments(TileSegment.N)}"), 10, 10)
+    drawnTilePane.add(new Text(s"East Border: \n${tileDrawn.segments(TileSegment.E)}"), 11, 11)
+    drawnTilePane.add(new Text(s"South Border: \n${tileDrawn.segments(TileSegment.S)}"), 10, 12)
+    drawnTilePane.add(new Text(s"West Border: \n${tileDrawn.segments(TileSegment.W)}"), 9, 11)
     drawnTilePane.add(_drawnTileImage, 10, 11)
 
   def addDrawnTilePane(): Unit =
