@@ -35,7 +35,7 @@ case class GameTile(
                    ):
 
   // Initialize followerMap as an empty map by default
-  private var followerMap: Map[TileSegment, Int] = Map.empty
+  var followerMap: Map[TileSegment, Int] = Map.empty
 
   /**
    * Rotates the tile 90 degrees clockwise.
@@ -79,6 +79,7 @@ case class GameTile(
       TileSegment.S  -> matrix.getOrElse(TileSegment.W, SegmentType.Field),
       TileSegment.SE -> matrix.getOrElse(TileSegment.SW, SegmentType.Field)
     )
+
 
 object GameTile:
 

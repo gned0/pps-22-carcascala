@@ -1,5 +1,6 @@
 package carcassonne.model
 
+import carcassonne.model.TileSegment.N
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 import play.api.libs.json.Json

@@ -22,6 +22,14 @@
       "SW": "Field", "S": "Road", "SE": "Field"
     },
     "imagePath": "CurvedRoad.png"
+  },
+  {
+    "segments": {
+      "NW": "City", "N": "City", "NE": "City",
+      "W": "City", "C": "City", "E": "City",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "CityOneSideField.png"
   }
 ]
 
