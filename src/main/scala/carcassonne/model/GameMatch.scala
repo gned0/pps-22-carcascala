@@ -67,11 +67,6 @@ class GameMatch(players: List[Player], map: CarcassonneBoard, deck: TileDeck) ex
 //      roadSegments.size * 1
 //    else 0
 //
-//  private def calculateCityPoints(meepleSegment: TileSegment, gameTile: GameTile): Int =
-//    if isCityFeatureComplete(meepleSegment, gameTile) then
-//      citySegments.size * 2
-//    else 0
-//
 //  private def calculateFieldPoints(gameTile: GameTile, adjacentTiles: Map[TileSegment, GameTile]): Int =
 //    val fieldSegments = gameTile.segments.filter(_._2 == SegmentType.Field).keys.toList
 //
@@ -82,7 +77,7 @@ class GameMatch(players: List[Player], map: CarcassonneBoard, deck: TileDeck) ex
   def calculateCityPoints(meepleSegment: TileSegment, position: Position): Int =
     (recursiveCityPointsCalculation(meepleSegment, position) + 1) * 2
 
-  def recursiveCityPointsCalculation(meepleSegment: TileSegment, position: Position): Int =
+  private def recursiveCityPointsCalculation(meepleSegment: TileSegment, position: Position): Int =
 
     @tailrec
     def helper(segmentsToCheck: List[(TileSegment, Position)], acc: Int): Int =
@@ -102,18 +97,17 @@ class GameMatch(players: List[Player], map: CarcassonneBoard, deck: TileDeck) ex
             case TileSegment.W => TileSegment.E
             case TileSegment.E => TileSegment.W
             case _ => segment
-  
-          if map.getTileMap.get.contains(checkTilePosition) then
-            val tile = map.getTileMap.get(checkTilePosition)
-            if tile.segments(cityOrientation) == SegmentType.City && tile.segments(TileSegment.C) != SegmentType.City then
+
+          map.getTileMap.get.get(checkTilePosition) match
+            case Some(tile) if tile.segments(cityOrientation) == SegmentType.City && tile.segments(TileSegment.C) != SegmentType.City =>
               helper(tail, acc + 1)
-            else
+            case Some(tile) =>
               val newSegments = tile.segments.collect {
                 case (seg, SegmentType.City) if List(TileSegment.N, TileSegment.S, TileSegment.W, TileSegment.E).contains(seg) && seg != cityOrientation =>
                   (seg, checkTilePosition)
               }.toList
               helper(newSegments ++ tail, acc + 1)
-          else
-            helper(tail, acc)
+            case None =>
+              helper(tail, acc)
             
     helper(List((meepleSegment, position)), 0)
