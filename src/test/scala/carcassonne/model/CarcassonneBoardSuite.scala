@@ -3,10 +3,10 @@ package carcassonne.model
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 
-class GameMapSuite extends AnyFunSuite with Matchers {
+class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
 
   test("A tile can be placed on an empty map") {
-    val map = new GameMap()
+    val map = new CarcassonneBoard()
     val tile = GameTile(
       Map(
         TileSegment.N -> SegmentType.City,
@@ -28,7 +28,7 @@ class GameMapSuite extends AnyFunSuite with Matchers {
   }
 
   test("A tile cannot be placed on an occupied position") {
-    val map = new GameMap()
+    val map = new CarcassonneBoard()
     val tile1 = GameTile(
       Map(
         TileSegment.N -> SegmentType.City,
@@ -64,7 +64,7 @@ class GameMapSuite extends AnyFunSuite with Matchers {
   }
 
   test("A tile can be placed next to an existing tile with matching edges") {
-    val map = new GameMap()
+    val map = new CarcassonneBoard()
     val tile1 = GameTile(
       Map(
         TileSegment.N -> SegmentType.City,
@@ -99,7 +99,7 @@ class GameMapSuite extends AnyFunSuite with Matchers {
   }
 
   test("A tile cannot be placed next to an existing tile with mismatching edges") {
-    val map = new GameMap()
+    val map = new CarcassonneBoard()
     val tile1 = GameTile(
       Map(
         TileSegment.N -> SegmentType.City,

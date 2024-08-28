@@ -1,7 +1,7 @@
 package carcassonne
 
 import carcassonne.controller.GameMapController
-import carcassonne.model.{Color, GameMap, GameMatch, Player, TileDeck}
+import carcassonne.model.{Color, CarcassonneBoard, GameMatch, Player, TileDeck}
 import carcassonne.view.{GameMapView, StarterView}
 import scalafx.application.JFXApp3
 import scalafx.scene.Scene
@@ -41,7 +41,7 @@ object CarcassonneApp extends JFXApp3:
       view.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
 
       val deck = TileDeck()
-      val map = GameMap()
+      val map = CarcassonneBoard()
       val game = GameMatch(List(Player(0, "test", 0, 0, Color.Red), Player(1, "test2", 0, 0, Color.Blue)), map, TileDeck())
       val controller = GameMapController(game, view)
       controller.initialize()
