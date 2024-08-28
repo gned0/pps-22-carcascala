@@ -3,14 +3,15 @@ package carcassonne.model
 import carcassonne.util.Logger
 
 /**
- * Represents the game map, which holds the placed tiles.
+ * Represents the game map, which holds the placed tiles and manages the graph of tile connections.
  *
- * This class extends `GameBoard[GameTile]`, meaning it can manage a board of tiles.
+ * This class extends `GameBoard[GameTile]` and `Graph[Position]`, meaning it can manage a board of tiles
+ * and handle graph-related operations for connected regions.
  */
-class CarcassonneBoard extends GameBoard[GameTile]:
+class CarcassonneBoard extends GameBoard[GameTile] with Graph[Position]:
 
   /**
-   * Places a tile on the map at the specified position.
+   * Places a tile on the map at the specified position and updates the graph structure.
    *
    * @param tile The `GameTile` to place.
    * @param position The `Position` where the tile should be placed.
@@ -23,9 +24,34 @@ class CarcassonneBoard extends GameBoard[GameTile]:
     if isValidPlacement(tile, position) then
       placeElement(tile, position)
       Logger.log("MODEL", s"Tile placed at $position")
+
+      addNode(position)
+
+      updateGraphEdges(tile, position)
       true
     else
       throw IllegalArgumentException(s"Invalid tile placement at position $position")
+
+  /**
+   * Updates the graph edges based on the neighboring positions and tile segments.
+   *
+   * @param tile The `GameTile` that has just been placed.
+   * @param position The `Position` where the tile is placed.
+   */
+  private def updateGraphEdges(tile: GameTile, position: Position): Unit =
+    val neighbors = List(
+      (Position(position.x, position.y - 1), TileSegment.N, TileSegment.S), // North neighbor
+      (Position(position.x + 1, position.y), TileSegment.E, TileSegment.W), // East neighbor
+      (Position(position.x, position.y + 1), TileSegment.S, TileSegment.N), // South neighbor
+      (Position(position.x - 1, position.y), TileSegment.W, TileSegment.E)  // West neighbor
+    )
+
+    neighbors.foreach { case (neighborPos, tileSegment, neighborSegment) =>
+      getElement(neighborPos).foreach { neighborTile =>
+        if tile.segments(tileSegment) == neighborTile.segments(neighborSegment) then
+          addEdge(position, neighborPos)
+      }
+    }
 
   /**
    * Validates whether a tile can be placed at the specified position.
@@ -42,10 +68,8 @@ class CarcassonneBoard extends GameBoard[GameTile]:
       (Position(position.x - 1, position.y), TileSegment.W, TileSegment.E)  // West neighbor
     )
 
-    // Check that for each neighbor, if it exists, the segments match appropriately
     neighbors.forall { case (pos, tileSegment, neighborSegment) =>
       getElement(pos).forall { neighborTile =>
-        // Compare the segment types of the current tile and the neighbor tile
         tile.segments(tileSegment) == neighborTile.segments(neighborSegment)
       }
     }
