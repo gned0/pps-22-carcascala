@@ -1,7 +1,9 @@
 package carcassonne.model
 
 import carcassonne.observers.SubjectGameMatch
-import carcassonne.model.TileSegment.{N, S, W, E, C}
+import carcassonne.model.TileSegment.{C, E, N, S, W}
+
+import scala.annotation.tailrec
 
 object GameMatch:
   private val MinPlayers = 2
@@ -81,34 +83,37 @@ class GameMatch(players: List[Player], map: CarcassonneBoard, deck: TileDeck) ex
     (recursiveCityPointsCalculation(meepleSegment, position) + 1) * 2
 
   def recursiveCityPointsCalculation(meepleSegment: TileSegment, position: Position): Int =
-    val lastTilePosition = position
-    var checkTilePosition = Position(0, 0)
-    var cityOrientation = N
-    meepleSegment match
-      case N =>
-        checkTilePosition = Position(lastTilePosition.x, lastTilePosition.y - 1)
-        cityOrientation = S
-      case S =>
-        checkTilePosition = Position(lastTilePosition.x, lastTilePosition.y + 1)
-        cityOrientation = N
-      case W =>
-        checkTilePosition = Position(lastTilePosition.x - 1, lastTilePosition.y)
-        cityOrientation = E
-      case E =>
-        checkTilePosition = Position(lastTilePosition.x + 1, lastTilePosition.y)
-        cityOrientation = W
 
-    if map.getTileMap.get.contains(checkTilePosition) then
-      if map.getTileMap.get(checkTilePosition).segments(cityOrientation) == SegmentType.City
-        && map.getTileMap.get(checkTilePosition).segments(C) != SegmentType.City then
-        return 1
-      else
-        val numPoints = map.getTile(checkTilePosition).
-          get.segments.
-          filter(segment => segment._2 == SegmentType.City &&
-            List(N, S, W, E).contains(segment._1) &&
-            segment._1 != cityOrientation).
-          map(element => recursiveCityPointsCalculation(element._1, checkTilePosition)).sum
-        return numPoints + 1
-
-    -1
+    @tailrec
+    def helper(segmentsToCheck: List[(TileSegment, Position)], acc: Int): Int =
+      segmentsToCheck match
+        case Nil => acc
+        case (segment, pos) :: tail =>
+          val checkTilePosition = segment match
+            case TileSegment.N => Position(pos.x, pos.y - 1)
+            case TileSegment.S => Position(pos.x, pos.y + 1)
+            case TileSegment.W => Position(pos.x - 1, pos.y)
+            case TileSegment.E => Position(pos.x + 1, pos.y)
+            case _ => pos
+  
+          val cityOrientation = segment match
+            case TileSegment.N => TileSegment.S
+            case TileSegment.S => TileSegment.N
+            case TileSegment.W => TileSegment.E
+            case TileSegment.E => TileSegment.W
+            case _ => segment
+  
+          if map.getTileMap.get.contains(checkTilePosition) then
+            val tile = map.getTileMap.get(checkTilePosition)
+            if tile.segments(cityOrientation) == SegmentType.City && tile.segments(TileSegment.C) != SegmentType.City then
+              helper(tail, acc + 1)
+            else
+              val newSegments = tile.segments.collect {
+                case (seg, SegmentType.City) if List(TileSegment.N, TileSegment.S, TileSegment.W, TileSegment.E).contains(seg) && seg != cityOrientation =>
+                  (seg, checkTilePosition)
+              }.toList
+              helper(newSegments ++ tail, acc + 1)
+          else
+            helper(tail, acc)
+            
+    helper(List((meepleSegment, position)), 0)
