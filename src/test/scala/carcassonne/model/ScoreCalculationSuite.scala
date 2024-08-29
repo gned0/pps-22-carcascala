@@ -10,8 +10,8 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
   test("Test calculate City points") {
     val deck = TileDeck()
     val map = CarcassonneBoard()
-    val player1 = Player(0, "test", 0, 0, Color.Red)
-    val player2 = Player(1, "test2", 0, 0, Color.Blue)
+    val player1 = Player(0, "test", Color.Red)
+    val player2 = Player(1, "test2", Color.Blue)
     val game = GameMatch(List(player1, player2), map, TileDeck())
 
     val tile = GameTile.startTile
@@ -45,8 +45,8 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
   test("Test calculate Road points") {
     val deck = TileDeck()
     val map = CarcassonneBoard()
-    val player1 = Player(0, "test", 0, 0, Color.Red)
-    val player2 = Player(1, "test2", 0, 0, Color.Blue)
+    val player1 = Player(0, "test", Color.Red)
+    val player2 = Player(1, "test2", Color.Blue)
     val game = GameMatch(List(player1, player2), map, TileDeck())
 
     val tile = GameTile.startTile
@@ -75,8 +75,8 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
   test("Test calculate circular Road points") {
     val deck = TileDeck()
     val map = CarcassonneBoard()
-    val player1 = Player(0, "test", 0, 0, Color.Red)
-    val player2 = Player(1, "test2", 0, 0, Color.Blue)
+    val player1 = Player(0, "test", Color.Red)
+    val player2 = Player(1, "test2", Color.Blue)
     val game = GameMatch(List(player1, player2), map, TileDeck())
 
     val tile = GameTile.startTile

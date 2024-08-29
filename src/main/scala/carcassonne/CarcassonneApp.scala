@@ -42,7 +42,7 @@ object CarcassonneApp extends JFXApp3:
 
       val deck = TileDeck()
       val map = CarcassonneBoard()
-      val game = GameMatch(List(Player(0, "test", 0, 0, Color.Red), Player(1, "test2", 0, 0, Color.Blue)), map, TileDeck())
+      val game = GameMatch(List(Player(0, "test", Color.Red), Player(1, "test2", Color.Blue)), map, TileDeck())
       val controller = GameMapController(game, view)
       controller.initialize()
 
