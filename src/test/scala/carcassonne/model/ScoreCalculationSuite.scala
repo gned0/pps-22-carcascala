@@ -39,7 +39,7 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
 
 
     game.placeMeeple(tile, TileSegment.N, player1)
-    game.calculateCityPoints(TileSegment.N, Position(10, 10)) shouldBe 12
+    ScoreCalculator().calculateCityPoints(TileSegment.N, Position(10, 10), map) shouldBe 12
   }
 
   test("Test calculate Road points") {
@@ -69,8 +69,7 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
     game.placeTile(tile2.rotateCounterClockwise, Position(9, 10))
 
     game.placeMeeple(tile, TileSegment.C, player1)
-    game.calculateRoadPoints(TileSegment.C, Position(10, 10)) shouldBe 3
-    println(game.calculateRoadPoints(TileSegment.C, Position(10, 10)))
+    ScoreCalculator().calculateRoadPoints(TileSegment.C, Position(10, 10), map) shouldBe 3
   }
 
   test("Test calculate circular Road points") {
@@ -106,7 +105,7 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
     game.placeTile(tile2.rotateCounterClockwise, Position(9, 8))
 
     game.placeMeeple(tile, TileSegment.C, player1)
-    game.calculateRoadPoints(TileSegment.C, Position(10, 10)) shouldBe 8
+    ScoreCalculator().calculateRoadPoints(TileSegment.C, Position(10, 10), map) shouldBe 8
   }
 
   test("Test calculate Field points") {
@@ -137,17 +136,10 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
     game.placeTile(tile.rotateClockwise.rotateClockwise, Position(11, 10))
 
     game.placeTile(tile, Position(12, 10))
-//    game.placeTile(tile.rotateClockwise.rotateClockwise, Position(12, 9))
+    game.placeTile(tile.rotateClockwise.rotateClockwise, Position(12, 9))
 
-
-    //
-//    game.placeTile(tile2.rotateClockwise, Position(11, 10))
-//    game.placeTile(tile2, Position(11, 8))
-//    game.placeTile(tile2.rotateClockwise.rotateClockwise, Position(9, 10))
-//    game.placeTile(tile2.rotateCounterClockwise, Position(9, 8))
-//
     game.placeMeeple(tile, TileSegment.NE, player1)
-    println(game.calculateFieldPoints(TileSegment.NE, Position(10, 10)))
+    ScoreCalculator().calculateFieldPoints(TileSegment.NE, Position(10, 10), map) shouldBe 6
   }
 
 
