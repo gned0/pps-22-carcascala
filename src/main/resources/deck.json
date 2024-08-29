@@ -17,19 +17,27 @@
   },
   {
     "segments": {
-      "NW": "Field", "N": "Field", "NE": "Field",
-      "W": "Road", "C": "Road", "E": "Field",
-      "SW": "Field", "S": "Road", "SE": "Field"
-    },
-    "imagePath": "CurvedRoad.png"
-  },
-  {
-    "segments": {
       "NW": "City", "N": "City", "NE": "City",
       "W": "City", "C": "City", "E": "City",
       "SW": "Field", "S": "Field", "SE": "Field"
     },
     "imagePath": "CityOneSideField.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Field", "C": "RoadEnd", "E": "Field",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "RoadEnd.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Road", "C": "Road", "E": "Field",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "RoadCurve.png"
   }
 ]
 

@@ -74,6 +74,61 @@ class GameMatch(players: List[Player], map: CarcassonneBoard, deck: TileDeck) ex
 //      adjacentTiles.get(pos).exists(_.segments(pos) == SegmentType.City)
 //    } * 3
 
+  def calculateRoadPoints(meepleSegment: TileSegment, position: Position): Int =
+    recursiveRoadPointsCalculation(meepleSegment, position) + 1
+
+  private def recursiveRoadPointsCalculation(meepleSegment: TileSegment, position: Position): Int =
+    val originalPos = position
+    var exploredPositions: List[Position] = List.empty
+    
+    @tailrec
+    def helper(segmentsToCheck: List[(TileSegment, Position)], acc: Int): Int =
+      segmentsToCheck match
+        case Nil => acc
+        case (segment, pos) :: tail =>
+
+          val tilesToCheck: List[(TileSegment, Position)] =
+              List(
+              (TileSegment.N, Position(pos.x, pos.y - 1)),
+              (TileSegment.S, Position(pos.x, pos.y + 1)),
+              (TileSegment.W, Position(pos.x - 1, pos.y)),
+              (TileSegment.E, Position(pos.x + 1, pos.y))
+            ).filter { case (seg, checkPos) =>
+              map.getTileMap.get.get(pos).exists(_.segments(seg) == SegmentType.Road 
+                && !exploredPositions.contains(checkPos))
+            }.map((seg, pos) => seg match
+              case TileSegment.N => (TileSegment.S, pos)
+              case TileSegment.S => (TileSegment.N, pos)
+              case TileSegment.W => (TileSegment.E, pos)
+              case TileSegment.E => (TileSegment.W, pos)
+            )
+
+          tilesToCheck.foldLeft((tail, acc)) { case ((remainingSegments, currentAcc), (seg, checkTilePosition)) =>
+            exploredPositions = exploredPositions :+ checkTilePosition
+            map.getTileMap.get.get(checkTilePosition) match
+              case Some(tile) if tile.segments(seg) == SegmentType.Road
+                && tile.segments(TileSegment.C) == SegmentType.RoadEnd =>
+                (remainingSegments, currentAcc + 1)
+              case Some(tile) if checkTilePosition == originalPos =>
+                (remainingSegments, currentAcc)
+              case Some(tile) =>
+                val newSegments = tile.segments.collect {
+                  case (newSeg, SegmentType.Road) if List(TileSegment.N,
+                    TileSegment.S,
+                    TileSegment.W,
+                    TileSegment.E).contains(newSeg) && newSeg != seg =>
+                    (newSeg, checkTilePosition)
+                }.toList
+                (newSegments ++ remainingSegments, currentAcc + 1)
+              case None =>
+                (remainingSegments, currentAcc)
+          } match {
+            case (newSegments, newAcc) => helper(newSegments, newAcc)
+          }
+
+    helper(List((meepleSegment, position)), 0)
+
+
   def calculateCityPoints(meepleSegment: TileSegment, position: Position): Int =
     (recursiveCityPointsCalculation(meepleSegment, position) + 1) * 2
 
