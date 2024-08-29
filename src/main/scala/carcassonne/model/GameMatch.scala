@@ -4,6 +4,7 @@ import carcassonne.observers.SubjectGameMatch
 import carcassonne.model.TileSegment.{C, E, N, S, W}
 
 import scala.annotation.tailrec
+import scala.collection.mutable
 
 object GameMatch:
   private val MinPlayers = 2
@@ -55,24 +56,186 @@ class GameMatch(players: List[Player], map: CarcassonneBoard, deck: TileDeck) ex
       true
     else false
 
-//  def calculatePoints(gameTile: GameTile, adjacentTiles: Map[TileSegment, GameTile]): Int =
-//    calculateCityPoints(gameTile, adjacentTiles) +
-//      calculateRoadPoints(gameTile, adjacentTiles) +
-//      calculateFieldPoints(gameTile, adjacentTiles)
 
-//  private def calculateRoadPoints(gameTile: GameTile, adjacentTiles: Map[TileSegment, GameTile]): Int =
-//    val roadSegments = gameTile.segments.filter(_._2 == SegmentType.Road).keys.toList
-//
-//    if isFeatureComplete(roadSegments, adjacentTiles, SegmentType.Road) then
-//      roadSegments.size * 1
-//    else 0
-//
-//  private def calculateFieldPoints(gameTile: GameTile, adjacentTiles: Map[TileSegment, GameTile]): Int =
-//    val fieldSegments = gameTile.segments.filter(_._2 == SegmentType.Field).keys.toList
-//
-//    fieldSegments.count { pos =>
-//      adjacentTiles.get(pos).exists(_.segments(pos) == SegmentType.City)
-//    } * 3
+  // Define the direct adjacencies for each TileSegment
+  private val adjacencyMap: Map[TileSegment, Set[TileSegment]] = Map(
+    TileSegment.NW -> Set(TileSegment.N, TileSegment.W, TileSegment.C),
+    TileSegment.N -> Set(TileSegment.NW, TileSegment.NE, TileSegment.C),
+    TileSegment.NE -> Set(TileSegment.N, TileSegment.E, TileSegment.C),
+    TileSegment.W -> Set(TileSegment.NW, TileSegment.SW, TileSegment.C),
+    TileSegment.C -> Set(TileSegment.NW, TileSegment.N, TileSegment.NE, TileSegment.W, TileSegment.E, TileSegment.SW, TileSegment.S, TileSegment.SE),
+    TileSegment.E -> Set(TileSegment.NE, TileSegment.SE, TileSegment.C),
+    TileSegment.SW -> Set(TileSegment.W, TileSegment.S, TileSegment.C),
+    TileSegment.S -> Set(TileSegment.SW, TileSegment.SE, TileSegment.C),
+    TileSegment.SE -> Set(TileSegment.S, TileSegment.E, TileSegment.C)
+  )
+
+  def adjacentFieldSegments(segment: TileSegment, gameTile: GameTile): Set[TileSegment] = {
+    // Filter only the segments that are connected fields
+    adjacencyMap(segment).filter { adjacentSegment =>
+      gameTile.segments(adjacentSegment) == gameTile.segments(segment) && gameTile.segments(adjacentSegment) == SegmentType.Field
+    }
+  }
+
+
+  def adjacentFieldSegmentsAcrossTiles(segment: TileSegment, tilePosition: Position): Set[(Position, TileSegment)] = {
+    val adjacencies: Set[(Position, TileSegment)] = segment match {
+      case TileSegment.NW => Set(
+        (Position(tilePosition.x - 1, tilePosition.y - 1), TileSegment.SE),
+        (Position(tilePosition.x - 1, tilePosition.y), TileSegment.NE),
+        (Position(tilePosition.x, tilePosition.y - 1), TileSegment.SW)
+      )
+      case TileSegment.N => Set((Position(tilePosition.x, tilePosition.y - 1), TileSegment.S))
+      case TileSegment.NE => Set(
+        (Position(tilePosition.x + 1, tilePosition.y - 1), TileSegment.SW),
+        (Position(tilePosition.x + 1, tilePosition.y), TileSegment.NW),
+        (Position(tilePosition.x, tilePosition.y - 1), TileSegment.SE),
+      )
+      case TileSegment.W => Set((Position(tilePosition.x - 1, tilePosition.y), TileSegment.E))
+      case TileSegment.C => Set.empty
+      case TileSegment.E => Set((Position(tilePosition.x + 1, tilePosition.y), TileSegment.W))
+      case TileSegment.SW => Set(
+        (Position(tilePosition.x - 1, tilePosition.y + 1), TileSegment.NE),
+        (Position(tilePosition.x - 1, tilePosition.y), TileSegment.SE),
+        (Position(tilePosition.x, tilePosition.y + 1), TileSegment.NW)
+      )
+      case TileSegment.S => Set((Position(tilePosition.x, tilePosition.y + 1), TileSegment.N))
+      case TileSegment.SE => Set(
+        (Position(tilePosition.x + 1, tilePosition.y + 1), TileSegment.NW),
+        (Position(tilePosition.x + 1, tilePosition.y), TileSegment.SW),
+        (Position(tilePosition.x, tilePosition.y + 1), TileSegment.NE)
+      )
+    }
+
+    // Return only the positions that connect to a field segment in the adjacent tile
+    adjacencies.filter { case (adjPosition, adjSegment) =>
+      // If the adjacent tile exists and has a field segment, include it
+      map.getTile(adjPosition).exists(_.segments(adjSegment) == SegmentType.Field)
+    }
+  }
+
+  def isAdjacentToCity(segment: TileSegment, tilePosition: Position, gameTile: GameTile): Set[(Position, TileSegment)] = {
+    // Check for intra-tile adjacency
+    val intraTileAdjacentCities = adjacencyMap(segment).flatMap { adjSegment =>
+      if (gameTile.segments.get(adjSegment).contains(SegmentType.City))
+        Some((tilePosition, adjSegment))
+      else
+        None
+    }
+
+    // Determine inter-tile adjacencies
+    val interTileAdjacencies = segment match {
+      case TileSegment.NW => Set((Position(tilePosition._1 - 1, tilePosition._2 - 1), TileSegment.SE))
+      case TileSegment.N => Set((Position(tilePosition._1, tilePosition._2 - 1), TileSegment.S))
+      case TileSegment.NE => Set((Position(tilePosition._1 + 1, tilePosition._2 - 1), TileSegment.SW))
+      case TileSegment.W => Set((Position(tilePosition._1 - 1, tilePosition._2), TileSegment.E))
+      case TileSegment.C => Set.empty
+      case TileSegment.E => Set((Position(tilePosition._1 + 1, tilePosition._2), TileSegment.W))
+      case TileSegment.SW => Set((Position(tilePosition._1 - 1, tilePosition._2 + 1), TileSegment.NE))
+      case TileSegment.S => Set((Position(tilePosition._1, tilePosition._2 + 1), TileSegment.N))
+      case TileSegment.SE => Set((Position(tilePosition._1 + 1, tilePosition._2 + 1), TileSegment.NW))
+    }
+
+    // Check if any adjacent tile segment contains a city
+    val interTileAdjacentCities = interTileAdjacencies.flatMap { case (adjPosition, adjSegment) =>
+      map.getTile(adjPosition).flatMap { adjTile =>
+        if (adjTile.segments.get(adjSegment).contains(SegmentType.City))
+          Some((adjPosition, adjSegment))
+        else
+          None
+      }
+    }
+
+    // Return the set of all adjacent city segments (both intra and inter-tile)
+    intraTileAdjacentCities ++ interTileAdjacentCities
+  }
+
+
+  // Checks if the given city segments are part of the same city.
+  def areSegmentsPartOfSameCity(
+                                 citySegments: Set[(Position, TileSegment)]
+                               ): Boolean = {
+
+    // Early return if there's only one segment
+    if (citySegments.size <= 1) return true
+
+    // To keep track of visited city segments
+    val visited = mutable.Set[(Position, TileSegment)]()
+
+    // Stack for DFS (could also use a queue for BFS)
+    val stack = mutable.Stack[(Position, TileSegment)]()
+
+    // Start with one of the segments
+    val startSegment = citySegments.head
+    stack.push(startSegment)
+    visited.add(startSegment)
+
+    while (stack.nonEmpty) {
+      val (currentPos, currentSegment) = stack.pop()
+
+      // Get all adjacent city segments for the current segment
+      val adjacentCities = isAdjacentToCity(currentSegment, currentPos, map.getTile(currentPos).get)
+
+      // Filter only those adjacent segments that are part of the input citySegments
+      val validAdjacentCities = adjacentCities.filter(citySegments.contains)
+
+      // Traverse each connected city segment
+      validAdjacentCities.foreach { adjCity =>
+        if (!visited.contains(adjCity)) {
+          visited.add(adjCity)
+          stack.push(adjCity)
+        }
+      }
+    }
+
+    // If all city segments were visited, they are part of the same city
+    visited.size == citySegments.size
+  }
+
+  def calculateFieldPoints(meepleSegment: TileSegment, position: Position): Int =
+    recursiveFieldPointsCalculation(meepleSegment, position)
+
+  private def recursiveFieldPointsCalculation(meepleSegment: TileSegment, position: Position): Int =
+    var citiesToCheck: List[(TileSegment, Position)] = List.empty
+    var fieldsVisited: List[(TileSegment, Position)] = List.empty
+
+    def exploreField(meepleSegment: TileSegment, position: Position): Unit =
+      fieldsVisited = fieldsVisited :+ (meepleSegment, position)
+
+      val currentTile = map.getTile(position).get
+      // Check adjacent segments within the same tile
+      for adjSegment <- adjacentFieldSegments(meepleSegment, currentTile) do
+        if !fieldsVisited.contains((adjSegment, position)) then
+          exploreField(adjSegment, position)
+
+      // Check adjacent tiles and their segments
+      for (adjPosition, adjSegment) <- adjacentFieldSegmentsAcrossTiles(meepleSegment, position) do
+        if map.getTileMap.get.contains(adjPosition) && !fieldsVisited.contains(adjSegment, Position(adjPosition.x, adjPosition.y)) then
+          exploreField(adjSegment, adjPosition)
+
+      // If this segment is adjacent to a city, add the city to the cities set
+      isAdjacentToCity(meepleSegment, position, currentTile).foreach((pos, seg) => if !citiesToCheck.contains((seg, pos)) then citiesToCheck = citiesToCheck :+ (seg, pos))
+
+    // Start exploration from the initial segment
+    exploreField(meepleSegment, position)
+
+
+    val combinations = (2 to citiesToCheck.length).flatMap(citiesToCheck.combinations).
+      filter(list => areSegmentsPartOfSameCity(list.map((seg, pos) => (pos, seg)).toSet)).
+      map(_.init).filter(_.nonEmpty).flatten
+
+    println(combinations)
+    println(citiesToCheck)
+
+    val results = citiesToCheck.filter((seg, pos) => !combinations.contains(seg, pos) && 
+      calculateCityPoints(seg, pos) != 0)
+
+
+//      .map((seg, pos) => calculateCityPoints(seg, pos))
+
+
+    // Return the score based on the number of cities connected to the field
+    results.size * 3
 
   def calculateRoadPoints(meepleSegment: TileSegment, position: Position): Int =
     recursiveRoadPointsCalculation(meepleSegment, position) + 1
@@ -129,8 +292,14 @@ class GameMatch(players: List[Player], map: CarcassonneBoard, deck: TileDeck) ex
     helper(List((meepleSegment, position)), 0)
 
 
+
+
   def calculateCityPoints(meepleSegment: TileSegment, position: Position): Int =
-    (recursiveCityPointsCalculation(meepleSegment, position) + 1) * 2
+    val cityPoints = recursiveCityPointsCalculation(meepleSegment, position)
+    if cityPoints != 0 then
+      (cityPoints + 1) * 2
+    else
+      0
 
   private def recursiveCityPointsCalculation(meepleSegment: TileSegment, position: Position): Int =
 
