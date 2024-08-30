@@ -34,8 +34,8 @@ class GameMatch(players: List[Player], map: CarcassonneBoard, deck: TileDeck) ex
 //    endTurn()
 
   def placeTile(gameTile: GameTile, position: Position): Unit =
-    val isTilePlaced = map.placeTile(gameTile, position)
-    notifyIsTilePlaced(isTilePlaced, map.getTileMap, position)
+    val isTilePlaced = board.placeTile(gameTile, position)
+    notifyIsTilePlaced(isTilePlaced, board.getTileMap, position)
 
     endTurn()
     takeTurn()
@@ -53,7 +53,7 @@ class GameMatch(players: List[Player], map: CarcassonneBoard, deck: TileDeck) ex
   def placeFollower(gameTile: GameTile, segment: TileSegment, player: Player): Boolean =
     if (gameTile.followerMap.contains(segment)) return false
 
-    val connectedFeature = map.getConnectedFeature(gameTile, segment)
+    val connectedFeature = board.getConnectedFeature(gameTile, segment)
 
     val isFeatureOccupied = connectedFeature.exists { case (tile, seg) =>
       tile.followerMap.contains(seg)
