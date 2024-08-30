@@ -90,3 +90,57 @@ class CarcassonneBoard extends GameBoard[GameTile] with Graph[Position]:
    */
   def getTileMap: Option[Map[Position, GameTile]] =
     getElementMap
+
+  def getConnectedFeature(startTile: GameTile, startSegment: TileSegment): Set[(GameTile, TileSegment)] = {
+    var visited: Set[(Position, TileSegment)] = Set()
+
+    def oppositeSegment(segment: TileSegment): TileSegment = segment match {
+      case TileSegment.N => TileSegment.S
+      case TileSegment.S => TileSegment.N
+      case TileSegment.E => TileSegment.W
+      case TileSegment.W => TileSegment.E
+      case other => other
+    }
+
+    def getNeighborPosition(position: Position, segment: TileSegment): Position = segment match {
+      case TileSegment.N => Position(position.x, position.y - 1)
+      case TileSegment.S => Position(position.x, position.y + 1)
+      case TileSegment.E => Position(position.x + 1, position.y)
+      case TileSegment.W => Position(position.x - 1, position.y)
+      case _ => position 
+    }
+
+    // Recursive dfs to find connected segments
+    def dfs(position: Position, segment: TileSegment): Set[(GameTile, TileSegment)] = {
+      if (visited.contains((position, segment))) return Set()
+
+      visited += ((position, segment))
+
+      val currentTileOpt = getTile(position)
+
+      currentTileOpt match {
+        case None => Set() 
+        case Some(currentTile) =>
+          val currentSet = Set((currentTile, segment))
+          
+          val connectedSegments = currentTile.segments.collect {
+            case (seg, segType) if segType == currentTile.segments(segment) && seg != segment => seg
+          }
+
+          val sameTileConnections = connectedSegments.flatMap(seg => dfs(position, seg))
+
+          val neighborPosition = getNeighborPosition(position, segment)
+          val neighborSegment = oppositeSegment(segment)
+          val neighborConnections = dfs(neighborPosition, neighborSegment)
+
+          currentSet ++ sameTileConnections ++ neighborConnections
+      }
+    }
+
+    val startPositionOpt = getElementMap.flatMap(_.find(_._2 == startTile).map(_._1))
+
+    startPositionOpt match {
+      case None => Set() 
+      case Some(startPosition) => dfs(startPosition, startSegment)
+    }
+  }
