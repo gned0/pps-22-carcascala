@@ -50,11 +50,20 @@ class GameMatch(players: List[Player], map: CarcassonneBoard, deck: TileDeck) ex
 
 
 
-  def placeMeeple(gameTile: GameTile, segment: TileSegment, player: Player): Boolean =
-    if !gameTile.followerMap.contains(segment) then
-      gameTile.followerMap = gameTile.followerMap.updated(segment, Some(player).get.playerId)
-      true
-    else false
+  def placeFollower(gameTile: GameTile, segment: TileSegment, player: Player): Boolean =
+    if (gameTile.followerMap.contains(segment)) return false
+
+    val connectedFeature = map.getConnectedFeature(gameTile, segment)
+
+    val isFeatureOccupied = connectedFeature.exists { case (tile, seg) =>
+      tile.followerMap.contains(seg)
+    }
+
+    if (isFeatureOccupied) return false
+
+    gameTile.followerMap = gameTile.followerMap.updated(segment, player.playerId)
+    player.placeFollower()
+
 
 
   
