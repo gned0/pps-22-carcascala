@@ -38,7 +38,7 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
     game.placeTile(tile, Position(11, 10))
 
 
-    game.placeMeeple(tile, TileSegment.N, player1)
+    game.placeFollower(tile, TileSegment.N, player1)
     ScoreCalculator().calculateCityPoints(TileSegment.N, Position(10, 10), map) shouldBe 12
   }
 
@@ -68,7 +68,7 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
     game.placeTile(tile2.rotateClockwise, Position(11, 10))
     game.placeTile(tile2.rotateCounterClockwise, Position(9, 10))
 
-    game.placeMeeple(tile, TileSegment.C, player1)
+    game.placeFollower(tile, TileSegment.C, player1)
     ScoreCalculator().calculateRoadPoints(TileSegment.C, Position(10, 10), map) shouldBe 3
   }
 
@@ -104,7 +104,7 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
     game.placeTile(tile2.rotateClockwise.rotateClockwise, Position(9, 10))
     game.placeTile(tile2.rotateCounterClockwise, Position(9, 8))
 
-    game.placeMeeple(tile, TileSegment.C, player1)
+    game.placeFollower(tile, TileSegment.C, player1)
     ScoreCalculator().calculateRoadPoints(TileSegment.C, Position(10, 10), map) shouldBe 8
   }
 
@@ -138,7 +138,7 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
     game.placeTile(tile, Position(12, 10))
     game.placeTile(tile.rotateClockwise.rotateClockwise, Position(12, 9))
 
-    game.placeMeeple(tile, TileSegment.NE, player1)
+    game.placeFollower(tile, TileSegment.NE, player1)
     ScoreCalculator().calculateFieldPoints(TileSegment.NE, Position(10, 10), map) shouldBe 6
   }
 

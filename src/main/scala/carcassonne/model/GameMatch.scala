@@ -9,7 +9,7 @@ import scala.collection.mutable
 object GameMatch:
   private val MinPlayers = 2
 
-class GameMatch(players: List[Player], map: CarcassonneBoard, deck: TileDeck) extends SubjectGameMatch[GameMatch]:
+class GameMatch(players: List[Player], board: CarcassonneBoard, deck: TileDeck) extends SubjectGameMatch[GameMatch]:
   require(players.length >= GameMatch.MinPlayers, s"At least ${GameMatch.MinPlayers} players are required to start the game.")
 
   private var currentPlayerIndex: Int = 0
@@ -27,11 +27,11 @@ class GameMatch(players: List[Player], map: CarcassonneBoard, deck: TileDeck) ex
     else
       val tile = deck.draw()
       notifyTileDrawn(tile.get)
-    // map.placeTile(tile.get, Position(userInput))
-    // map.placeFollower(Position(userInput)
-    // scoring.computeScore(map)
+  // map.placeTile(tile.get, Position(userInput))
+  // map.placeFollower(Position(userInput)
+  // scoring.computeScore(map)
 
-//    endTurn()
+  //    endTurn()
 
   def placeTile(gameTile: GameTile, position: Position): Unit =
     val isTilePlaced = board.placeTile(gameTile, position)
@@ -66,4 +66,3 @@ class GameMatch(players: List[Player], map: CarcassonneBoard, deck: TileDeck) ex
 
 
 
-  
