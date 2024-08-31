@@ -23,7 +23,6 @@ class GameMapView(onSwitchToStarterView: () => Unit) extends GridPane
   with SubjectGameView[GameMapView] with ObserverGameMatch[GameMatch]:
 
   private val mapSize = 5 // 5x5 grid for simplicity
-  private var _lastPositionTilePlaced: Position = Position(0, 0)
   private var _lastTilePlaced: Region = new Region()
 
   private var _drawnTile: GameTile = GameTile.startTile
@@ -56,7 +55,6 @@ class GameMapView(onSwitchToStarterView: () => Unit) extends GridPane
    * @param tiles the current state of the game map tiles
    */
   def placeTile(position: Position, placedTile: Region, tiles: Map[Position, GameTile]): Unit =
-    _lastPositionTilePlaced = position
     val placedGameTile = tiles(position)
 
     placedTile.styleClass.clear()
@@ -72,18 +70,18 @@ class GameMapView(onSwitchToStarterView: () => Unit) extends GridPane
    * Creates new placeholder tiles around the last placed tile.
    * @param tiles the current state of the game map tiles
    */
-  def createNewPlaceholders(tiles: Map[Position, GameTile]): Unit =
+  def createNewPlaceholders(tiles: Map[Position, GameTile], position: Position): Unit =
     for
-      posX <- Seq(_lastPositionTilePlaced.x - 1, _lastPositionTilePlaced.x + 1)
-      if !tiles.contains(Position(posX, _lastPositionTilePlaced.y))
+      posX <- Seq(position.x - 1, position.x + 1)
+      if !tiles.contains(Position(posX, position.y))
     do
-      val placeholderTile = createPlaceholderTile(Position(posX, _lastPositionTilePlaced.y))
+      val placeholderTile = createPlaceholderTile(Position(posX, position.y))
 
     for
-      posY <- Seq(_lastPositionTilePlaced.y - 1, _lastPositionTilePlaced.y + 1)
-      if !tiles.contains(Position(_lastPositionTilePlaced.x, posY))
+      posY <- Seq(position.y - 1, position.y + 1)
+      if !tiles.contains(Position(position.x, posY))
     do
-      val placeholderTile = createPlaceholderTile(Position(_lastPositionTilePlaced.x, posY))
+      val placeholderTile = createPlaceholderTile(Position(position.x, posY))
 
   /**
    * Creates a placeholder tile at the specified position.
@@ -119,13 +117,7 @@ class GameMapView(onSwitchToStarterView: () => Unit) extends GridPane
     _drawnTileImage.rotate = _drawnTileImage.getRotate - 90
     println(_drawnTile)
     Logger.log(s"VIEW", "Drawn tile rotated counter clockwise")
-
-  /**
-   * Returns the position of the last placed tile.
-   * @return the position of the last placed tile
-   */
-  def getLastTilePlacedPosition: Option[Position] = Some(_lastPositionTilePlaced)
-
+  
   /**
    * Returns the last placed tile.
    * @return the last placed tile
@@ -181,10 +173,10 @@ class GameMapView(onSwitchToStarterView: () => Unit) extends GridPane
     if isTilePlaced then
       if tiles.isEmpty then
         placeTile(position, getLastTilePlaced.get, tiles)
-        createNewPlaceholders(tiles)
+        createNewPlaceholders(tiles, position)
       else
         placeTile(position, getLastTilePlaced.get, tiles)
-        createNewPlaceholders(tiles)
+        createNewPlaceholders(tiles, position)
 
   override def gameEnded(players: List[Player]): Unit =
     GameEndView(players).popupStage.show()
