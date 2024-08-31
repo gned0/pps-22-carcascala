@@ -1,6 +1,7 @@
 package carcassonne.observers
 
-import carcassonne.model.{GameTile, Position}
+import carcassonne.model.board.Position
+import carcassonne.model.tile.GameTile
 import scalafx.scene.layout.Region
 
 /**

@@ -1,7 +1,9 @@
 package carcassonne
 
 import carcassonne.controller.GameMapController
-import carcassonne.model.{Color, CarcassonneBoard, GameMatch, Player, TileDeck}
+import carcassonne.model.board.CarcassonneBoard
+import carcassonne.model.game.{Color, GameMatch, Player}
+import carcassonne.model.tile.TileDeck
 import carcassonne.view.{GameMapView, StarterView}
 import scalafx.application.JFXApp3
 import scalafx.scene.Scene

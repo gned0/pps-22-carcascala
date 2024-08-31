@@ -1,4 +1,4 @@
-package carcassonne.model
+package carcassonne.model.board
 
 /**
  * Represents a generic graph with nodes and edges.

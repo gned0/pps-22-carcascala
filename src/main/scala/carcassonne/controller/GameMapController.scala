@@ -1,6 +1,8 @@
 package carcassonne.controller
 
-import carcassonne.model.{CarcassonneBoard, GameMatch, GameTile, Position}
+import carcassonne.model.board.{CarcassonneBoard, Position}
+import carcassonne.model.game.GameMatch
+import carcassonne.model.tile.GameTile
 import carcassonne.observers.ObserverGameView
 import carcassonne.util.Logger
 import carcassonne.view.GameMapView

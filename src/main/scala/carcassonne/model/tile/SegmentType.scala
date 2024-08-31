@@ -1,6 +1,7 @@
-package carcassonne.model
+package carcassonne.model.tile
 
-import play.api.libs.json._
+import carcassonne.model.tile.SegmentType
+import play.api.libs.json.*
 
 /**
  * Represents the different types of edges that can be found on a tile.

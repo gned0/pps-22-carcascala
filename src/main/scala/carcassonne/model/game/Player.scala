@@ -1,4 +1,6 @@
-package carcassonne.model
+package carcassonne.model.game
+
+import carcassonne.model.game.Color
 
 /**
  * Represents the different colors that a player can choose.

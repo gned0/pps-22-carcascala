@@ -1,5 +1,6 @@
 package carcassonne.model
 
+import carcassonne.model.board.Graph
 import org.scalatest.funsuite.AnyFunSuite
 
 class TestGraph extends Graph[String]

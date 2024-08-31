@@ -1,4 +1,6 @@
-package carcassonne.model
+package carcassonne.model.board
+
+import carcassonne.model.board.Position
 
 /**
  * Represents a position on the game map.

@@ -1,6 +1,6 @@
 package carcassonne.view
 
-import carcassonne.model.Player
+import carcassonne.model.game.Player
 import scalafx.application.JFXApp3
 import scalafx.scene.Scene
 import scalafx.scene.control.{Button, Label}

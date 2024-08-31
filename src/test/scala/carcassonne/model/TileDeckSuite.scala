@@ -1,6 +1,6 @@
 package carcassonne.model
 
-import carcassonne.model.TileDeck
+import carcassonne.model.tile.TileDeck
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 

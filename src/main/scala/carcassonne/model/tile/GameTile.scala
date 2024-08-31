@@ -1,6 +1,7 @@
-package carcassonne.model
+package carcassonne.model.tile
 
-import play.api.libs.json.{Format, JsError, JsResult, JsString, JsSuccess, JsValue, Json}
+import carcassonne.model.tile.{GameTile, TileSegment}
+import play.api.libs.json.*
 
 enum TileSegment:
   case N, NE, E, SE, S, SW, W, NW, C

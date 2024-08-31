@@ -1,4 +1,7 @@
-package carcassonne.model
+package carcassonne.model.game
+
+import carcassonne.model.board.{CarcassonneBoard, Position}
+import carcassonne.model.tile.{GameTile, SegmentType, TileSegment}
 
 import scala.annotation.tailrec
 import scala.collection.mutable

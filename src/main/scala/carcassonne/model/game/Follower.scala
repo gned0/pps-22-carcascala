@@ -1,4 +1,6 @@
-package carcassonne.model
+package carcassonne.model.game
+
+import carcassonne.model.game.Player
 
 /**
  * Represents a follower in the game.

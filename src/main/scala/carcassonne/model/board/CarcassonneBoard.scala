@@ -1,5 +1,7 @@
-package carcassonne.model
+package carcassonne.model.board
 
+import carcassonne.model.*
+import carcassonne.model.tile.{GameTile, TileSegment}
 import carcassonne.util.Logger
 
 /**

@@ -1,7 +1,9 @@
-package carcassonne.model
+package carcassonne.model.tile
 
+import carcassonne.model.tile.TileConfig
+import carcassonne.model.tile.GameTile
 import carcassonne.util.Logger
-import play.api.libs.json.{JsError, JsResult, JsSuccess, JsValue, Json, OFormat}
+import play.api.libs.json.*
 
 import scala.io.Source
 import scala.util.Random
