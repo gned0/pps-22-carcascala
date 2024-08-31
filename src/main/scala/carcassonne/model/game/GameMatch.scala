@@ -1,10 +1,11 @@
 package carcassonne.model.game
 
 import carcassonne.model.tile.TileSegment.{C, E, N, S, W}
-import carcassonne.model.board.{CarcassonneBoard, Position}
+import carcassonne.model.board.CarcassonneBoard
 import carcassonne.model.*
 import carcassonne.model.tile.{GameTile, TileDeck, TileSegment}
 import carcassonne.observers.SubjectGameMatch
+import carcassonne.util.Position
 
 import scala.annotation.tailrec
 import scala.collection.mutable

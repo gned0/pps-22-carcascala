@@ -1,10 +1,10 @@
 package carcassonne.controller
 
-import carcassonne.model.board.{CarcassonneBoard, Position}
+import carcassonne.model.board.CarcassonneBoard
 import carcassonne.model.game.GameMatch
 import carcassonne.model.tile.GameTile
 import carcassonne.observers.ObserverGameView
-import carcassonne.util.Logger
+import carcassonne.util.{Logger, Position}
 import carcassonne.view.GameMapView
 import scalafx.scene.layout.Region
 

@@ -1,10 +1,9 @@
 package carcassonne.view
 
-import carcassonne.model.board.Position
 import carcassonne.model.game.{GameMatch, Player}
 import carcassonne.model.tile.{GameTile, TileSegment}
 import carcassonne.observers.{ObserverGameMatch, SubjectGameView}
-import carcassonne.util.Logger
+import carcassonne.util.{Logger, Position}
 import javafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}
 import scalafx.geometry.Pos
 import scalafx.scene.input.{MouseButton, MouseEvent}

@@ -1,14 +1,6 @@
 package carcassonne.model.board
 
-import carcassonne.model.board.Position
-
-/**
- * Represents a position on the game map.
- *
- * @param x The x-coordinate of the position.
- * @param y The y-coordinate of the position.
- */
-case class Position(x: Int, y: Int)
+import carcassonne.util.Position
 
 /**
  * Represents a board table that manages positions and elements.

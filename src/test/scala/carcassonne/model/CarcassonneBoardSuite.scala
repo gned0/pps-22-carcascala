@@ -1,7 +1,8 @@
 package carcassonne.model
 
-import carcassonne.model.board.{CarcassonneBoard, Position}
+import carcassonne.model.board.CarcassonneBoard
 import carcassonne.model.tile.{GameTile, SegmentType, TileSegment}
+import carcassonne.util.Position
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 

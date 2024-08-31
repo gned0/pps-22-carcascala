@@ -1,8 +1,8 @@
 package carcassonne.observers
 
-import carcassonne.model.board.Position
 import carcassonne.model.game.Player
 import carcassonne.model.tile.GameTile
+import carcassonne.util.Position
 
 /**
  * A trait representing a subject in the observer pattern for the game map.

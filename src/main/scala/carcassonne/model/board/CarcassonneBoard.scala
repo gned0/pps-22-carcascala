@@ -2,7 +2,7 @@ package carcassonne.model.board
 
 import carcassonne.model.*
 import carcassonne.model.tile.{GameTile, TileSegment}
-import carcassonne.util.Logger
+import carcassonne.util.{Logger, Position}
 
 /**
  * Represents the game map, which holds the placed tiles and manages the graph of tile connections.
