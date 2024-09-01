@@ -17,12 +17,13 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
   scene = new Scene(850, 600):
     stylesheets.add(getClass.getResource("../placeholderTile.css").toExternalForm)
     root = gameViewContainer
-  
+
   gameViewContainer.children = GameStarterView(() => switchMainGameView())
 
   def switchMainGameView(): Unit =
     val gameBoard = GameBoardView()
     val boardView = GameMatchView(() => gameEndedSwitchView())
+    gameBoard.children = boardView
 
     val game = GameMatch(List(Player(0, "test", Color.Red), Player(1, "test2", Color.Blue)),
       CarcassonneBoard(),
@@ -30,10 +31,8 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
     GameMatchController(game, boardView).initialize()
     game.addObserver(boardView)
 
-    gameBoard.children = boardView
     this.setMainView(boardView)
 
-    HBox.setHgrow(gameBoard, Always)
     game.play()
     boardView.addDrawnTilePane()
 

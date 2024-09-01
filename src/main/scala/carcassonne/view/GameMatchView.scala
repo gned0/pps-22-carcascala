@@ -1,7 +1,7 @@
 package carcassonne.view
 
 import carcassonne.model.game.{GameMatch, Player}
-import carcassonne.model.tile.{GameTile, TileSegment}
+import carcassonne.model.tile.{GameTile, GameTileFactory, TileSegment}
 import carcassonne.observers.observers.ObserverGameMatch
 import carcassonne.observers.subjects.{SubjectGameMatchView, SubjectStarterView}
 import carcassonne.util.{Logger, Position}
@@ -27,8 +27,8 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
   private val mapSize = 5 // 5x5 grid for simplicity
   private var _lastTilePlaced: Region = new Region()
 
-  private var _drawnTile: GameTile = GameTile.startTile
-  private var _drawnTileImage: ImageView = ImageView(new Image(getClass.getResource("../../tiles/" + GameTile.startTile.imagePath).toExternalForm))
+  private var _drawnTile = GameTileFactory.createStartTile()
+  private var _drawnTileImage: ImageView = ImageView(new Image(getClass.getResource("../../tiles/" + _drawnTile.imagePath).toExternalForm))
 
   private val rotateClockwise = Button("Clockwise")
   rotateClockwise.onMouseClicked = _ => rotateDrawnTileClockwise()
