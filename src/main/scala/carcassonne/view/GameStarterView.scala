@@ -6,10 +6,10 @@ import scalafx.geometry.Pos
 import scalafx.scene.control.Button
 import scalafx.scene.layout.{HBox, VBox}
 
-class GameStarterView() extends VBox 
+class GameStarterView() extends VBox
   with SubjectStarterView[GameStarterView]{
   val startGameButton = new Button("Start Game")
-//  startGameButton.onMouseClicked = _ => onSwitchToGameView()
+  startGameButton.onMouseClicked = _ => notifySwitchMainGameView()
 
   val exitGameButton = new Button("Exit Game")
   exitGameButton.onMouseClicked = _ => Platform.exit()

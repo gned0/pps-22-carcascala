@@ -1,6 +1,6 @@
 package carcassonne
 
-import carcassonne.controller.GameMatchController
+import carcassonne.controller.{GameMainViewsController, GameMatchController}
 import carcassonne.model.board.CarcassonneBoard
 import carcassonne.model.game.{Color, GameMatch, Player}
 import carcassonne.model.tile.TileDeck
@@ -18,35 +18,13 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
     stylesheets.add(getClass.getResource("../placeholderTile.css").toExternalForm)
     root = gameViewContainer
 
-  val gameMapView = GameBoardView()
+  val starterView = GameStarterView()
+  val viewsController = GameMainViewsController(this)
+  starterView.addObserver(viewsController)
+  gameViewContainer.children = starterView
 
-//    def switchToGameView(): Unit =
-//      val view = GameMatchView(() => switchToStarterView())
-//      view.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
-//      view.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
-//
-//      val deck = TileDeck()
-//      val map = CarcassonneBoard()
-//      val game = GameMatch(List(Player(0, "test", Color.Red), Player(1, "test2", Color.Blue)), map, TileDeck())
-//      val controller = GameMatchController(game, view)
-//      controller.initialize()
-//
-//      game.addObserver(view)
-//
-//
-//      gameMapView.children = view
-//      containerPane.children = gameMapView
-//      HBox.setHgrow(gameMapView, Always)
-//      game.play()
-//      view.addDrawnTilePane()
 
-  def switchToStarterView(): Unit =
-    val starterView = GameStarterView()
-    gameViewContainer.children = starterView
-
-  gameViewContainer.children = GameStarterView()
-
-  def setMainView(view: Seq(Node)): Unit =
+  def setMainView(view: Node): Unit =
     gameViewContainer.children = view
 
 }
