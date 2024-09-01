@@ -2,7 +2,8 @@ package carcassonne.view
 
 import carcassonne.model.game.{GameMatch, Player}
 import carcassonne.model.tile.{GameTile, TileSegment}
-import carcassonne.observers.{ObserverGameMatch, SubjectGameView}
+import carcassonne.observers.observers.ObserverGameMatch
+import carcassonne.observers.subjects.{SubjectGameMatchView, SubjectStarterView}
 import carcassonne.util.{Logger, Position}
 import javafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}
 import scalafx.geometry.Pos
@@ -19,8 +20,9 @@ import scalafx.scene.image.{Image, ImageView}
  * The view for the game map.
  * This class extends `GridPane` and implements `SubjectGameView` and `ObserverGameMap`.
  */
-class GameMatchView(onSwitchToStarterView: () => Unit) extends GridPane
-  with SubjectGameView[GameMatchView] with ObserverGameMatch[GameMatch]:
+class GameMatchView() extends GridPane
+  with SubjectGameMatchView[GameMatchView]
+  with ObserverGameMatch[GameMatch]:
 
   private val mapSize = 5 // 5x5 grid for simplicity
   private var _lastTilePlaced: Region = new Region()
@@ -37,6 +39,10 @@ class GameMatchView(onSwitchToStarterView: () => Unit) extends GridPane
   private val drawnTilePane = GridPane()
   drawnTilePane.alignment = Pos.CenterRight
   drawnTilePane.mouseTransparent = true
+
+  this.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
+  this.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
+
 
   this.prefWidth = 600
   this.prefHeight = 400
@@ -180,4 +186,4 @@ class GameMatchView(onSwitchToStarterView: () => Unit) extends GridPane
 
   override def gameEnded(players: List[Player]): Unit =
     GameEndView(players).popupStage.show()
-    onSwitchToStarterView()
+//    onSwitchToStarterView()

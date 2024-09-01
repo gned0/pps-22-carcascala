@@ -4,7 +4,7 @@ import carcassonne.model.tile.TileSegment.{C, E, N, S, W}
 import carcassonne.model.*
 import carcassonne.model.board.CarcassonneBoard
 import carcassonne.model.tile.{GameTile, TileDeck, TileSegment}
-import carcassonne.observers.SubjectGameMatch
+import carcassonne.observers.subjects.SubjectGameMatch
 import carcassonne.util.Position
 
 import scala.annotation.tailrec
