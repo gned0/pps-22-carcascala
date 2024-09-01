@@ -1,6 +1,5 @@
 package carcassonne.model.tile
 
-import carcassonne.model.tile.{GameTile, TileSegment}
 import play.api.libs.json.*
 
 enum TileSegment:

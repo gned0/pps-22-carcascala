@@ -1,6 +1,5 @@
 package carcassonne.model.tile
 
-import carcassonne.model.tile.SegmentType
 import play.api.libs.json.*
 
 /**
