@@ -20,7 +20,7 @@ import scalafx.scene.image.{Image, ImageView}
  * The view for the game map.
  * This class extends `GridPane` and implements `SubjectGameView` and `ObserverGameMap`.
  */
-class GameMatchView() extends GridPane
+class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
   with SubjectGameMatchView[GameMatchView]
   with ObserverGameMatch[GameMatch]:
 
@@ -186,4 +186,4 @@ class GameMatchView() extends GridPane
 
   override def gameEnded(players: List[Player]): Unit =
     GameEndView(players).popupStage.show()
-//    onSwitchToStarterView()
+    gameEndedSwitchView()

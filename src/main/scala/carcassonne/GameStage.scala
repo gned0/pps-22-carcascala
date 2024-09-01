@@ -1,6 +1,6 @@
 package carcassonne
 
-import carcassonne.controller.{GameMainViewsController, GameMatchController}
+import carcassonne.controller.GameMatchController
 import carcassonne.model.board.CarcassonneBoard
 import carcassonne.model.game.{Color, GameMatch, Player}
 import carcassonne.model.tile.TileDeck
@@ -17,14 +17,29 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
   scene = new Scene(850, 600):
     stylesheets.add(getClass.getResource("../placeholderTile.css").toExternalForm)
     root = gameViewContainer
+  
+  gameViewContainer.children = GameStarterView(() => switchMainGameView())
 
-  val starterView = GameStarterView()
-  val viewsController = GameMainViewsController(this)
-  starterView.addObserver(viewsController)
-  gameViewContainer.children = starterView
+  def switchMainGameView(): Unit =
+    val gameBoard = GameBoardView()
+    val boardView = GameMatchView(() => gameEndedSwitchView())
 
+    val game = GameMatch(List(Player(0, "test", Color.Red), Player(1, "test2", Color.Blue)),
+      CarcassonneBoard(),
+      TileDeck())
+    GameMatchController(game, boardView).initialize()
+    game.addObserver(boardView)
 
-  def setMainView(view: Node): Unit =
+    gameBoard.children = boardView
+    this.setMainView(boardView)
+
+    HBox.setHgrow(gameBoard, Always)
+    game.play()
+    boardView.addDrawnTilePane()
+
+  def gameEndedSwitchView(): Unit =
+    this.setMainView(GameStarterView(() => switchMainGameView()))
+
+  private def setMainView(view: Node): Unit =
     gameViewContainer.children = view
-
 }
