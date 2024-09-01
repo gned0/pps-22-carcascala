@@ -95,30 +95,3 @@ object GameTile:
     )
   }
 
-  /**
-   * The starting tile of the game, with specific segment types as per the game rules:
-   *
-   * - **North (N)**: City
-   * - **East (E)**: Road
-   * - **South (S)**: Field
-   * - **West (W)**: Road
-   * - **North-West (NW)**: Field
-   * - **North-East (NE)**: Field
-   * - **South-West (SW)**: Field
-   * - **South-East (SE)**: Field
-   * - **Center (C)**: Road
-   */
-  val startTile: GameTile = GameTile(
-    Map(
-      TileSegment.NW -> SegmentType.Field,
-      TileSegment.N  -> SegmentType.City,
-      TileSegment.NE -> SegmentType.Field,
-      TileSegment.W  -> SegmentType.Road,
-      TileSegment.C  -> SegmentType.Road,
-      TileSegment.E  -> SegmentType.Road,
-      TileSegment.SW -> SegmentType.Field,
-      TileSegment.S  -> SegmentType.Field,
-      TileSegment.SE -> SegmentType.Field
-    ),
-    "CastleSideRoad.png"
-  )

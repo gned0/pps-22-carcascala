@@ -1,21 +1,12 @@
 package carcassonne.model.tile
 
+import carcassonne.model.tile.TileConfig
+import carcassonne.model.tile.GameTile
 import carcassonne.util.Logger
 import play.api.libs.json.*
 
 import scala.io.Source
 import scala.util.Random
-
-private case class TileConfig(north: String,
-                              east: String,
-                              south: String,
-                              west: String,
-                              meeplePositions: Map[String, String],
-                              imgPath: String)
-
-object TileConfig {
-  implicit val format: OFormat[TileConfig] = Json.format[TileConfig]
-}
 /**
  * Represents a deck of game tiles.
  *
