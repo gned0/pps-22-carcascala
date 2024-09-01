@@ -1,7 +1,7 @@
 package carcassonne.view
 
 import carcassonne.model.game.{GameMatch, Player}
-import carcassonne.model.tile.{GameTile, TileSegment}
+import carcassonne.model.tile.{GameTile, GameTileFactory, TileSegment}
 import carcassonne.observers.{ObserverGameMatch, SubjectGameView}
 import carcassonne.util.{Logger, Position}
 import javafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}
@@ -25,8 +25,8 @@ class GameMapView(onSwitchToStarterView: () => Unit) extends GridPane
   private val mapSize = 5 // 5x5 grid for simplicity
   private var _lastTilePlaced: Region = new Region()
 
-  private var _drawnTile: GameTile = GameTile.startTile
-  private var _drawnTileImage: ImageView = ImageView(new Image(getClass.getResource("../../tiles/" + GameTile.startTile.imagePath).toExternalForm))
+  private var _drawnTile: GameTile = GameTileFactory.createStartTile()
+  private var _drawnTileImage: ImageView = ImageView(new Image(getClass.getResource("../../tiles/" + GameTileFactory.createStartTile().imagePath).toExternalForm))
 
   private val rotateClockwise = Button("Clockwise")
   rotateClockwise.onMouseClicked = _ => rotateDrawnTileClockwise()
