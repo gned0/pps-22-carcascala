@@ -19,8 +19,8 @@ import scalafx.scene.image.{Image, ImageView}
  * The view for the game map.
  * This class extends `GridPane` and implements `SubjectGameView` and `ObserverGameMap`.
  */
-class GameMapView(onSwitchToStarterView: () => Unit) extends GridPane
-  with SubjectGameView[GameMapView] with ObserverGameMatch[GameMatch]:
+class GameMatchView(onSwitchToStarterView: () => Unit) extends GridPane
+  with SubjectGameView[GameMatchView] with ObserverGameMatch[GameMatch]:
 
   private val mapSize = 5 // 5x5 grid for simplicity
   private var _lastTilePlaced: Region = new Region()

@@ -5,7 +5,7 @@ import carcassonne.model.game.GameMatch
 import carcassonne.model.tile.GameTile
 import carcassonne.observers.ObserverGameView
 import carcassonne.util.{Logger, Position}
-import carcassonne.view.GameMapView
+import carcassonne.view.GameMatchView
 import scalafx.scene.layout.Region
 
 /**
@@ -13,7 +13,7 @@ import scalafx.scene.layout.Region
  * @param model the game map model
  * @param view the game map view
  */
-class GameMatchController(model: GameMatch, view: GameMapView) extends ObserverGameView[GameMapView]:
+class GameMatchController(model: GameMatch, view: GameMatchView) extends ObserverGameView[GameMatchView]:
 
   /**
    * Initializes the controller by setting up the view to listen for tile click events.
