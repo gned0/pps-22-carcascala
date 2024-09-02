@@ -1,6 +1,6 @@
 package carcassonne.model
 
-import carcassonne.model.tile.{GameTile, SegmentType, TileSegment}
+import carcassonne.model.tile.{GameTile, GameTileFactory, SegmentType, TileSegment}
 import carcassonne.model.tile.TileSegment.N
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
@@ -65,11 +65,11 @@ class GameTileSuite extends AnyFunSuite with Matchers:
   }
 
   test("The start tile should have correct segments") {
-    GameTile.startTile.segments(TileSegment.N) shouldBe SegmentType.City
-    GameTile.startTile.segments(TileSegment.E) shouldBe SegmentType.Road
-    GameTile.startTile.segments(TileSegment.S) shouldBe SegmentType.Field
-    GameTile.startTile.segments(TileSegment.W) shouldBe SegmentType.Road
-    GameTile.startTile.segments(TileSegment.C) shouldBe SegmentType.Road
+    GameTileFactory.createStartTile().segments(TileSegment.N) shouldBe SegmentType.City
+    GameTileFactory.createStartTile().segments(TileSegment.E) shouldBe SegmentType.Road
+    GameTileFactory.createStartTile().segments(TileSegment.S) shouldBe SegmentType.Field
+    GameTileFactory.createStartTile().segments(TileSegment.W) shouldBe SegmentType.Road
+    GameTileFactory.createStartTile().segments(TileSegment.C) shouldBe SegmentType.Road
   }
 
   test("GameTile should be correctly deserialized from JSON") {

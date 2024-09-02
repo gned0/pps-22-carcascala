@@ -1,7 +1,8 @@
-package carcassonne.observers
+package carcassonne.observers.subjects
 
 import carcassonne.model.game.Player
 import carcassonne.model.tile.GameTile
+import carcassonne.observers.observers.ObserverGameMatch
 import carcassonne.util.Position
 
 /**

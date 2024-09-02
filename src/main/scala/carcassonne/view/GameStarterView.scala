@@ -1,13 +1,15 @@
 package carcassonne.view
 
+import carcassonne.observers.subjects.SubjectStarterView
 import scalafx.application.Platform
 import scalafx.geometry.Pos
 import scalafx.scene.control.Button
 import scalafx.scene.layout.{HBox, VBox}
 
-class StarterView(onSwitchToGameView: () => Unit) extends VBox {
+class GameStarterView(switchMainGameView: () => Unit) extends VBox
+  with SubjectStarterView[GameStarterView]{
   val startGameButton = new Button("Start Game")
-  startGameButton.onMouseClicked = _ => onSwitchToGameView()
+  startGameButton.onMouseClicked = _ => switchMainGameView()
 
   val exitGameButton = new Button("Exit Game")
   exitGameButton.onMouseClicked = _ => Platform.exit()

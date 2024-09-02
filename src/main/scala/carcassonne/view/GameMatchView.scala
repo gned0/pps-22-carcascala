@@ -1,8 +1,9 @@
 package carcassonne.view
 
 import carcassonne.model.game.{GameMatch, Player}
-import carcassonne.model.tile.{GameTile, TileSegment}
-import carcassonne.observers.{ObserverGameMatch, SubjectGameView}
+import carcassonne.model.tile.{GameTile, GameTileFactory, TileSegment}
+import carcassonne.observers.observers.ObserverGameMatch
+import carcassonne.observers.subjects.{SubjectGameMatchView, SubjectStarterView}
 import carcassonne.util.{Logger, Position}
 import javafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}
 import scalafx.geometry.Pos
@@ -19,15 +20,15 @@ import scalafx.scene.image.{Image, ImageView}
  * The view for the game map.
  * This class extends `GridPane` and implements `SubjectGameView` and `ObserverGameMap`.
  */
-class GameMapView(onSwitchToStarterView: () => Unit) extends GridPane
-  with SubjectGameView[GameMapView] with ObserverGameMatch[GameMatch]:
+class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
+  with SubjectGameMatchView[GameMatchView]
+  with ObserverGameMatch[GameMatch]:
 
   private val mapSize = 5 // 5x5 grid for simplicity
-  private var _lastPositionTilePlaced: Position = Position(0, 0)
   private var _lastTilePlaced: Region = new Region()
 
-  private var _drawnTile: GameTile = GameTile.startTile
-  private var _drawnTileImage: ImageView = ImageView(new Image(getClass.getResource("../../tiles/" + GameTile.startTile.imagePath).toExternalForm))
+  private var _drawnTile = GameTileFactory.createStartTile()
+  private var _drawnTileImage: ImageView = ImageView(new Image(getClass.getResource("../../tiles/" + _drawnTile.imagePath).toExternalForm))
 
   private val rotateClockwise = Button("Clockwise")
   rotateClockwise.onMouseClicked = _ => rotateDrawnTileClockwise()
@@ -38,6 +39,10 @@ class GameMapView(onSwitchToStarterView: () => Unit) extends GridPane
   private val drawnTilePane = GridPane()
   drawnTilePane.alignment = Pos.CenterRight
   drawnTilePane.mouseTransparent = true
+
+  this.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
+  this.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
+
 
   this.prefWidth = 600
   this.prefHeight = 400
@@ -56,7 +61,6 @@ class GameMapView(onSwitchToStarterView: () => Unit) extends GridPane
    * @param tiles the current state of the game map tiles
    */
   def placeTile(position: Position, placedTile: Region, tiles: Map[Position, GameTile]): Unit =
-    _lastPositionTilePlaced = position
     val placedGameTile = tiles(position)
 
     placedTile.styleClass.clear()
@@ -72,18 +76,18 @@ class GameMapView(onSwitchToStarterView: () => Unit) extends GridPane
    * Creates new placeholder tiles around the last placed tile.
    * @param tiles the current state of the game map tiles
    */
-  def createNewPlaceholders(tiles: Map[Position, GameTile]): Unit =
+  def createNewPlaceholders(tiles: Map[Position, GameTile], position: Position): Unit =
     for
-      posX <- Seq(_lastPositionTilePlaced.x - 1, _lastPositionTilePlaced.x + 1)
-      if !tiles.contains(Position(posX, _lastPositionTilePlaced.y))
+      posX <- Seq(position.x - 1, position.x + 1)
+      if !tiles.contains(Position(posX, position.y))
     do
-      val placeholderTile = createPlaceholderTile(Position(posX, _lastPositionTilePlaced.y))
+      val placeholderTile = createPlaceholderTile(Position(posX, position.y))
 
     for
-      posY <- Seq(_lastPositionTilePlaced.y - 1, _lastPositionTilePlaced.y + 1)
-      if !tiles.contains(Position(_lastPositionTilePlaced.x, posY))
+      posY <- Seq(position.y - 1, position.y + 1)
+      if !tiles.contains(Position(position.x, posY))
     do
-      val placeholderTile = createPlaceholderTile(Position(_lastPositionTilePlaced.x, posY))
+      val placeholderTile = createPlaceholderTile(Position(position.x, posY))
 
   /**
    * Creates a placeholder tile at the specified position.
@@ -119,13 +123,7 @@ class GameMapView(onSwitchToStarterView: () => Unit) extends GridPane
     _drawnTileImage.rotate = _drawnTileImage.getRotate - 90
     println(_drawnTile)
     Logger.log(s"VIEW", "Drawn tile rotated counter clockwise")
-
-  /**
-   * Returns the position of the last placed tile.
-   * @return the position of the last placed tile
-   */
-  def getLastTilePlacedPosition: Option[Position] = Some(_lastPositionTilePlaced)
-
+  
   /**
    * Returns the last placed tile.
    * @return the last placed tile
@@ -181,11 +179,11 @@ class GameMapView(onSwitchToStarterView: () => Unit) extends GridPane
     if isTilePlaced then
       if tiles.isEmpty then
         placeTile(position, getLastTilePlaced.get, tiles)
-        createNewPlaceholders(tiles)
+        createNewPlaceholders(tiles, position)
       else
         placeTile(position, getLastTilePlaced.get, tiles)
-        createNewPlaceholders(tiles)
+        createNewPlaceholders(tiles, position)
 
   override def gameEnded(players: List[Player]): Unit =
     GameEndView(players).popupStage.show()
-    onSwitchToStarterView()
+    gameEndedSwitchView()
