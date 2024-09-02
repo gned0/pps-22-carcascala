@@ -23,7 +23,7 @@ class CarcassonneBoard extends GameBoard[GameTile] with Graph[Position]:
     if getElement(position).isDefined then
       throw IllegalArgumentException(s"Tile already placed at position $position")
 
-    if isValidPlacement(tile, position) then
+    if isValidTilePlacement(tile, position) then
       placeElement(tile, position)
       Logger.log("MODEL", s"Tile placed at $position")
 
@@ -62,15 +62,15 @@ class CarcassonneBoard extends GameBoard[GameTile] with Graph[Position]:
    * @param position The `Position` where the tile is to be placed.
    * @return `true` if the placement is valid, `false` otherwise.
    */
-  private def isValidPlacement(tile: GameTile, position: Position): Boolean =
-    val neighbors = List(
+  private def isValidTilePlacement(tile: GameTile, position: Position): Boolean =
+    val neighborTiles = List(
       (Position(position.x, position.y - 1), TileSegment.N, TileSegment.S), // North neighbor
       (Position(position.x + 1, position.y), TileSegment.E, TileSegment.W), // East neighbor
       (Position(position.x, position.y + 1), TileSegment.S, TileSegment.N), // South neighbor
       (Position(position.x - 1, position.y), TileSegment.W, TileSegment.E)  // West neighbor
     )
 
-    neighbors.forall { case (pos, tileSegment, neighborSegment) =>
+    neighborTiles.forall { case (pos, tileSegment, neighborSegment) =>
       getElement(pos).forall { neighborTile =>
         tile.segments(tileSegment) == neighborTile.segments(neighborSegment)
       }
