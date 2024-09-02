@@ -41,14 +41,9 @@ class CarcassonneBoard extends GameBoard[GameTile] with Graph[Position]:
    * @param position The `Position` where the tile is placed.
    */
   private def updateGraphEdges(tile: GameTile, position: Position): Unit =
-    val neighbors = List(
-      (Position(position.x, position.y - 1), TileSegment.N, TileSegment.S), // North neighbor
-      (Position(position.x + 1, position.y), TileSegment.E, TileSegment.W), // East neighbor
-      (Position(position.x, position.y + 1), TileSegment.S, TileSegment.N), // South neighbor
-      (Position(position.x - 1, position.y), TileSegment.W, TileSegment.E)  // West neighbor
-    )
+    val neighborTiles = getNeighborTiles(position)
 
-    neighbors.foreach { case (neighborPos, tileSegment, neighborSegment) =>
+    neighborTiles.foreach { case (neighborPos, tileSegment, neighborSegment) =>
       getElement(neighborPos).foreach { neighborTile =>
         if tile.segments(tileSegment) == neighborTile.segments(neighborSegment) then
           addEdge(position, neighborPos)
@@ -63,18 +58,23 @@ class CarcassonneBoard extends GameBoard[GameTile] with Graph[Position]:
    * @return `true` if the placement is valid, `false` otherwise.
    */
   private def isValidTilePlacement(tile: GameTile, position: Position): Boolean =
-    val neighborTiles = List(
-      (Position(position.x, position.y - 1), TileSegment.N, TileSegment.S), // North neighbor
-      (Position(position.x + 1, position.y), TileSegment.E, TileSegment.W), // East neighbor
-      (Position(position.x, position.y + 1), TileSegment.S, TileSegment.N), // South neighbor
-      (Position(position.x - 1, position.y), TileSegment.W, TileSegment.E)  // West neighbor
-    )
+    val neighborTiles = getNeighborTiles(position)
 
     neighborTiles.forall { case (pos, tileSegment, neighborSegment) =>
       getElement(pos).forall { neighborTile =>
         tile.segments(tileSegment) == neighborTile.segments(neighborSegment)
       }
     }
+
+  private def getNeighborTiles(position: Position) = {
+    val neighborTiles = List(
+      (Position(position.x, position.y - 1), TileSegment.N, TileSegment.S), // North neighbor
+      (Position(position.x + 1, position.y), TileSegment.E, TileSegment.W), // East neighbor
+      (Position(position.x, position.y + 1), TileSegment.S, TileSegment.N), // South neighbor
+      (Position(position.x - 1, position.y), TileSegment.W, TileSegment.E) // West neighbor
+    )
+    neighborTiles
+  }
 
   /**
    * Retrieves the tile at the specified position, if any.
