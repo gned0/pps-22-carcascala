@@ -1,10 +1,13 @@
 package carcassonne.view
 
 import scalafx.scene.input.{MouseEvent, ScrollEvent}
-import scalafx.scene.layout.{Region, StackPane}
+import scalafx.scene.layout.{Background, BackgroundFill, CornerRadii, HBox, Region, StackPane}
 import scalafx.Includes.*
+import scalafx.geometry.{Insets, Pos}
+import scalafx.scene.effect.ColorAdjust
+import scalafx.scene.paint.Color
 
-class GameBoardView extends StackPane{
+class GameBoardView() extends StackPane {
 
   // Initial mouse position
   private var initialX = 0.0
@@ -15,6 +18,22 @@ class GameBoardView extends StackPane{
   private val zoomIncrement = 0.1 // Zoom step size
   private val minZoom = 0.5 // Minimum zoom level
   private val maxZoom = 4.0 // Maximum zoom level
+
+  this.background = new Background(
+    Array(
+      new BackgroundFill(
+      Color.Pink,
+      CornerRadii.Empty,
+      Insets.Empty
+      )
+    )
+  )
+
+//  this.effect = new ColorAdjust():
+//    hue = 240.0
+//    brightness = 44.0
+//    contrast = 0.0
+//    saturation = 100.0
 
   this.onMousePressed = (event: MouseEvent) =>
     initialX = event.sceneX
@@ -38,11 +57,12 @@ class GameBoardView extends StackPane{
 
     this.scaleX = zoomFactor
     this.scaleY = zoomFactor
-
+    
     event.consume()
 
   this.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
-  this.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
+  this.setPrefSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
   this.setMaxSize(Double.MaxValue, Double.MaxValue)
-  
+  StackPane.setAlignment(this, Pos.Center)
+  StackPane.setMargin(this, Insets(10))
 }

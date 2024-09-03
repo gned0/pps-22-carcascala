@@ -8,12 +8,15 @@ import carcassonne.util.{Logger, Position}
 import javafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.input.{MouseButton, MouseEvent}
-import scalafx.scene.layout.{ColumnConstraints, GridPane, HBox, Region, RowConstraints, StackPane, VBox}
+import scalafx.scene.layout.{ColumnConstraints, GridPane, HBox, Priority, Region, RowConstraints, StackPane, VBox}
 import scalafx.scene.text.Text
 import scalafx.Includes.*
 import scalafx.event.EventIncludes.eventClosureWrapperWithParam
 import scalafx.scene.control.Button
+import scalafx.scene.effect.ColorAdjust
 import scalafx.scene.image.{Image, ImageView}
+import scalafx.scene.paint.Color
+import scalafx.scene.shape.Rectangle
 
 
 /**
@@ -41,7 +44,10 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
   drawnTilePane.mouseTransparent = true
 
   this.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
-  this.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
+  this.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
+  this.setMaxSize(Double.MaxValue, Double.MaxValue)
+  GridPane.setHgrow(this, Priority.Always)
+  GridPane.setVgrow(this, Priority.Always)
 
 
   this.prefWidth = 600
@@ -74,6 +80,7 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
       hgap = 0
       vgap = 0
       padding = Insets(0)
+      alignment = Pos.Center
 
       // Creating 3x3 grid structure with equal cell sizes
       columnConstraints ++= Seq(
@@ -110,18 +117,46 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
           fitHeight = (_drawnTileImage.fitHeight.toDouble - 5) / 3.3
           preserveRatio = true
         }
-        meepleGrid.add(meepleImageView, j, i)
+
+        // Create the overlay Rectangle with the desired fill color
+        val filledMeeple = new ImageView(new Image(getClass.getResource("../../MeepleFill.png").toExternalForm)) {
+          fitWidth = (_drawnTileImage.fitWidth.toDouble - 5) / 3.3
+          fitHeight = (_drawnTileImage.fitHeight.toDouble - 5) / 3.3
+          opacity = 0.5 // Set the opacity to make it semi-transparent
+//          visible = false // Initially not visible
+          preserveRatio = true
+        }
+
+        // Create a StackPane to hold the ImageView and Rectangle
+        val stackPane = new StackPane {
+          children = Seq(meepleImageView, filledMeeple)
+        }
+
+        // Create a ColorAdjust effect
+        val colorAdjust = new ColorAdjust()
+
+        // Add hover effect to show/hide the rectangle
+        filledMeeple.onMouseEntered = _ =>
+          filledMeeple.visible = false
+//          colorAdjust.brightness = 0.3 // Brightens the image
+//          colorAdjust.hue = 0.5 // Adjusts the hue
+//          filledMeeple.effect = colorAdjust
+
+        filledMeeple.onMouseExited = _ =>
+          filledMeeple.visible = true
+          filledMeeple.effect = null // Remove the effect when the mouse leaves
+
+
+
+        meepleGrid.add(stackPane, j, i)
 
     val placeTileStackPane = new StackPane():
       maxHeight = 10
       maxWidth = 10
-//      prefWidth = 10
-//      prefWidth = 10
       children = Seq(
         _drawnTileImage,
         meepleGrid
       )
-
 
     this.add(placeTileStackPane, position.x, position.y)
 

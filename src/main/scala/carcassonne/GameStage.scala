@@ -11,7 +11,7 @@ import scalafx.application.JFXApp3
 import scalafx.scene.{Node, Scene}
 import scalafx.scene.input.{MouseEvent, ScrollEvent}
 import scalafx.scene.layout.Priority.Always
-import scalafx.scene.layout.{HBox, Region, StackPane}
+import scalafx.scene.layout.{HBox, Region, StackPane, VBox}
 
 class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimaryStage {
   title = "CarcaScala"
@@ -25,6 +25,9 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
   // Update this method to accept player names and assign colors
   def switchMainGameView(playerNames: List[String]): Unit = {
     val gameBoard = GameBoardView()
+    HBox.setHgrow(gameBoard, Always)
+    VBox.setVgrow(gameBoard, Always)
+    
     val boardView = GameMatchView(() => gameEndedSwitchView())
     gameBoard.children = boardView
 
@@ -37,7 +40,7 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
     GameMatchController(game, boardView).initialize()
     game.addObserver(boardView)
 
-    this.setMainView(boardView)
+    this.setMainView(gameBoard)
 
     game.play()
     boardView.addDrawnTilePane()
