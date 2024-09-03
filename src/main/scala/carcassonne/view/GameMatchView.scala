@@ -6,9 +6,9 @@ import carcassonne.observers.observers.ObserverGameMatch
 import carcassonne.observers.subjects.{SubjectGameMatchView, SubjectStarterView}
 import carcassonne.util.{Logger, Position}
 import javafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}
-import scalafx.geometry.Pos
+import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.input.{MouseButton, MouseEvent}
-import scalafx.scene.layout.{GridPane, HBox, Region, VBox}
+import scalafx.scene.layout.{ColumnConstraints, GridPane, HBox, Region, RowConstraints, StackPane, VBox}
 import scalafx.scene.text.Text
 import scalafx.Includes.*
 import scalafx.event.EventIncludes.eventClosureWrapperWithParam
@@ -70,7 +70,60 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
       getColumnIndex(node) == position.x && getRowIndex(node) == position.y
     )
     // Replace the tile that has been just removed with new attributes
-    this.add(_drawnTileImage, position.x, position.y)
+    val meepleGrid = new GridPane():
+      hgap = 0
+      vgap = 0
+      padding = Insets(0)
+
+      // Creating 3x3 grid structure with equal cell sizes
+      columnConstraints ++= Seq(
+        new ColumnConstraints {
+          percentWidth = 100 / 3.0
+        },
+        new ColumnConstraints {
+          percentWidth = 100 / 3.0
+        },
+        new ColumnConstraints {
+          percentWidth = 100 / 3.0
+        }
+      )
+
+      rowConstraints ++= Seq(
+        new RowConstraints {
+          percentHeight = 100 / 3.0
+        },
+        new RowConstraints {
+          percentHeight = 100 / 3.0
+        },
+        new RowConstraints {
+          percentHeight = 100 / 3.0
+        }
+      )
+
+    meepleGrid.prefHeight <== _drawnTileImage.fitHeight.toDouble
+    meepleGrid.prefWidth <== _drawnTileImage.fitWidth.toDouble
+
+    for i <- 0 until 3 do
+      for j <- 0 until 3 do
+        val meepleImageView = new ImageView(new Image(getClass.getResource("../../Meeple.png").toExternalForm)) {
+          fitWidth = (_drawnTileImage.fitWidth.toDouble - 5) / 3.3
+          fitHeight = (_drawnTileImage.fitHeight.toDouble - 5) / 3.3
+          preserveRatio = true
+        }
+        meepleGrid.add(meepleImageView, j, i)
+
+    val placeTileStackPane = new StackPane():
+      maxHeight = 10
+      maxWidth = 10
+//      prefWidth = 10
+//      prefWidth = 10
+      children = Seq(
+        _drawnTileImage,
+        meepleGrid
+      )
+
+
+    this.add(placeTileStackPane, position.x, position.y)
 
   /**
    * Creates new placeholder tiles around the last placed tile.
@@ -136,6 +189,9 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
     _drawnTile = tileDrawn
     drawnTilePane.getChildren.clear()
     _drawnTileImage = new ImageView(new Image(getClass.getResource("../../tiles/" + tileDrawn.imagePath).toExternalForm))
+//    _drawnTileImage.maxWidth(10)
+//    _drawnTileImage.maxHeight(10)
+
     _drawnTileImage.fitWidth = 100
     _drawnTileImage.fitHeight = 100
     _drawnTileImage.preserveRatio = true
