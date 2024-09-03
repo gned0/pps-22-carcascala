@@ -9,22 +9,21 @@ import scalafx.scene.Scene
 import scalafx.scene.control.Alert.AlertType
 import scalafx.stage.Stage
 
-class GameStarterView(switchMainGameView: (List[String]) => Unit) extends VBox
+class GameStarterView(switchMainGameView: List[String] => Unit) extends VBox
   with SubjectStarterView[GameStarterView] {
 
-  val startGameButton = new Button("Start Game")
-  val exitGameButton = new Button("Exit Game")
+  private val startGameButton = new Button("Start Game")
+  private val exitGameButton = new Button("Exit Game")
 
   startGameButton.onMouseClicked = _ => showPlayerSetupDialog()
   exitGameButton.onMouseClicked = _ => Platform.exit()
 
-  val buttonBox = new HBox(10) // 10 pixels of spacing between buttons
+  private val buttonBox = new HBox(10) // 10 pixels of spacing between buttons
   buttonBox.children.addAll(startGameButton, exitGameButton)
   buttonBox.alignment = Pos.Center // Center the buttons in the HBox
 
   this.children = buttonBox
 
-  // Function to show a dialog for entering player names
   private def showPlayerSetupDialog(): Unit = {
     val playerSetupStage = new Stage {
       title = "Player Setup"
