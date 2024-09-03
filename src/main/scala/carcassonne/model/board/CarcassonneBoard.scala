@@ -93,6 +93,28 @@ class CarcassonneBoard extends GameBoard[GameTile] with Graph[Position]:
   def getTileMap: Option[Map[Position, GameTile]] =
     getElementMap
 
+  def placeFollower(gameTile: GameTile, segment: TileSegment, player: Player): Boolean =
+    if (gameTile.followerMap.contains(segment)) return false
+
+    val connectedFeature = this.getConnectedFeature(gameTile, segment)
+
+    val isFeatureOccupied = connectedFeature.exists { case (tile, seg) =>
+      tile.followerMap.contains(seg)
+    }
+
+    if (isFeatureOccupied) return false
+
+    gameTile.followerMap = gameTile.followerMap.updated(segment, player.playerId)
+    true 
+
+  /**
+   * Retrieves the connected feature starting from a specific tile and segment.
+   * Uses breadth-first search (BFS) to find all connected tiles and segments.
+   *
+   * @param startTile    The starting `GameTile`.
+   * @param startSegment The starting `TileSegment`.
+   * @return A set of tuples representing the connected tiles and segments.
+   */
   def getConnectedFeature(startTile: GameTile, startSegment: TileSegment): Set[(GameTile, TileSegment)] = {
     var visited: Set[(Position, TileSegment)] = Set()
 

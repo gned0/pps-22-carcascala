@@ -55,18 +55,12 @@ class GameMatch(players: List[Player], board: CarcassonneBoard, deck: TileDeck) 
 
 
   def placeFollower(gameTile: GameTile, segment: TileSegment, player: Player): Boolean =
-    if (gameTile.followerMap.contains(segment)) return false
+    if board.placeFollower(gameTile, segment, player) then
+      player.placeFollower()
+      true
+    else
+      false
 
-    val connectedFeature = board.getConnectedFeature(gameTile, segment)
-
-    val isFeatureOccupied = connectedFeature.exists { case (tile, seg) =>
-      tile.followerMap.contains(seg)
-    }
-
-    if (isFeatureOccupied) return false
-
-    gameTile.followerMap = gameTile.followerMap.updated(segment, player.playerId)
-    player.placeFollower()
 
 
 
