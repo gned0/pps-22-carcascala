@@ -1,10 +1,10 @@
 package carcassonne.model.game
 
+import carcassonne.util.Color
+
 /**
  * Represents the different colors that a player can choose.
  */
-enum Color:
-  case Black, Red, Yellow, Green, Blue
 
 /**
  * Represents a player in the game.
