@@ -29,13 +29,7 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
 
   private var _drawnTile = GameTileFactory.createStartTile()
   private var _drawnTileImage: ImageView = ImageView(new Image(getClass.getResource("../../tiles/" + _drawnTile.imagePath).toExternalForm))
-
-  private val rotateClockwise = Button("Clockwise")
-  rotateClockwise.onMouseClicked = _ => rotateDrawnTileClockwise()
-
-  private val rotateCounterClockwise = Button("Counter Clockwise")
-  rotateCounterClockwise.onMouseClicked = _ => rotateDrawnTileCounterClockwise()
-
+  
   private val drawnTilePane = GridPane()
   drawnTilePane.alignment = Pos.CenterRight
   drawnTilePane.mouseTransparent = true
@@ -199,56 +193,13 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
    */
   def checkClickedTile(position: Position): Unit =
     notifyTilePlacementAttempt(_drawnTile, position)
-
-  def rotateDrawnTileClockwise(): Unit =
-    _drawnTile = _drawnTile.rotateClockwise
-    _drawnTileImage.rotate = _drawnTileImage.getRotate + 90
-    println(_drawnTile)
-    Logger.log(s"VIEW", "Drawn tile rotated clockwise")
-
-  def rotateDrawnTileCounterClockwise(): Unit =
-    _drawnTile = _drawnTile.rotateCounterClockwise
-    _drawnTileImage.rotate = _drawnTileImage.getRotate - 90
-    println(_drawnTile)
-    Logger.log(s"VIEW", "Drawn tile rotated counter clockwise")
+  
 
   def getDrawnTilePane: Option[GridPane] = Some(drawnTilePane)
 
   override def tileDrawn(tileDrawn: GameTile): Unit =
-    _drawnTile = tileDrawn
-    drawnTilePane.getChildren.clear()
-    _drawnTileImage = new ImageView(new Image(getClass.getResource("../../tiles/" + tileDrawn.imagePath).toExternalForm))
-//    _drawnTileImage.maxWidth(10)
-//    _drawnTileImage.maxHeight(10)
-
-    _drawnTileImage.fitWidth = 100
-    _drawnTileImage.fitHeight = 100
-    _drawnTileImage.preserveRatio = true
-
-    drawnTilePane.add(new Text(s"North Border: \n${tileDrawn.segments(TileSegment.N)}"), 10, 10)
-    drawnTilePane.add(new Text(s"East Border: \n${tileDrawn.segments(TileSegment.E)}"), 11, 11)
-    drawnTilePane.add(new Text(s"South Border: \n${tileDrawn.segments(TileSegment.S)}"), 10, 12)
-    drawnTilePane.add(new Text(s"West Border: \n${tileDrawn.segments(TileSegment.W)}"), 9, 11)
-    drawnTilePane.add(_drawnTileImage, 10, 11)
-
-  def addDrawnTilePane(): Unit =
-    val menuColumn = new VBox {
-      prefWidth = 250 // Fixed width for the menu column
-      style = "-fx-background-color: darkgray;" // Background color for the menu column
-
-      // Add some example buttons to the menu
-      children = Seq(
-        drawnTilePane,
-        new HBox {
-          children = Seq(
-            rotateClockwise,
-            rotateCounterClockwise
-          )
-        }
-      )
-    }
-    menuColumn.alignment = Pos.TopLeft
-    this.getScene.getChildren.add(menuColumn)
+    println("nothing")
+    
 
   /**
    * Called when a tile is placed on the game map.

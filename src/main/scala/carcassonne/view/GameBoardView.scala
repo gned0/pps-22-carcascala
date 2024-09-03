@@ -7,7 +7,7 @@ import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.effect.ColorAdjust
 import scalafx.scene.paint.Color
 
-class GameBoardView() extends StackPane {
+class GameBoardView extends StackPane {
 
   // Initial mouse position
   private var initialX = 0.0
