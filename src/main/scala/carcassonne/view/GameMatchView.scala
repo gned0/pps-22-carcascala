@@ -27,9 +27,6 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
   with SubjectGameMatchView[GameMatchView]
   with ObserverGameMatch[GameMatch]:
 
-  private val mapSize = 5 // 5x5 grid for simplicity
-  private var _lastTilePlaced: Region = new Region()
-
   private var _drawnTile = GameTileFactory.createStartTile()
   private var _drawnTileImage: ImageView = ImageView(new Image(getClass.getResource("../../tiles/" + _drawnTile.imagePath).toExternalForm))
 
@@ -63,14 +60,11 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
   /**
    * Places a tile at the specified position in the view.
    * @param position the position where the tile should be placed
-   * @param placedTile the tile to place
    * @param tiles the current state of the game map tiles
    */
-  def placeTile(position: Position, placedTile: Region, tiles: Map[Position, GameTile]): Unit =
+  def placeTile(position: Position, tiles: Map[Position, GameTile]): Unit =
     val placedGameTile = tiles(position)
-
-    placedTile.styleClass.clear()
-    placedTile.onMouseClicked = null
+    
     // Remove the old placeholder
     this.getChildren.removeIf(node =>
       getColumnIndex(node) == position.x && getRowIndex(node) == position.y
@@ -135,9 +129,9 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
         def map(value: Double, start: Double, stop: Double, targetStart: Double, targetStop: Double) =
           targetStart + (targetStop - targetStart) * ((value - start) / (stop - start))
 
-        // 240 is the value of th Hue for the blue color, so change 240 accordingly to the wanted colour, keep
+        // 240 is the value of Hue for the blue color, so change 240 accordingly to the wanted colour, keep
         // the rest the same
-        println(map( (240 + 180) % 360, 0, 360, -1, 1))
+//      println(map( (240 + 180) % 360, 0, 360, -1, 1))
 
         // Create a ColorAdjust effect
         val colorAdjust = new ColorAdjust() {
@@ -196,16 +190,14 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
       prefHeight = 100
       styleClass += "placeholderTile"
       onMouseClicked = (event: MouseEvent) => if event.button == MouseButton.Primary then
-        checkClickedTile(position, this)
+        checkClickedTile(position)
       add(this, position.x, position.y)
 
   /**
    * Checks the clicked tile and notifies observers of a tile placement attempt.
    * @param position the position of the clicked tile
-   * @param placedTile the clicked tile
    */
-  def checkClickedTile(position: Position, placedTile: Region): Unit =
-    _lastTilePlaced = placedTile
+  def checkClickedTile(position: Position): Unit =
     notifyTilePlacementAttempt(_drawnTile, position)
 
   def rotateDrawnTileClockwise(): Unit =
@@ -219,12 +211,6 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
     _drawnTileImage.rotate = _drawnTileImage.getRotate - 90
     println(_drawnTile)
     Logger.log(s"VIEW", "Drawn tile rotated counter clockwise")
-  
-  /**
-   * Returns the last placed tile.
-   * @return the last placed tile
-   */
-  def getLastTilePlaced: Option[Region] = Some(_lastTilePlaced)
 
   def getDrawnTilePane: Option[GridPane] = Some(drawnTilePane)
 
@@ -277,10 +263,10 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
     val tiles = tilesOption.get
     if isTilePlaced then
       if tiles.isEmpty then
-        placeTile(position, getLastTilePlaced.get, tiles)
+        placeTile(position, tiles)
         createNewPlaceholders(tiles, position)
       else
-        placeTile(position, getLastTilePlaced.get, tiles)
+        placeTile(position, tiles)
         createNewPlaceholders(tiles, position)
 
   override def gameEnded(players: List[Player]): Unit =
