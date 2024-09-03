@@ -1,9 +1,9 @@
 package carcassonne.model
 
 import carcassonne.model.board.CarcassonneBoard
-import carcassonne.model.game.{Color, GameMatch, Player, ScoreCalculator}
+import carcassonne.model.game.{GameMatch, Player, ScoreCalculator}
 import carcassonne.model.tile.{GameTile, GameTileFactory, TileDeck, TileSegment}
-import carcassonne.util.Position
+import carcassonne.util.{Color, Position}
 import carcassonne.view.GameMatchView
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
