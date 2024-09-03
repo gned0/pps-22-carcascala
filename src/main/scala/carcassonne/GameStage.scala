@@ -2,8 +2,9 @@ package carcassonne
 
 import carcassonne.controller.GameMatchController
 import carcassonne.model.board.CarcassonneBoard
-import carcassonne.model.game.{Color, GameMatch, Player}
+import carcassonne.model.game.{GameMatch, Player}
 import carcassonne.model.tile.TileDeck
+import carcassonne.util.{Color, PlayerColor}
 import carcassonne.view.{GameBoardView, GameMatchView, GameStarterView, GameViewContainer}
 import scalafx.Includes.*
 import scalafx.application.JFXApp3
@@ -18,16 +19,21 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
     stylesheets.add(getClass.getResource("../placeholderTile.css").toExternalForm)
     root = gameViewContainer
 
-  gameViewContainer.children = GameStarterView(() => switchMainGameView())
+  // Pass a function that accepts a List[String]
+  gameViewContainer.children = new GameStarterView(playerNames => switchMainGameView(playerNames))
 
-  def switchMainGameView(): Unit =
+  // Update this method to accept player names and assign colors
+  def switchMainGameView(playerNames: List[String]): Unit = {
     val gameBoard = GameBoardView()
     val boardView = GameMatchView(() => gameEndedSwitchView())
     gameBoard.children = boardView
 
-    val game = GameMatch(List(Player(0, "test", Color.Red), Player(1, "test2", Color.Blue)),
-      CarcassonneBoard(),
-      TileDeck())
+    val playersWithColors = PlayerColor.assignColors(playerNames)
+    val players = playersWithColors.zipWithIndex.map {
+      case ((name, color), index) => Player(index, name, color)
+    }
+
+    val game = GameMatch(players, CarcassonneBoard(), TileDeck())
     GameMatchController(game, boardView).initialize()
     game.addObserver(boardView)
 
@@ -35,9 +41,10 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
 
     game.play()
     boardView.addDrawnTilePane()
+  }
 
   def gameEndedSwitchView(): Unit =
-    this.setMainView(GameStarterView(() => switchMainGameView()))
+    this.setMainView(new GameStarterView(playerNames => switchMainGameView(playerNames)))
 
   private def setMainView(view: Node): Unit =
     gameViewContainer.children = view
