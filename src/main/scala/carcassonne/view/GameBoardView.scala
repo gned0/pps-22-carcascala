@@ -19,22 +19,6 @@ class GameBoardView() extends StackPane {
   private val minZoom = 0.5 // Minimum zoom level
   private val maxZoom = 4.0 // Maximum zoom level
 
-  this.background = new Background(
-    Array(
-      new BackgroundFill(
-      Color.Pink,
-      CornerRadii.Empty,
-      Insets.Empty
-      )
-    )
-  )
-
-//  this.effect = new ColorAdjust():
-//    hue = 240.0
-//    brightness = 44.0
-//    contrast = 0.0
-//    saturation = 100.0
-
   this.onMousePressed = (event: MouseEvent) =>
     initialX = event.sceneX
     initialY = event.sceneY
@@ -57,12 +41,11 @@ class GameBoardView() extends StackPane {
 
     this.scaleX = zoomFactor
     this.scaleY = zoomFactor
-    
+
     event.consume()
 
   this.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
   this.setPrefSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
   this.setMaxSize(Double.MaxValue, Double.MaxValue)
   StackPane.setAlignment(this, Pos.Center)
-  StackPane.setMargin(this, Insets(10))
 }

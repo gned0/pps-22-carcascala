@@ -123,7 +123,7 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
           fitWidth = (_drawnTileImage.fitWidth.toDouble - 5) / 3.3
           fitHeight = (_drawnTileImage.fitHeight.toDouble - 5) / 3.3
           opacity = 0.5 // Set the opacity to make it semi-transparent
-//          visible = false // Initially not visible
+          visible = true // Initially not visible
           preserveRatio = true
         }
 
@@ -132,19 +132,27 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
           children = Seq(meepleImageView, filledMeeple)
         }
 
+        def map(value: Double, start: Double, stop: Double, targetStart: Double, targetStop: Double) =
+          targetStart + (targetStop - targetStart) * ((value - start) / (stop - start))
+
+        // 240 is the value of th Hue for the blue color, so change 240 accordingly to the wanted colour, keep
+        // the rest the same
+        println(map( (240 + 180) % 360, 0, 360, -1, 1))
+
         // Create a ColorAdjust effect
-        val colorAdjust = new ColorAdjust()
+        val colorAdjust = new ColorAdjust() {
+          hue = -0.6666666666666667 // Shift hue towards blue
+          brightness = 0.0 // No change in brightness
+          saturation = 1.0 // No change in saturation
+          contrast = 0.0
+        }
 
         // Add hover effect to show/hide the rectangle
         filledMeeple.onMouseEntered = _ =>
-          filledMeeple.visible = false
-//          colorAdjust.brightness = 0.3 // Brightens the image
-//          colorAdjust.hue = 0.5 // Adjusts the hue
-//          filledMeeple.effect = colorAdjust
+          filledMeeple.effect = colorAdjust
 
         filledMeeple.onMouseExited = _ =>
-          filledMeeple.visible = true
-          filledMeeple.effect = null // Remove the effect when the mouse leaves
+          filledMeeple.effect = null
 
 
 
