@@ -41,8 +41,8 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
 
     val game = GameMatch(players, CarcassonneBoard(), TileDeck())
     GameMatchController(game, boardView).initialize()
-    game.addObserver(boardView)
-    game.addObserver(gameMenu)
+    game.addObserverBoard(boardView)
+    game.addObserverMenu(gameMenu)
 
     this.setMainView(Seq(gameBoard, gameMenu))
     game.play()

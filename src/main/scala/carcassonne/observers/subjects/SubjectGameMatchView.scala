@@ -9,22 +9,20 @@ import scalafx.scene.layout.Region
  * A trait representing a subject in the observer pattern for the game view.
  * @tparam S the type of the subject
  */
-trait SubjectGameMatchView[S]:
-  this: S =>
-
-  private var observers: List[ObserverGameMatchView[S]] = Nil
+trait SubjectGameMatchView:
+  private var observers: List[ObserverGameMatchView] = Nil
 
   /**
    * Adds an observer to the subject.
    * @param observer the observer to add
    */
-  def addObserver(observer: ObserverGameMatchView[S]): Unit = observers = observer :: observers
+  def addObserver(observer: ObserverGameMatchView): Unit = observers = observer :: observers
 
   /**
    * Returns the list of observers.
    * @return the list of observers
    */
-  def getObservers: List[ObserverGameMatchView[S]] = observers
+  def getObservers: List[ObserverGameMatchView] = observers
 
   /**
    * Notifies all observers of a tile placement attempt.

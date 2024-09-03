@@ -8,7 +8,7 @@ import scalafx.scene.layout.Region
  * A trait representing an observer for the game view.
  * @tparam S the type of the subject being observed
  */
-trait ObserverGameMatchView[S]:
+trait ObserverGameMatchView:
 
   /**
    * Called when a tile placement attempt is made.

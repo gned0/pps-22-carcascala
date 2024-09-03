@@ -9,6 +9,6 @@ import carcassonne.util.Position
  *
  * @tparam S the type of the subject being observed
  */
-trait ObserverStarterView[S]:
+trait ObserverStarterView:
 
   def switchMainGameView(): Unit

@@ -2,7 +2,7 @@ package carcassonne.view
 
 import carcassonne.model.game.{GameMatch, Player}
 import carcassonne.model.tile.{GameTile, GameTileFactory, TileSegment}
-import carcassonne.observers.observers.ObserverGameMatch
+import carcassonne.observers.observers.{ObserverGameMatchBoard}
 import carcassonne.observers.subjects.{SubjectGameMatchView, SubjectStarterView}
 import carcassonne.util.{Logger, Position}
 import javafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}
@@ -24,8 +24,8 @@ import scalafx.scene.shape.Rectangle
  * This class extends `GridPane` and implements `SubjectGameView` and `ObserverGameMap`.
  */
 class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
-  with SubjectGameMatchView[GameMatchView]
-  with ObserverGameMatch[GameMatch]:
+  with SubjectGameMatchView
+  with ObserverGameMatchBoard:
 
   private var _drawnTile = GameTileFactory.createStartTile()
   private var _drawnTileImage: ImageView = ImageView(new Image(getClass.getResource("../../tiles/" + _drawnTile.imagePath).toExternalForm))
@@ -196,9 +196,6 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
   
 
   def getDrawnTilePane: Option[GridPane] = Some(drawnTilePane)
-
-  override def tileDrawn(tileDrawn: GameTile): Unit =
-    println("nothing")
     
 
   /**

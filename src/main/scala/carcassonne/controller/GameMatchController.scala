@@ -13,7 +13,7 @@ import scalafx.scene.layout.Region
  * @param model the game map model
  * @param view the game map view
  */
-class GameMatchController(model: GameMatch, view: GameMatchView) extends ObserverGameMatchView[GameMatchView]:
+class GameMatchController(model: GameMatch, view: GameMatchView) extends ObserverGameMatchView :
 
   /**
    * Initializes the controller by setting up the view to listen for tile click events.

@@ -10,7 +10,7 @@ import scalafx.scene.control.Alert.AlertType
 import scalafx.stage.Stage
 
 class GameStarterView(switchMainGameView: List[String] => Unit) extends VBox
-  with SubjectStarterView[GameStarterView] {
+  with SubjectStarterView {
 
   private val startGameButton = new Button("Start Game")
   private val exitGameButton = new Button("Exit Game")

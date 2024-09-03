@@ -2,7 +2,7 @@ package carcassonne.view
 
 import carcassonne.model.game.{GameMatch, Player}
 import carcassonne.model.tile.{GameTile, TileSegment}
-import carcassonne.observers.observers.ObserverGameMatch
+import carcassonne.observers.observers.ObserverGameMatchMenu
 import carcassonne.util.{Logger, Position}
 import scalafx.geometry.Pos
 import scalafx.scene.control.Button
@@ -11,7 +11,7 @@ import scalafx.scene.layout.{GridPane, HBox, VBox}
 import scalafx.scene.text.Text
 
 class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
-  with ObserverGameMatch[GameMatch] {
+  with ObserverGameMatchMenu {
 
   this.prefWidth = 250
   this.style = "-fx-background-color: darkgray;"
@@ -58,14 +58,9 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     
     rotateClockwise.onMouseClicked = _ => rotateDrawnTileClockwise(tileDrawn, tileDrawnImage)
     rotateCounterClockwise.onMouseClicked = _ => rotateDrawnTileCounterClockwise(tileDrawn, tileDrawnImage)
+  
 
-  override def gameEnded(players: List[Player]): Unit =
-    println("nothing")
-
-  override def isTilePlaced(isTilePlaced: Boolean, tiles: Option[Map[Position, GameTile]], position: Position): Unit =
-    println("nothing")
-
-  def addDrawnTilePaneElements(tileDrawn: GameTile, tileDrawnImage: ImageView): Unit =
+  private def addDrawnTilePaneElements(tileDrawn: GameTile, tileDrawnImage: ImageView): Unit =
     drawnTilePane.add(new Text(s"North Border: \n${tileDrawn.segments(TileSegment.N)}"), 10, 10)
     drawnTilePane.add(new Text(s"East Border: \n${tileDrawn.segments(TileSegment.E)}"), 11, 11)
     drawnTilePane.add(new Text(s"South Border: \n${tileDrawn.segments(TileSegment.S)}"), 10, 12)

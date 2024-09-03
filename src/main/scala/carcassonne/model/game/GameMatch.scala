@@ -13,7 +13,8 @@ import scala.collection.mutable
 object GameMatch:
   private val MinPlayers = 2
 
-class GameMatch(players: List[Player], board: CarcassonneBoard, deck: TileDeck) extends SubjectGameMatch[GameMatch]:
+class GameMatch(players: List[Player], board: CarcassonneBoard, deck: TileDeck) 
+  extends SubjectGameMatch:
   require(players.length >= GameMatch.MinPlayers, s"At least ${GameMatch.MinPlayers} players are required to start the game.")
 
   private var currentPlayerIndex: Int = 0
