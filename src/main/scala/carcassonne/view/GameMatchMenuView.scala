@@ -3,6 +3,7 @@ package carcassonne.view
 import carcassonne.model.game.{GameMatch, Player}
 import carcassonne.model.tile.{GameTile, TileSegment}
 import carcassonne.observers.observers.ObserverGameMatchMenu
+import carcassonne.observers.subjects.SubjectGameMenuView
 import carcassonne.util.{Logger, Position}
 import scalafx.geometry.Pos
 import scalafx.scene.control.Button
@@ -11,6 +12,7 @@ import scalafx.scene.layout.{GridPane, HBox, VBox}
 import scalafx.scene.text.Text
 
 class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
+  with SubjectGameMenuView
   with ObserverGameMatchMenu {
 
   this.prefWidth = 250
@@ -32,11 +34,13 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
 
   private def rotateDrawnTileClockwise(tileDrawn: GameTile, tileDrawnImage: ImageView): Unit =
     tileDrawnImage.rotate = tileDrawnImage.getRotate + 90
+    setDrawnTile(tileDrawn, tileDrawnImage)
     redrawTileDrawn(tileDrawn.rotateClockwise, tileDrawnImage)
     Logger.log(s"MENU VIEW", "Drawn tile rotated clockwise")
 
   private def rotateDrawnTileCounterClockwise(tileDrawn: GameTile, tileDrawnImage: ImageView): Unit =
     tileDrawnImage.rotate = tileDrawnImage.getRotate - 90
+    setDrawnTile(tileDrawn, tileDrawnImage)
     redrawTileDrawn(tileDrawn.rotateCounterClockwise, tileDrawnImage)
     Logger.log(s"MENU VIEW", "Drawn tile rotated counter clockwise")
 
@@ -49,11 +53,12 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     Logger.log("MENU VIEW", "Tile drawn")
     drawnTilePane.getChildren.clear()
     val tileDrawnImage = new ImageView(new Image(getClass.getResource("../../tiles/" + tileDrawn.imagePath).toExternalForm))
-
+    
     tileDrawnImage.fitWidth = 100
     tileDrawnImage.fitHeight = 100
     tileDrawnImage.preserveRatio = true
-
+    setDrawnTile(tileDrawn, tileDrawnImage)
+    
     addDrawnTilePaneElements(tileDrawn, tileDrawnImage)
     
     rotateClockwise.onMouseClicked = _ => rotateDrawnTileClockwise(tileDrawn, tileDrawnImage)

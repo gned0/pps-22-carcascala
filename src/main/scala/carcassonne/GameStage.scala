@@ -5,7 +5,7 @@ import carcassonne.model.board.CarcassonneBoard
 import carcassonne.model.game.{GameMatch, Player}
 import carcassonne.model.tile.TileDeck
 import carcassonne.util.{Color, PlayerColor}
-import carcassonne.view.{GameBoardView, GameMatchMenuView, GameMatchView, GameStarterView, GameViewContainer}
+import carcassonne.view.{GameBoardView, GameMatchMenuView, GameMatchBoardView, GameStarterView, GameViewContainer}
 import scalafx.Includes.*
 import scalafx.application.JFXApp3
 import scalafx.scene.{Node, Scene}
@@ -27,8 +27,10 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
     val gameMenu = GameMatchMenuView(GridPane())
 
     val gameBoard = GameBoardView()
-    val boardView = GameMatchView(() => gameEndedSwitchView())
+    val boardView = GameMatchBoardView(() => gameEndedSwitchView())
     gameBoard.children = boardView
+    
+    gameMenu.addObserver(boardView)
 
     // Set HGrow priorities
     HBox.setHgrow(gameBoard, Priority.Always)

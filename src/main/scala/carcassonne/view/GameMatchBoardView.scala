@@ -2,8 +2,8 @@ package carcassonne.view
 
 import carcassonne.model.game.{GameMatch, Player}
 import carcassonne.model.tile.{GameTile, GameTileFactory, TileSegment}
-import carcassonne.observers.observers.{ObserverGameMatchBoard}
-import carcassonne.observers.subjects.{SubjectGameMatchView, SubjectStarterView}
+import carcassonne.observers.observers.{ObserverGameMatchBoard, ObserverGameMenuView}
+import carcassonne.observers.subjects.{SubjectGameMatchView, SubjectGameMenuView, SubjectStarterView}
 import carcassonne.util.{Logger, Position}
 import javafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}
 import scalafx.geometry.{Insets, Pos}
@@ -23,13 +23,12 @@ import scalafx.scene.shape.Rectangle
  * The view for the game map.
  * This class extends `GridPane` and implements `SubjectGameView` and `ObserverGameMap`.
  */
-class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
+class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
+  with ObserverGameMenuView
   with SubjectGameMatchView
   with ObserverGameMatchBoard:
 
-  private var _drawnTile = GameTileFactory.createStartTile()
-  private var _drawnTileImage: ImageView = ImageView(new Image(getClass.getResource("../../tiles/" + _drawnTile.imagePath).toExternalForm))
-  
+
   private val drawnTilePane = GridPane()
   drawnTilePane.alignment = Pos.CenterRight
   drawnTilePane.mouseTransparent = true
@@ -56,9 +55,9 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
    * @param position the position where the tile should be placed
    * @param tiles the current state of the game map tiles
    */
-  def placeTile(position: Position, tiles: Map[Position, GameTile]): Unit =
-    val placedGameTile = tiles(position)
-    
+  def placeTile(position: Position): Unit =
+    val drawnTileImage = getDrawnTile._2
+
     // Remove the old placeholder
     this.getChildren.removeIf(node =>
       getColumnIndex(node) == position.x && getRowIndex(node) == position.y
@@ -95,21 +94,21 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
         }
       )
 
-    meepleGrid.prefHeight <== _drawnTileImage.fitHeight.toDouble
-    meepleGrid.prefWidth <== _drawnTileImage.fitWidth.toDouble
+    meepleGrid.prefHeight <== drawnTileImage.fitHeight.toDouble
+    meepleGrid.prefWidth <== drawnTileImage.fitWidth.toDouble
 
     for i <- 0 until 3 do
       for j <- 0 until 3 do
         val meepleImageView = new ImageView(new Image(getClass.getResource("../../Meeple.png").toExternalForm)) {
-          fitWidth = (_drawnTileImage.fitWidth.toDouble - 5) / 3.3
-          fitHeight = (_drawnTileImage.fitHeight.toDouble - 5) / 3.3
+          fitWidth = (drawnTileImage.fitWidth.toDouble - 5) / 3.3
+          fitHeight = (drawnTileImage.fitHeight.toDouble - 5) / 3.3
           preserveRatio = true
         }
 
         // Create the overlay Rectangle with the desired fill color
         val filledMeeple = new ImageView(new Image(getClass.getResource("../../MeepleFill.png").toExternalForm)) {
-          fitWidth = (_drawnTileImage.fitWidth.toDouble - 5) / 3.3
-          fitHeight = (_drawnTileImage.fitHeight.toDouble - 5) / 3.3
+          fitWidth = (drawnTileImage.fitWidth.toDouble - 5) / 3.3
+          fitHeight = (drawnTileImage.fitHeight.toDouble - 5) / 3.3
           opacity = 0.5 // Set the opacity to make it semi-transparent
           visible = true // Initially not visible
           preserveRatio = true
@@ -150,7 +149,7 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
       maxHeight = 10
       maxWidth = 10
       children = Seq(
-        _drawnTileImage,
+        drawnTileImage,
         meepleGrid
       )
 
@@ -192,11 +191,12 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
    * @param position the position of the clicked tile
    */
   def checkClickedTile(position: Position): Unit =
-    notifyTilePlacementAttempt(_drawnTile, position)
+    println(getDrawnTile._1)
+    notifyTilePlacementAttempt(getDrawnTile._1, position)
   
 
   def getDrawnTilePane: Option[GridPane] = Some(drawnTilePane)
-    
+
 
   /**
    * Called when a tile is placed on the game map.
@@ -210,11 +210,7 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
                             position: Position): Unit =
     val tiles = tilesOption.get
     if isTilePlaced then
-      if tiles.isEmpty then
-        placeTile(position, tiles)
-        createNewPlaceholders(tiles, position)
-      else
-        placeTile(position, tiles)
+        placeTile(position)
         createNewPlaceholders(tiles, position)
 
   override def gameEnded(players: List[Player]): Unit =
