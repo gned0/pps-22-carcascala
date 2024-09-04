@@ -2,7 +2,7 @@ package carcassonne.observers.subjects
 
 import carcassonne.model.game.Player
 import carcassonne.model.tile.{GameTile, TileSegment}
-import carcassonne.observers.observers.ObserverGameMatch
+import carcassonne.observers.observers.{ObserverGameMatchBoard, ObserverGameMatchMenu}
 import carcassonne.util.Position
 
 /**
@@ -10,22 +10,15 @@ import carcassonne.util.Position
  *
  * @tparam S the type of the subject
  */
-trait SubjectGameMatch[S]:
-  this: S =>
-
-  private var observers: List[ObserverGameMatch[S]] = Nil
-
-  /**
-   * Adds an observer to the subject.
-   * @param observer the observer to add
-   */
-  def addObserver(observer: ObserverGameMatch[S]): Unit = observers = observer :: observers
-
-  /**
-   * Returns the list of observers.
-   * @return the list of observers
-   */
-  def getObservers: List[ObserverGameMatch[S]] = observers
+trait SubjectGameMatch:
+  private var observersBoardView: List[ObserverGameMatchBoard] = Nil
+  private var observersMenuView: List[ObserverGameMatchMenu] = Nil
+  
+  def addObserverBoard(observer: ObserverGameMatchBoard): Unit = observersBoardView = observer :: observersBoardView
+  def addObserverMenu(observer: ObserverGameMatchMenu): Unit = observersMenuView = observer :: observersMenuView
+  
+  def getObserversBoard: List[ObserverGameMatchBoard] = observersBoardView
+  def getObserversMenu: List[ObserverGameMatchMenu] = observersMenuView
 
   /**
    * Notifies all observers that a tile has been placed.
@@ -36,16 +29,16 @@ trait SubjectGameMatch[S]:
   def notifyIsTilePlaced(isTilePlaced: Boolean,
                          tiles: Option[Map[Position, GameTile]],
                          position: Position): Unit =
-    observers.foreach(_.isTilePlaced(isTilePlaced, tiles, position))
+    observersBoardView.foreach(_.isTilePlaced(isTilePlaced, tiles, position))
     
   def notifyTileDrawn(tileDrawn: GameTile): Unit =
-    observers.foreach(_.tileDrawn(tileDrawn))
+    observersMenuView.foreach(_.tileDrawn(tileDrawn))
     
   def notifyGameEnded(players: List[Player]): Unit =
-    observers.foreach(_.gameEnded(players))  
+    observersBoardView.foreach(_.gameEnded(players))  
     
   def notifyIsFollowerPlaced(gameTile: GameTile, segment: TileSegment, player: Player): Unit =
-    observers.foreach(_.isFollowerPlaced(gameTile, segment, player))
+    observersBoardView.foreach(_.isFollowerPlaced(gameTile, segment, player))
 
   def notifyPlayerChanged(player: Player): Unit =
-    observers.foreach(_.playerChanged(player))
+    observersBoardView.foreach(_.playerChanged(player))

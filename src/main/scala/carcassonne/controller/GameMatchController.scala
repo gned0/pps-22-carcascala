@@ -12,7 +12,7 @@ trait Controller:
   def placeFollower(gameTile: GameTile, segment: TileSegment, player: Player): Unit
   def nextTurn(): Unit
 
-class GameMatchController(model: GameMatch, view: GameMatchView) extends ObserverGameMatchView[GameMatchView] with Controller:
+class GameMatchController(model: GameMatch, view: GameMatchView) extends ObserverGameMatchView with Controller:
 
   def initialize(): Unit =
     view.addObserver(this)
