@@ -33,15 +33,23 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
   )
 
   private def rotateDrawnTileClockwise(tileDrawn: GameTile, tileDrawnImage: ImageView): Unit =
+    val newTileDrawn = tileDrawn.rotateClockwise
     tileDrawnImage.rotate = tileDrawnImage.getRotate + 90
-    setDrawnTile(tileDrawn, tileDrawnImage)
-    redrawTileDrawn(tileDrawn.rotateClockwise, tileDrawnImage)
+    setDrawnTile(newTileDrawn, tileDrawnImage)
+    redrawTileDrawn(newTileDrawn, tileDrawnImage)
+
+    rotateClockwise.onMouseClicked = _ => rotateDrawnTileClockwise(newTileDrawn, tileDrawnImage)
+    rotateCounterClockwise.onMouseClicked = _ => rotateDrawnTileCounterClockwise(newTileDrawn, tileDrawnImage)
     Logger.log(s"MENU VIEW", "Drawn tile rotated clockwise")
 
   private def rotateDrawnTileCounterClockwise(tileDrawn: GameTile, tileDrawnImage: ImageView): Unit =
+    val newTileDrawn = tileDrawn.rotateCounterClockwise
     tileDrawnImage.rotate = tileDrawnImage.getRotate - 90
-    setDrawnTile(tileDrawn, tileDrawnImage)
-    redrawTileDrawn(tileDrawn.rotateCounterClockwise, tileDrawnImage)
+    setDrawnTile(newTileDrawn, tileDrawnImage)
+    redrawTileDrawn(newTileDrawn, tileDrawnImage)
+
+    rotateClockwise.onMouseClicked = _ => rotateDrawnTileClockwise(newTileDrawn, tileDrawnImage)
+    rotateCounterClockwise.onMouseClicked = _ => rotateDrawnTileCounterClockwise(newTileDrawn, tileDrawnImage)
     Logger.log(s"MENU VIEW", "Drawn tile rotated counter clockwise")
 
 
@@ -53,12 +61,12 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     Logger.log("MENU VIEW", "Tile drawn")
     drawnTilePane.getChildren.clear()
     val tileDrawnImage = new ImageView(new Image(getClass.getResource("../../tiles/" + tileDrawn.imagePath).toExternalForm))
-    
+
     tileDrawnImage.fitWidth = 100
     tileDrawnImage.fitHeight = 100
     tileDrawnImage.preserveRatio = true
     setDrawnTile(tileDrawn, tileDrawnImage)
-    
+
     addDrawnTilePaneElements(tileDrawn, tileDrawnImage)
     
     rotateClockwise.onMouseClicked = _ => rotateDrawnTileClockwise(tileDrawn, tileDrawnImage)
@@ -71,5 +79,5 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     drawnTilePane.add(new Text(s"South Border: \n${tileDrawn.segments(TileSegment.S)}"), 10, 12)
     drawnTilePane.add(new Text(s"West Border: \n${tileDrawn.segments(TileSegment.W)}"), 9, 11)
     drawnTilePane.add(tileDrawnImage, 10, 11)
-  
+
 }

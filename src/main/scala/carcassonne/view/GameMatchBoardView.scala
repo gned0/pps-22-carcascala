@@ -191,7 +191,6 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
    * @param position the position of the clicked tile
    */
   def checkClickedTile(position: Position): Unit =
-    println(getDrawnTile._1)
     notifyTilePlacementAttempt(getDrawnTile._1, position)
   
 

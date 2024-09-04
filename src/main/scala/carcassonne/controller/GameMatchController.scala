@@ -20,6 +20,7 @@ class GameMatchController(model: GameMatch, view: GameMatchBoardView) extends Ob
 
   def placeTile(gameTile: GameTile, position: Position): Unit =
     model.placeTile(gameTile, position)
+    nextTurn()
 
   def placeFollower(gameTile: GameTile, segment: TileSegment, player: Player): Unit = 
     if model.placeFollower(gameTile, segment, player) then
