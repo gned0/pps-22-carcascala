@@ -187,3 +187,7 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
   override def gameEnded(players: List[Player]): Unit =
     GameEndView(players).popupStage.show()
     gameEndedSwitchView()
+
+  override def isFollowerPlaced(gameTile: GameTile, segment: TileSegment, player: Player): Unit = ()
+
+  override def playerChanged(player: Player): Unit = ()

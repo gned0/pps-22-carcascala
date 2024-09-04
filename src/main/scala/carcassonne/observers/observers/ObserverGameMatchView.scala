@@ -14,4 +14,4 @@ trait ObserverGameMatchView[S]:
    * Called when a tile placement attempt is made.
    * @param position the position where the tile placement was attempted
    */
-  def receiveTilePlacementAttempt(gameTile: GameTile, position: Position): Unit
+  def placeTile(gameTile: GameTile, position: Position): Unit

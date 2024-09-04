@@ -1,7 +1,7 @@
 package carcassonne.observers.observers
 
 import carcassonne.model.game.Player
-import carcassonne.model.tile.GameTile
+import carcassonne.model.tile.{GameTile, TileSegment}
 import carcassonne.util.Position
 
 /**
@@ -24,3 +24,7 @@ trait ObserverGameMatch[S]:
   def tileDrawn(tileDrawn: GameTile): Unit
   
   def gameEnded(players: List[Player]): Unit
+  
+  def isFollowerPlaced(gameTile: GameTile, segment: TileSegment, player: Player): Unit
+  
+  def playerChanged(player: Player): Unit

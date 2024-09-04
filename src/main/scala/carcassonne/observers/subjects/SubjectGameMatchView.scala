@@ -30,4 +30,4 @@ trait SubjectGameMatchView[S]:
    * Notifies all observers of a tile placement attempt.
    * @param position the position where the tile placement was attempted
    */
-  def notifyTilePlacementAttempt(gameTile: GameTile, position: Position): Unit = observers.foreach(_.receiveTilePlacementAttempt(gameTile, position))
+  def notifyTilePlacementAttempt(gameTile: GameTile, position: Position): Unit = observers.foreach(_.placeTile(gameTile, position))

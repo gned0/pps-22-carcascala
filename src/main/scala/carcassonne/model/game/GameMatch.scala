@@ -13,53 +13,41 @@ import scala.collection.mutable
 object GameMatch:
   private val MinPlayers = 2
 
-class GameMatch(players: List[Player], board: CarcassonneBoard, deck: TileDeck) extends SubjectGameMatch[GameMatch]:
+class GameMatch(players: List[Player], board: CarcassonneBoard = CarcassonneBoard(), deck: TileDeck = TileDeck()) extends SubjectGameMatch[GameMatch]:
   require(players.length >= GameMatch.MinPlayers, s"At least ${GameMatch.MinPlayers} players are required to start the game.")
 
   private var currentPlayerIndex: Int = 0
 
   private def currentPlayer: Player = players(currentPlayerIndex)
 
-  private def endTurn(): Unit =
-    currentPlayerIndex = (currentPlayerIndex + 1) % players.length
+  def drawTile(): Unit =
+    val tile = deck.draw()
+    tile.foreach(t => notifyTileDrawn(t))
 
-  private def isGameOver: Boolean = deck.isEmpty
-
-  private def takeTurn(): Unit =
-    if deck.isEmpty then
-      gameEnded()
-    else
-      val tile = deck.draw()
-      notifyTileDrawn(tile.get)
-  // map.placeTile(tile.get, Position(userInput))
-  // map.placeFollower(Position(userInput)
-  // scoring.computeScore(map)
-
-  //    endTurn()
-
-  def placeTile(gameTile: GameTile, position: Position): Unit =
+  def placeTile(gameTile: GameTile, position: Position): Boolean =
     val isTilePlaced = board.placeTile(gameTile, position)
     notifyIsTilePlaced(isTilePlaced, board.getTileMap, position)
-
-    endTurn()
-    takeTurn()
-
-  def play(): Unit =
-    takeTurn()
-
-  def gameEnded(): Unit =
-    notifyGameEnded(players)
-    println("Game over! Final scores:")
-    players.foreach(p => println(s"${p.name}: ${p.score}"))
-
-
+    isTilePlaced
 
   def placeFollower(gameTile: GameTile, segment: TileSegment, player: Player): Boolean =
     if board.placeFollower(gameTile, segment, player) then
       player.placeFollower()
+      notifyIsFollowerPlaced(gameTile, segment, player)
       true
     else
       false
+
+  def isDeckEmpty: Boolean = deck.isEmpty
+
+  def nextPlayer(): Unit =
+    currentPlayerIndex = (currentPlayerIndex + 1) % players.length
+    notifyPlayerChanged(currentPlayer)
+
+  def getPlayers: List[Player] = players
+
+  def getBoard: CarcassonneBoard = board
+
+
 
 
 

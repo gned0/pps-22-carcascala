@@ -1,7 +1,7 @@
 package carcassonne.observers.subjects
 
 import carcassonne.model.game.Player
-import carcassonne.model.tile.GameTile
+import carcassonne.model.tile.{GameTile, TileSegment}
 import carcassonne.observers.observers.ObserverGameMatch
 import carcassonne.util.Position
 
@@ -43,3 +43,9 @@ trait SubjectGameMatch[S]:
     
   def notifyGameEnded(players: List[Player]): Unit =
     observers.foreach(_.gameEnded(players))  
+    
+  def notifyIsFollowerPlaced(gameTile: GameTile, segment: TileSegment, player: Player): Unit =
+    observers.foreach(_.isFollowerPlaced(gameTile, segment, player))
+
+  def notifyPlayerChanged(player: Player): Unit =
+    observers.foreach(_.playerChanged(player))

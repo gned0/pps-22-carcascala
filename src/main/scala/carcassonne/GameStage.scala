@@ -33,13 +33,10 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
       case ((name, color), index) => Player(index, name, color)
     }
 
-    val game = GameMatch(players, CarcassonneBoard(), TileDeck())
-    GameMatchController(game, boardView).initialize()
-    game.addObserver(boardView)
-
+    val game = GameMatch(players)
+    val controller = GameMatchController(game, boardView)
+    controller.initialize()
     this.setMainView(boardView)
-
-    game.play()
     boardView.addDrawnTilePane()
   }
 
