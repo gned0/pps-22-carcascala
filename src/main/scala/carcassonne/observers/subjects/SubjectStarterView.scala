@@ -10,22 +10,20 @@ import carcassonne.util.Position
  *
  * @tparam S the type of the subject
  */
-trait SubjectStarterView[S]:
-  this: S =>
-
-  private var observers: List[ObserverStarterView[S]] = Nil
+trait SubjectStarterView:
+  private var observers: List[ObserverStarterView] = Nil
 
   /**
    * Adds an observer to the subject.
    * @param observer the observer to add
    */
-  def addObserver(observer: ObserverStarterView[S]): Unit = observers = observer :: observers
+  def addObserver(observer: ObserverStarterView): Unit = observers = observer :: observers
 
   /**
    * Returns the list of observers.
    * @return the list of observers
    */
-  def getObservers: List[ObserverStarterView[S]] = observers
+  def getObservers: List[ObserverStarterView] = observers
 
   def notifySwitchMainGameView(): Unit =
     observers.foreach(_.switchMainGameView())

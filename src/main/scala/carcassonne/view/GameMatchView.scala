@@ -2,18 +2,21 @@ package carcassonne.view
 
 import carcassonne.model.game.{GameMatch, Player}
 import carcassonne.model.tile.{GameTile, GameTileFactory, TileSegment}
-import carcassonne.observers.observers.ObserverGameMatch
+import carcassonne.observers.observers.{ObserverGameMatchBoard}
 import carcassonne.observers.subjects.{SubjectGameMatchView, SubjectStarterView}
 import carcassonne.util.{Logger, Position}
 import javafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}
-import scalafx.geometry.Pos
+import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.input.{MouseButton, MouseEvent}
-import scalafx.scene.layout.{GridPane, HBox, Region, VBox}
+import scalafx.scene.layout.{ColumnConstraints, GridPane, HBox, Priority, Region, RowConstraints, StackPane, VBox}
 import scalafx.scene.text.Text
 import scalafx.Includes.*
 import scalafx.event.EventIncludes.eventClosureWrapperWithParam
 import scalafx.scene.control.Button
+import scalafx.scene.effect.ColorAdjust
 import scalafx.scene.image.{Image, ImageView}
+import scalafx.scene.paint.Color
+import scalafx.scene.shape.Rectangle
 
 
 /**
@@ -21,27 +24,21 @@ import scalafx.scene.image.{Image, ImageView}
  * This class extends `GridPane` and implements `SubjectGameView` and `ObserverGameMap`.
  */
 class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
-  with SubjectGameMatchView[GameMatchView]
-  with ObserverGameMatch[GameMatch]:
-
-  private val mapSize = 5 // 5x5 grid for simplicity
-  private var _lastTilePlaced: Region = new Region()
+  with SubjectGameMatchView
+  with ObserverGameMatchBoard:
 
   private var _drawnTile = GameTileFactory.createStartTile()
   private var _drawnTileImage: ImageView = ImageView(new Image(getClass.getResource("../../tiles/" + _drawnTile.imagePath).toExternalForm))
-
-  private val rotateClockwise = Button("Clockwise")
-  rotateClockwise.onMouseClicked = _ => rotateDrawnTileClockwise()
-
-  private val rotateCounterClockwise = Button("Counter Clockwise")
-  rotateCounterClockwise.onMouseClicked = _ => rotateDrawnTileCounterClockwise()
-
+  
   private val drawnTilePane = GridPane()
   drawnTilePane.alignment = Pos.CenterRight
   drawnTilePane.mouseTransparent = true
 
   this.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
-  this.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
+  this.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
+  this.setMaxSize(Double.MaxValue, Double.MaxValue)
+  GridPane.setHgrow(this, Priority.Always)
+  GridPane.setVgrow(this, Priority.Always)
 
 
   this.prefWidth = 600
@@ -57,20 +54,107 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
   /**
    * Places a tile at the specified position in the view.
    * @param position the position where the tile should be placed
-   * @param placedTile the tile to place
    * @param tiles the current state of the game map tiles
    */
-  def placeTile(position: Position, placedTile: Region, tiles: Map[Position, GameTile]): Unit =
+  def placeTile(position: Position, tiles: Map[Position, GameTile]): Unit =
     val placedGameTile = tiles(position)
-
-    placedTile.styleClass.clear()
-    placedTile.onMouseClicked = null
+    
     // Remove the old placeholder
     this.getChildren.removeIf(node =>
       getColumnIndex(node) == position.x && getRowIndex(node) == position.y
     )
     // Replace the tile that has been just removed with new attributes
-    this.add(_drawnTileImage, position.x, position.y)
+    val meepleGrid = new GridPane():
+      hgap = 0
+      vgap = 0
+      padding = Insets(0)
+      alignment = Pos.Center
+
+      // Creating 3x3 grid structure with equal cell sizes
+      columnConstraints ++= Seq(
+        new ColumnConstraints {
+          percentWidth = 100 / 3.0
+        },
+        new ColumnConstraints {
+          percentWidth = 100 / 3.0
+        },
+        new ColumnConstraints {
+          percentWidth = 100 / 3.0
+        }
+      )
+
+      rowConstraints ++= Seq(
+        new RowConstraints {
+          percentHeight = 100 / 3.0
+        },
+        new RowConstraints {
+          percentHeight = 100 / 3.0
+        },
+        new RowConstraints {
+          percentHeight = 100 / 3.0
+        }
+      )
+
+    meepleGrid.prefHeight <== _drawnTileImage.fitHeight.toDouble
+    meepleGrid.prefWidth <== _drawnTileImage.fitWidth.toDouble
+
+    for i <- 0 until 3 do
+      for j <- 0 until 3 do
+        val meepleImageView = new ImageView(new Image(getClass.getResource("../../Meeple.png").toExternalForm)) {
+          fitWidth = (_drawnTileImage.fitWidth.toDouble - 5) / 3.3
+          fitHeight = (_drawnTileImage.fitHeight.toDouble - 5) / 3.3
+          preserveRatio = true
+        }
+
+        // Create the overlay Rectangle with the desired fill color
+        val filledMeeple = new ImageView(new Image(getClass.getResource("../../MeepleFill.png").toExternalForm)) {
+          fitWidth = (_drawnTileImage.fitWidth.toDouble - 5) / 3.3
+          fitHeight = (_drawnTileImage.fitHeight.toDouble - 5) / 3.3
+          opacity = 0.5 // Set the opacity to make it semi-transparent
+          visible = true // Initially not visible
+          preserveRatio = true
+        }
+
+        // Create a StackPane to hold the ImageView and Rectangle
+        val stackPane = new StackPane {
+          children = Seq(meepleImageView, filledMeeple)
+        }
+
+        def map(value: Double, start: Double, stop: Double, targetStart: Double, targetStop: Double) =
+          targetStart + (targetStop - targetStart) * ((value - start) / (stop - start))
+
+        // 240 is the value of Hue for the blue color, so change 240 accordingly to the wanted colour, keep
+        // the rest the same
+//      println(map( (240 + 180) % 360, 0, 360, -1, 1))
+
+        // Create a ColorAdjust effect
+        val colorAdjust = new ColorAdjust() {
+          hue = -0.6666666666666667 // Shift hue towards blue
+          brightness = 0.0 // No change in brightness
+          saturation = 1.0 // No change in saturation
+          contrast = 0.0
+        }
+
+        // Add hover effect to show/hide the rectangle
+        filledMeeple.onMouseEntered = _ =>
+          filledMeeple.effect = colorAdjust
+
+        filledMeeple.onMouseExited = _ =>
+          filledMeeple.effect = null
+
+
+
+        meepleGrid.add(stackPane, j, i)
+
+    val placeTileStackPane = new StackPane():
+      maxHeight = 10
+      maxWidth = 10
+      children = Seq(
+        _drawnTileImage,
+        meepleGrid
+      )
+
+    this.add(placeTileStackPane, position.x, position.y)
 
   /**
    * Creates new placeholder tiles around the last placed tile.
@@ -100,70 +184,19 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
       prefHeight = 100
       styleClass += "placeholderTile"
       onMouseClicked = (event: MouseEvent) => if event.button == MouseButton.Primary then
-        checkClickedTile(position, this)
+        checkClickedTile(position)
       add(this, position.x, position.y)
 
   /**
    * Checks the clicked tile and notifies observers of a tile placement attempt.
    * @param position the position of the clicked tile
-   * @param placedTile the clicked tile
    */
-  def checkClickedTile(position: Position, placedTile: Region): Unit =
-    _lastTilePlaced = placedTile
+  def checkClickedTile(position: Position): Unit =
     notifyTilePlacementAttempt(_drawnTile, position)
-
-  def rotateDrawnTileClockwise(): Unit =
-    _drawnTile = _drawnTile.rotateClockwise
-    _drawnTileImage.rotate = _drawnTileImage.getRotate + 90
-    println(_drawnTile)
-    Logger.log(s"VIEW", "Drawn tile rotated clockwise")
-
-  def rotateDrawnTileCounterClockwise(): Unit =
-    _drawnTile = _drawnTile.rotateCounterClockwise
-    _drawnTileImage.rotate = _drawnTileImage.getRotate - 90
-    println(_drawnTile)
-    Logger.log(s"VIEW", "Drawn tile rotated counter clockwise")
   
-  /**
-   * Returns the last placed tile.
-   * @return the last placed tile
-   */
-  def getLastTilePlaced: Option[Region] = Some(_lastTilePlaced)
 
   def getDrawnTilePane: Option[GridPane] = Some(drawnTilePane)
-
-  override def tileDrawn(tileDrawn: GameTile): Unit =
-    _drawnTile = tileDrawn
-    drawnTilePane.getChildren.clear()
-    _drawnTileImage = new ImageView(new Image(getClass.getResource("../../tiles/" + tileDrawn.imagePath).toExternalForm))
-    _drawnTileImage.fitWidth = 100
-    _drawnTileImage.fitHeight = 100
-    _drawnTileImage.preserveRatio = true
-
-    drawnTilePane.add(new Text(s"North Border: \n${tileDrawn.segments(TileSegment.N)}"), 10, 10)
-    drawnTilePane.add(new Text(s"East Border: \n${tileDrawn.segments(TileSegment.E)}"), 11, 11)
-    drawnTilePane.add(new Text(s"South Border: \n${tileDrawn.segments(TileSegment.S)}"), 10, 12)
-    drawnTilePane.add(new Text(s"West Border: \n${tileDrawn.segments(TileSegment.W)}"), 9, 11)
-    drawnTilePane.add(_drawnTileImage, 10, 11)
-
-  def addDrawnTilePane(): Unit =
-    val menuColumn = new VBox {
-      prefWidth = 250 // Fixed width for the menu column
-      style = "-fx-background-color: darkgray;" // Background color for the menu column
-
-      // Add some example buttons to the menu
-      children = Seq(
-        drawnTilePane,
-        new HBox {
-          children = Seq(
-            rotateClockwise,
-            rotateCounterClockwise
-          )
-        }
-      )
-    }
-    menuColumn.alignment = Pos.TopLeft
-    this.getScene.getChildren.add(menuColumn)
+    
 
   /**
    * Called when a tile is placed on the game map.
@@ -178,10 +211,10 @@ class GameMatchView(gameEndedSwitchView: () => Unit) extends GridPane
     val tiles = tilesOption.get
     if isTilePlaced then
       if tiles.isEmpty then
-        placeTile(position, getLastTilePlaced.get, tiles)
+        placeTile(position, tiles)
         createNewPlaceholders(tiles, position)
       else
-        placeTile(position, getLastTilePlaced.get, tiles)
+        placeTile(position, tiles)
         createNewPlaceholders(tiles, position)
 
   override def gameEnded(players: List[Player]): Unit =
