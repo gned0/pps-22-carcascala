@@ -210,16 +210,6 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
       filledMeeple.onMouseExited = _ =>
         filledMeeple.effect = null
 
-      filledMeeple.onMouseClicked = (event: MouseEvent) => if event.button == MouseButton.Primary then
-        filledMeeple.onMouseEntered = null
-        filledMeeple.onMouseExited = null
-        filledMeeple.effect = new ColorAdjust():
-          hue = -0.6666666666666667 // Shift hue towards blue
-          brightness = 0.0 // No change in brightness
-          saturation = 1.0 // No change in saturation
-          contrast = 0.0
-        notifyFollowerPlacement(getDrawnTile._1, segment, getCurrentPlayer)
-
       var x = 1
       var y = 1
 
@@ -241,7 +231,21 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
           x -= 1
           y += 1
         case _ =>
-      
+
+      filledMeeple.onMouseClicked = (event: MouseEvent) => if event.button == MouseButton.Primary then
+        filledMeeple.onMouseEntered = null
+        filledMeeple.onMouseExited = null
+        filledMeeple.effect = new ColorAdjust():
+          hue = -0.6666666666666667 // Shift hue towards blue
+          brightness = 0.0 // No change in brightness
+          saturation = 1.0 // No change in saturation
+          contrast = 0.0
+        notifyFollowerPlacement(getDrawnTile._1, segment, getCurrentPlayer)
+        meepleGrid.getChildren.removeIf(node =>
+          GridPane.getColumnIndex(node) != x || GridPane.getRowIndex(node) != y
+        )
+        filledMeeple.onMouseClicked = null
+
       meepleGrid.add(stackPane, x, y)
     )
 
