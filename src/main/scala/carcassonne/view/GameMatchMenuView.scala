@@ -20,6 +20,10 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     fill = Color.White
     alignment = Pos.Center
     font = Font.font("Arial", FontWeight.Bold, 20)
+  val meepleNumber: Text = new Text("Meeple Number: "):
+    fill = Color.White
+    alignment = Pos.Center
+    font = Font.font("Arial", 15)
   val rotateClockwise: Button = new Button("Clockwise"):
     alignment = Pos.TopCenter
   val rotateCounterClockwise: Button = new Button("Counter Clockwise"):
@@ -27,6 +31,7 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
 
   this.children = Seq(
     playerText,
+    meepleNumber,
     drawnTilePane,
     new HBox:
       alignment = Pos.TopCenter
@@ -92,4 +97,6 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     setCurrentPlayer(player)
     playerText.text = "Current Player: " + player.name
     playerText.fill = player.getSFXColor
+//    meepleNumber.text = "Meeple Number: " + player.fo
+    meepleNumber.fill = player.getSFXColor
 }
