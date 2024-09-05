@@ -22,4 +22,22 @@ object PlayerColor:
     }
   }
 
+  def colorAdjustCalculator(color: Color): (Double, Double) =
+    def rangeCalculator(value: Double, start: Double, stop: Double, targetStart: Double, targetStop: Double): Double =
+      targetStart + (targetStop - targetStart) * ((value - start) / (stop - start))
+
+    var hue = 0
+    var brightness = 0
+    color match
+      case Color.Black => brightness = -1
+      case Color.Red => hue = 0
+      case Color.Yellow => hue = 60
+      case Color.Green => hue = 120
+      case Color.Blue => hue = 240
+      case Color.Purple => hue = 300
+
+    (rangeCalculator((hue + 180) % 360, 0, 360, -1, 1), brightness)
+
+
+
 

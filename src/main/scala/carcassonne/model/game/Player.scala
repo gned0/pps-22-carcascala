@@ -1,6 +1,7 @@
 package carcassonne.model.game
 
-import carcassonne.util.Color
+import carcassonne.util.{Color, PlayerColor}
+import scalafx.scene.effect.ColorAdjust
 
 /**
  * Represents the different colors that a player can choose.
@@ -70,5 +71,13 @@ case class Player(playerId: Int, name: String, color: Color) {
    * @return The number of followers placed.
    */
   def getFollowerPlaced: Int = placedFollowers
+  
+  def getPlayerColor: ColorAdjust =
+    val (hueCalculated, brightnessCalculated) = PlayerColor.colorAdjustCalculator(color)
+    new ColorAdjust():
+      hue = hueCalculated
+      brightness = brightnessCalculated
+      contrast = 0.0
+      saturation = 1.0
 }
 

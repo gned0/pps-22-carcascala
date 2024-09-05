@@ -15,7 +15,6 @@ import scalafx.Includes.*
 import scalafx.event.EventIncludes.eventClosureWrapperWithParam
 import scalafx.scene.Node
 import scalafx.scene.control.Button
-import scalafx.scene.effect.ColorAdjust
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
@@ -188,24 +187,9 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
         children = Seq(meepleImageView, filledMeeple)
       }
 
-      def map(value: Double, start: Double, stop: Double, targetStart: Double, targetStop: Double) =
-        targetStart + (targetStop - targetStart) * ((value - start) / (stop - start))
-
-      // 240 is the value of Hue for the blue color, so change 240 accordingly to the wanted colour, keep
-      // the rest the same
-      //      println(map( (240 + 180) % 360, 0, 360, -1, 1))
-
-      // Create a ColorAdjust effect
-      val colorAdjust = new ColorAdjust() {
-        hue = -0.6666666666666667 // Shift hue towards blue
-        brightness = 0.0 // No change in brightness
-        saturation = 1.0 // No change in saturation
-        contrast = 0.0
-      }
-
       // Add hover effect to show/hide the rectangle
       filledMeeple.onMouseEntered = _ =>
-        filledMeeple.effect = colorAdjust
+        filledMeeple.effect = getCurrentPlayer.getPlayerColor
 
       filledMeeple.onMouseExited = _ =>
         filledMeeple.effect = null
@@ -235,11 +219,7 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
       filledMeeple.onMouseClicked = (event: MouseEvent) => if event.button == MouseButton.Primary then
         filledMeeple.onMouseEntered = null
         filledMeeple.onMouseExited = null
-        filledMeeple.effect = new ColorAdjust():
-          hue = -0.6666666666666667 // Shift hue towards blue
-          brightness = 0.0 // No change in brightness
-          saturation = 1.0 // No change in saturation
-          contrast = 0.0
+        filledMeeple.effect = getCurrentPlayer.getPlayerColor
         notifyFollowerPlacement(getDrawnTile._1, segment, getCurrentPlayer)
         meepleGrid.getChildren.removeIf(node =>
           GridPane.getColumnIndex(node) != x || GridPane.getRowIndex(node) != y
