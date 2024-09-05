@@ -37,6 +37,17 @@ class GameMatch(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
     else
       false
 
+  def sendAvailableFollowerPositions(gameTile: GameTile, position: Position): Unit =
+    val availSegments = gameTile.segments
+      .flatMap(segment =>
+        board.getConnectedFeature(gameTile, segment._1).
+          map(tileSeg => 
+            tileSeg._2 -> tileSeg._1.followerMap.contains(tileSeg._2)
+          )
+      )
+      .filter { case (_, value) => !value }
+    notifyAvailableFollowerPositions(availSegments, position)
+
   def isDeckEmpty: Boolean = deck.isEmpty
 
   def nextPlayer(): Unit =

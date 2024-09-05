@@ -26,3 +26,5 @@ trait ObserverGameMatchBoard:
   def isFollowerPlaced(gameTile: GameTile, segment: TileSegment, player: Player): Unit
   
   def playerChanged(player: Player): Unit
+  
+  def availableFollowerPositions(availSegments: Map[TileSegment, Boolean], position: Position): Unit

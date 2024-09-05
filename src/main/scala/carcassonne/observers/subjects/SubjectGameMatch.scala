@@ -42,3 +42,6 @@ trait SubjectGameMatch:
 
   def notifyPlayerChanged(player: Player): Unit =
     observersBoardView.foreach(_.playerChanged(player))
+    
+  def notifyAvailableFollowerPositions(availSegments: Map[TileSegment, Boolean], position: Position): Unit =
+    observersBoardView.foreach(_.availableFollowerPositions(availSegments, position))
