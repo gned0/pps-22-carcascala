@@ -16,11 +16,13 @@ class GameMatchController(model: GameMatch, view: GameMatchBoardView) extends Ob
 
   def initialize(): Unit =
     view.addObserver(this)
+    model.initializeFirstPlayer()
     takeTurn()
 
   def placeTile(gameTile: GameTile, position: Position): Unit =
+    println(gameTile)
     model.placeTile(gameTile, position)
-    nextTurn()
+    sendAvailableFollowerPositions(gameTile, position)
 
   def placeFollower(gameTile: GameTile, segment: TileSegment, player: Player): Unit = 
     if model.placeFollower(gameTile, segment, player) then
@@ -39,4 +41,6 @@ class GameMatchController(model: GameMatch, view: GameMatchBoardView) extends Ob
   private def gameEnded(): Unit =
     println("Game over! Final scores:")
     model.getPlayers.foreach(p => println(s"${p.name}: ${p.score}"))
-
+    
+  private def sendAvailableFollowerPositions(gameTile: GameTile, position: Position): Unit =
+    model.sendAvailableFollowerPositions(gameTile, position)

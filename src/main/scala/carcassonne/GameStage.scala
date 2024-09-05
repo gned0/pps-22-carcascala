@@ -5,13 +5,14 @@ import carcassonne.model.board.CarcassonneBoard
 import carcassonne.model.game.{GameMatch, Player}
 import carcassonne.model.tile.TileDeck
 import carcassonne.util.{Color, PlayerColor}
-import carcassonne.view.{GameBoardView, GameMatchMenuView, GameMatchBoardView, GameStarterView, GameViewContainer}
+import carcassonne.view.{GameBoardView, GameMatchBoardView, GameMatchMenuView, GameStarterView, GameViewContainer}
 import scalafx.Includes.*
 import scalafx.application.JFXApp3
+import scalafx.geometry.Pos.TopCenter
 import scalafx.scene.{Node, Scene}
 import scalafx.scene.input.{MouseEvent, ScrollEvent}
-import scalafx.scene.layout.Priority.Always
-import scalafx.scene.layout.{GridPane, HBox, Priority, Region, StackPane}
+import scalafx.scene.layout.Priority.{Always, Never}
+import scalafx.scene.layout.{GridPane, HBox, Priority, Region, StackPane, VBox}
 
 class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimaryStage {
   title = "CarcaScala"
@@ -24,7 +25,11 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
 
   // Update this method to accept player names and assign colors
   def switchMainGameView(playerNames: List[String]): Unit = {
-    val gameMenu = GameMatchMenuView(GridPane())
+    val gameMenu = GameMatchMenuView(
+      new GridPane():
+        alignment = TopCenter
+        vgrow = Always
+    )
 
     val gameBoard = GameBoardView()
     val boardView = GameMatchBoardView(() => gameEndedSwitchView())
@@ -46,7 +51,7 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
     game.addObserverMenu(gameMenu)
     GameMatchController(game, boardView).initialize()
 
-    this.setMainView(Seq(boardView, gameMenu))
+    this.setMainView(Seq(gameBoard, gameMenu))
   }
 
   def gameEndedSwitchView(): Unit =

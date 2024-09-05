@@ -15,24 +15,35 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
   with SubjectGameMenuView
   with ObserverGameMatchMenu {
 
-  this.prefWidth = 250
-  this.style = "-fx-background-color: darkgray;"
-  this.alignment = Pos.TopLeft
+  val playerText: Text = new Text("Current Player: "):
+    fill = Color.White
+    alignment = Pos.Center
+    font = Font.font("Arial", FontWeight.Bold, 20)
+  val meepleNumber: Text = new Text("Meeple Number: "):
+    fill = Color.White
+    alignment = Pos.Center
+    font = Font.font("Arial", 15)
+  val rotateClockwise: Button = new Button("Clockwise"):
+    alignment = Pos.TopCenter
+  val rotateCounterClockwise: Button = new Button("Counter Clockwise"):
+    alignment = Pos.TopCenter
 
-  val rotateClockwise = new Button("Clockwise")
-  val rotateCounterClockwise = new Button("Counter Clockwise")
-
-  private val currentPlayerText = new Text("Current Player: None")
   this.children = Seq(
     currentPlayerText,
+    meepleNumber,
     drawnTilePane,
-    new HBox {
+    new HBox:
+      alignment = Pos.TopCenter
       children = Seq(
         rotateClockwise,
         rotateCounterClockwise
       )
-    },
+    }
   )
+  this.alignment = Pos.TopCenter
+  this.prefWidth = 250
+  this.style = "-fx-background-color: darkgray;"
+  this.spacing = 10
 
   private def rotateDrawnTileClockwise(tileDrawn: GameTile, tileDrawnImage: ImageView): Unit =
     val newTileDrawn = tileDrawn.rotateClockwise
@@ -70,10 +81,10 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     setDrawnTile(tileDrawn, tileDrawnImage)
 
     addDrawnTilePaneElements(tileDrawn, tileDrawnImage)
-
+    
     rotateClockwise.onMouseClicked = _ => rotateDrawnTileClockwise(tileDrawn, tileDrawnImage)
     rotateCounterClockwise.onMouseClicked = _ => rotateDrawnTileCounterClockwise(tileDrawn, tileDrawnImage)
-
+  
 
   private def addDrawnTilePaneElements(tileDrawn: GameTile, tileDrawnImage: ImageView): Unit =
     drawnTilePane.add(new Text(s"North Border: \n${tileDrawn.segments(TileSegment.N)}"), 10, 10)

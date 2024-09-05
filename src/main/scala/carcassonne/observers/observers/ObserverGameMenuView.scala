@@ -17,4 +17,4 @@ trait ObserverGameMenuView:
     _drawnTile = drawnTile
 
   def playerChanged(playerName: String): Unit
-  
+

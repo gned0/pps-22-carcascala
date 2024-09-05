@@ -37,12 +37,25 @@ class GameMatch(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
     else
       false
 
+  def sendAvailableFollowerPositions(gameTile: GameTile, position: Position): Unit =
+    val segmentMap = gameTile.segments.collect {
+      case (segment, _) if {
+        val connectedFeature = board.getConnectedFeature(gameTile, segment)
+        !connectedFeature.exists { case (tile, seg) => tile.followerMap.contains(seg) }
+      } => segment
+    }.toList
+    println(segmentMap)
+    notifyAvailableFollowerPositions(segmentMap, position)
+
   def isDeckEmpty: Boolean = deck.isEmpty
 
   def nextPlayer(): Unit =
     currentPlayerIndex = (currentPlayerIndex + 1) % players.length
     notifyPlayerChanged(currentPlayer.name)
 
+  def initializeFirstPlayer(): Unit =
+    notifyPlayerChanged(currentPlayer)
+  
   def getPlayers: List[Player] = players
 
   def getBoard: CarcassonneBoard = board
