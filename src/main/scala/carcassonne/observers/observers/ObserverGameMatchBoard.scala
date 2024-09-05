@@ -6,6 +6,8 @@ import carcassonne.util.Position
 
 /**
  * A trait representing an observer for the game map.
+ *
+ * @tparam S the type of the subject being observed
  */
 trait ObserverGameMatchBoard:
 
@@ -22,7 +24,7 @@ trait ObserverGameMatchBoard:
   def gameEnded(players: List[Player]): Unit
   
   def isFollowerPlaced(gameTile: GameTile, segment: TileSegment, player: Player): Unit
-
+  
   def playerChanged(player: Player): Unit
-
+  
   def availableFollowerPositions(availSegments: List[TileSegment], position: Position): Unit

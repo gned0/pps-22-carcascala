@@ -5,11 +5,12 @@ import carcassonne.model.tile.{GameTile, TileSegment}
 import carcassonne.observers.observers.ObserverGameMatchMenu
 import carcassonne.observers.subjects.SubjectGameMenuView
 import carcassonne.util.{Logger, Position}
-import scalafx.geometry.Pos
+import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.control.Button
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.layout.{GridPane, HBox, VBox}
-import scalafx.scene.text.Text
+import scalafx.scene.paint.Color
+import scalafx.scene.text.{Font, FontWeight, Text}
 
 class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
   with SubjectGameMenuView
@@ -29,7 +30,7 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     alignment = Pos.TopCenter
 
   this.children = Seq(
-    currentPlayerText,
+    playerText,
     meepleNumber,
     drawnTilePane,
     new HBox:
@@ -38,7 +39,6 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
         rotateClockwise,
         rotateCounterClockwise
       )
-    }
   )
   this.alignment = Pos.TopCenter
   this.prefWidth = 250
@@ -84,7 +84,7 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     
     rotateClockwise.onMouseClicked = _ => rotateDrawnTileClockwise(tileDrawn, tileDrawnImage)
     rotateCounterClockwise.onMouseClicked = _ => rotateDrawnTileCounterClockwise(tileDrawn, tileDrawnImage)
-  
+
 
   private def addDrawnTilePaneElements(tileDrawn: GameTile, tileDrawnImage: ImageView): Unit =
     drawnTilePane.add(new Text(s"North Border: \n${tileDrawn.segments(TileSegment.N)}"), 10, 10)
@@ -93,8 +93,10 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     drawnTilePane.add(new Text(s"West Border: \n${tileDrawn.segments(TileSegment.W)}"), 9, 11)
     drawnTilePane.add(tileDrawnImage, 10, 11)
 
-  override def playerChanged(playerName: String): Unit = {
-    currentPlayerText.text = s"Current Player: $playerName"
-  }
-
+  override def playerChanged(player: Player): Unit =
+    setCurrentPlayer(player)
+    playerText.text = "Current Player: " + player.name
+    playerText.fill = player.getSFXColor
+//    meepleNumber.text = "Meeple Number: " + player.fo
+    meepleNumber.fill = player.getSFXColor
 }

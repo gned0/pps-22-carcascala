@@ -100,7 +100,7 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
    */
   def checkClickedTile(position: Position): Unit =
     notifyTilePlacementAttempt(getDrawnTile._1, position)
-
+  
 
   def getDrawnTilePane: Option[GridPane] = Some(drawnTilePane)
 
