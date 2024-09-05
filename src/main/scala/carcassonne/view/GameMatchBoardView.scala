@@ -130,7 +130,7 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
   override def playerChanged(player: Player): Unit =
     setCurrentPlayer(player)
 
-  override def availableFollowerPositions(availSegments: Map[TileSegment, Boolean], position: Position): Unit =
+  override def availableFollowerPositions(availSegments: List[TileSegment], position: Position): Unit =
     val drawnTileImage = getDrawnTile._2
 
     // Replace the tile that has been just removed with new attributes
@@ -168,7 +168,7 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
     meepleGrid.prefHeight <== drawnTileImage.fitHeight.toDouble
     meepleGrid.prefWidth <== drawnTileImage.fitWidth.toDouble
 
-    availSegments.foreach( (segment, isAvailable) =>
+    availSegments.foreach( segment =>
       val meepleImageView = new ImageView(new Image(getClass.getResource("../../Meeple.png").toExternalForm)):
         fitWidth = (drawnTileImage.fitWidth.toDouble - 5) / 3.3
         fitHeight = (drawnTileImage.fitHeight.toDouble - 5) / 3.3
@@ -211,8 +211,13 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
         filledMeeple.effect = null
 
       filledMeeple.onMouseClicked = (event: MouseEvent) => if event.button == MouseButton.Primary then
-        filledMeeple.effect = colorAdjust
-        filledMeeple.visible = false
+        filledMeeple.onMouseEntered = null
+        filledMeeple.onMouseExited = null
+        filledMeeple.effect = new ColorAdjust():
+          hue = -0.6666666666666667 // Shift hue towards blue
+          brightness = 0.0 // No change in brightness
+          saturation = 1.0 // No change in saturation
+          contrast = 0.0
         notifyFollowerPlacement(getDrawnTile._1, segment, getCurrentPlayer)
 
       var x = 1
@@ -236,8 +241,7 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
           x -= 1
           y += 1
         case _ =>
-
-
+      
       meepleGrid.add(stackPane, x, y)
     )
 

@@ -38,15 +38,14 @@ class GameMatch(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
       false
 
   def sendAvailableFollowerPositions(gameTile: GameTile, position: Position): Unit =
-    val availSegments = gameTile.segments
-      .flatMap(segment =>
-        board.getConnectedFeature(gameTile, segment._1).
-          map(tileSeg =>
-            tileSeg._2 -> tileSeg._1.followerMap.contains(tileSeg._2)
-          )
-      )
-      .filter { case (_, value) => !value }
-    notifyAvailableFollowerPositions(availSegments, position)
+    val segmentMap = gameTile.segments.collect {
+      case (segment, _) if {
+        val connectedFeature = board.getConnectedFeature(gameTile, segment)
+        !connectedFeature.exists { case (tile, seg) => tile.followerMap.contains(seg) }
+      } => segment
+    }.toList
+    println(segmentMap)
+    notifyAvailableFollowerPositions(segmentMap, position)
 
   def isDeckEmpty: Boolean = deck.isEmpty
 

@@ -27,4 +27,4 @@ trait ObserverGameMatchBoard:
   
   def playerChanged(player: Player): Unit
   
-  def availableFollowerPositions(availSegments: Map[TileSegment, Boolean], position: Position): Unit
+  def availableFollowerPositions(availSegments: List[TileSegment], position: Position): Unit
