@@ -41,7 +41,7 @@ class GameMatch(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
     val availSegments = gameTile.segments
       .flatMap(segment =>
         board.getConnectedFeature(gameTile, segment._1).
-          map(tileSeg => 
+          map(tileSeg =>
             tileSeg._2 -> tileSeg._1.followerMap.contains(tileSeg._2)
           )
       )
@@ -54,6 +54,9 @@ class GameMatch(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
     currentPlayerIndex = (currentPlayerIndex + 1) % players.length
     notifyPlayerChanged(currentPlayer)
 
+  def initializeFirstPlayer(): Unit =
+    notifyPlayerChanged(currentPlayer)
+  
   def getPlayers: List[Player] = players
 
   def getBoard: CarcassonneBoard = board

@@ -16,6 +16,7 @@ class GameMatchController(model: GameMatch, view: GameMatchBoardView) extends Ob
 
   def initialize(): Unit =
     view.addObserver(this)
+    model.initializeFirstPlayer()
     takeTurn()
 
   def placeTile(gameTile: GameTile, position: Position): Unit =
@@ -42,5 +43,4 @@ class GameMatchController(model: GameMatch, view: GameMatchBoardView) extends Ob
     
   private def sendAvailableFollowerPositions(gameTile: GameTile, position: Position): Unit =
     model.sendAvailableFollowerPositions(gameTile, position)
-    nextTurn()
 

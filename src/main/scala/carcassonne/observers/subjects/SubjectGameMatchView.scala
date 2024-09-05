@@ -1,6 +1,7 @@
 package carcassonne.observers.subjects
 
-import carcassonne.model.tile.GameTile
+import carcassonne.model.game.Player
+import carcassonne.model.tile.{GameTile, TileSegment}
 import carcassonne.observers.observers.ObserverGameMatchView
 import carcassonne.util.Position
 import scalafx.scene.layout.Region
@@ -28,6 +29,8 @@ trait SubjectGameMatchView:
    * Notifies all observers of a tile placement attempt.
    * @param position the position where the tile placement was attempted
    */
-  def notifyTilePlacementAttempt(gameTile: GameTile, position: Position): Unit = observers.foreach(_.placeTile(gameTile, position))
-  
-  def notifyFollowerPlacement()
+  def notifyTilePlacementAttempt(gameTile: GameTile, position: Position): Unit =
+    observers.foreach(_.placeTile(gameTile, position))
+
+  def notifyFollowerPlacement(gameTile: GameTile, segment: TileSegment, player: Player): Unit =
+    observers.foreach(_.placeFollower(gameTile, segment, player))

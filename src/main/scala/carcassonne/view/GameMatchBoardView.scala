@@ -127,7 +127,8 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
 
   override def isFollowerPlaced(gameTile: GameTile, segment: TileSegment, player: Player): Unit = ()
 
-  override def playerChanged(player: Player): Unit = ()
+  override def playerChanged(player: Player): Unit =
+    setCurrentPlayer(player)
 
   override def availableFollowerPositions(availSegments: Map[TileSegment, Boolean], position: Position): Unit =
     val drawnTileImage = getDrawnTile._2
@@ -210,7 +211,7 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
         filledMeeple.effect = null
         
       filledMeeple.onMouseClicked = (event: MouseEvent) => if event.button == MouseButton.Primary then
-        notifyTilePlacementAttempt(getDrawnTile._1, position, Some(segment))
+        notifyFollowerPlacement(getDrawnTile._1, segment, getCurrentPlayer)
       
       var x = 1
       var y = 1
