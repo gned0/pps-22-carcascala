@@ -1,5 +1,7 @@
 package carcassonne.util
 
+import scalafx.scene.paint.Color as FXColor
+
 enum Color:
   case Black, Red, Yellow, Green, Blue, Purple
 
@@ -38,6 +40,13 @@ object PlayerColor:
 
     (rangeCalculator((hue + 180) % 360, 0, 360, -1, 1), brightness)
 
-
+  def getNormalColor(color: Color): FXColor =
+    color match
+      case Color.Black => FXColor.Black
+      case Color.Red => FXColor.Red
+      case Color.Yellow => FXColor.Yellow
+      case Color.Green => FXColor.Green
+      case Color.Blue => FXColor.Blue
+      case Color.Purple => FXColor.Purple
 
 

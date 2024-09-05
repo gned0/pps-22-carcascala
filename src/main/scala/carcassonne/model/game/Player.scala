@@ -2,6 +2,7 @@ package carcassonne.model.game
 
 import carcassonne.util.{Color, PlayerColor}
 import scalafx.scene.effect.ColorAdjust
+import scalafx.scene.paint.Color as FXColor
 
 /**
  * Represents the different colors that a player can choose.
@@ -79,5 +80,8 @@ case class Player(playerId: Int, name: String, color: Color) {
       brightness = brightnessCalculated
       contrast = 0.0
       saturation = 1.0
+      
+  def getSFXColor: FXColor =
+    PlayerColor.getNormalColor(color)
 }
 

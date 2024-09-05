@@ -5,32 +5,40 @@ import carcassonne.model.tile.{GameTile, TileSegment}
 import carcassonne.observers.observers.ObserverGameMatchMenu
 import carcassonne.observers.subjects.SubjectGameMenuView
 import carcassonne.util.{Logger, Position}
-import scalafx.geometry.Pos
+import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.control.Button
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.layout.{GridPane, HBox, VBox}
-import scalafx.scene.text.Text
+import scalafx.scene.paint.Color
+import scalafx.scene.text.{Font, FontWeight, Text}
 
 class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
   with SubjectGameMenuView
   with ObserverGameMatchMenu {
 
-  this.prefWidth = 250
-  this.style = "-fx-background-color: darkgray;"
-  this.alignment = Pos.TopLeft
-
-  val rotateClockwise = new Button("Clockwise")
-  val rotateCounterClockwise = new Button("Counter Clockwise")
+  val playerText: Text = new Text("Current Player: "):
+    fill = Color.White
+    alignment = Pos.Center
+    font = Font.font("Arial", FontWeight.Bold, 20)
+  val rotateClockwise: Button = new Button("Clockwise"):
+    alignment = Pos.TopCenter
+  val rotateCounterClockwise: Button = new Button("Counter Clockwise"):
+    alignment = Pos.TopCenter
 
   this.children = Seq(
+    playerText,
     drawnTilePane,
-    new HBox {
+    new HBox:
+      alignment = Pos.TopCenter
       children = Seq(
         rotateClockwise,
         rotateCounterClockwise
       )
-    }
   )
+  this.alignment = Pos.TopCenter
+  this.prefWidth = 250
+  this.style = "-fx-background-color: darkgray;"
+  this.spacing = 10
 
   private def rotateDrawnTileClockwise(tileDrawn: GameTile, tileDrawnImage: ImageView): Unit =
     val newTileDrawn = tileDrawn.rotateClockwise
@@ -71,7 +79,7 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     
     rotateClockwise.onMouseClicked = _ => rotateDrawnTileClockwise(tileDrawn, tileDrawnImage)
     rotateCounterClockwise.onMouseClicked = _ => rotateDrawnTileCounterClockwise(tileDrawn, tileDrawnImage)
-  
+
 
   private def addDrawnTilePaneElements(tileDrawn: GameTile, tileDrawnImage: ImageView): Unit =
     drawnTilePane.add(new Text(s"North Border: \n${tileDrawn.segments(TileSegment.N)}"), 10, 10)
@@ -80,4 +88,8 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     drawnTilePane.add(new Text(s"West Border: \n${tileDrawn.segments(TileSegment.W)}"), 9, 11)
     drawnTilePane.add(tileDrawnImage, 10, 11)
 
+  override def playerChanged(player: Player): Unit =
+    setCurrentPlayer(player)
+    playerText.text = "Current Player: " + player.name
+    playerText.fill = player.getSFXColor
 }
