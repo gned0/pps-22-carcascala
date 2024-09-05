@@ -22,14 +22,16 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
   val rotateClockwise = new Button("Clockwise")
   val rotateCounterClockwise = new Button("Counter Clockwise")
 
+  private val currentPlayerText = new Text("Current Player: None")
   this.children = Seq(
+    currentPlayerText,
     drawnTilePane,
     new HBox {
       children = Seq(
         rotateClockwise,
         rotateCounterClockwise
       )
-    }
+    },
   )
 
   private def rotateDrawnTileClockwise(tileDrawn: GameTile, tileDrawnImage: ImageView): Unit =
@@ -68,10 +70,10 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     setDrawnTile(tileDrawn, tileDrawnImage)
 
     addDrawnTilePaneElements(tileDrawn, tileDrawnImage)
-    
+
     rotateClockwise.onMouseClicked = _ => rotateDrawnTileClockwise(tileDrawn, tileDrawnImage)
     rotateCounterClockwise.onMouseClicked = _ => rotateDrawnTileCounterClockwise(tileDrawn, tileDrawnImage)
-  
+
 
   private def addDrawnTilePaneElements(tileDrawn: GameTile, tileDrawnImage: ImageView): Unit =
     drawnTilePane.add(new Text(s"North Border: \n${tileDrawn.segments(TileSegment.N)}"), 10, 10)
@@ -79,5 +81,9 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     drawnTilePane.add(new Text(s"South Border: \n${tileDrawn.segments(TileSegment.S)}"), 10, 12)
     drawnTilePane.add(new Text(s"West Border: \n${tileDrawn.segments(TileSegment.W)}"), 9, 11)
     drawnTilePane.add(tileDrawnImage, 10, 11)
+
+  override def playerChanged(playerName: String): Unit = {
+    currentPlayerText.text = s"Current Player: $playerName"
+  }
 
 }

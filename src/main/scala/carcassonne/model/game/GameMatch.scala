@@ -41,7 +41,7 @@ class GameMatch(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
 
   def nextPlayer(): Unit =
     currentPlayerIndex = (currentPlayerIndex + 1) % players.length
-    notifyPlayerChanged(currentPlayer)
+    notifyPlayerChanged(currentPlayer.name)
 
   def getPlayers: List[Player] = players
 

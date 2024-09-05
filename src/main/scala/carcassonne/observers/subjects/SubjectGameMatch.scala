@@ -7,8 +7,6 @@ import carcassonne.util.Position
 
 /**
  * A trait representing a subject in the observer pattern for the game map.
- *
- * @tparam S the type of the subject
  */
 trait SubjectGameMatch:
   private var observersBoardView: List[ObserverGameMatchBoard] = Nil
@@ -40,5 +38,5 @@ trait SubjectGameMatch:
   def notifyIsFollowerPlaced(gameTile: GameTile, segment: TileSegment, player: Player): Unit =
     observersBoardView.foreach(_.isFollowerPlaced(gameTile, segment, player))
 
-  def notifyPlayerChanged(player: Player): Unit =
-    observersBoardView.foreach(_.playerChanged(player))
+  def notifyPlayerChanged(playerName: String): Unit =
+    observersMenuView.foreach(_.playerChanged(playerName))

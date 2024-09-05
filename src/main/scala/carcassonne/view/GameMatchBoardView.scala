@@ -53,7 +53,6 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
   /**
    * Places a tile at the specified position in the view.
    * @param position the position where the tile should be placed
-   * @param tiles the current state of the game map tiles
    */
   def placeTile(position: Position): Unit =
     val drawnTileImage = getDrawnTile._2
@@ -192,7 +191,7 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
    */
   def checkClickedTile(position: Position): Unit =
     notifyTilePlacementAttempt(getDrawnTile._1, position)
-  
+
 
   def getDrawnTilePane: Option[GridPane] = Some(drawnTilePane)
 
@@ -217,5 +216,6 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
     gameEndedSwitchView()
 
   override def isFollowerPlaced(gameTile: GameTile, segment: TileSegment, player: Player): Unit = ()
-
-  override def playerChanged(player: Player): Unit = ()
+  
+  override def playerChanged(playerName: String): Unit = ()
+  
