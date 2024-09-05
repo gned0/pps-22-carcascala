@@ -46,7 +46,7 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
     game.addObserverMenu(gameMenu)
     GameMatchController(game, boardView).initialize()
 
-    this.setMainView(Seq(boardView, gameMenu))
+    this.setMainView(Seq(gameBoard, gameMenu))
   }
 
   def gameEndedSwitchView(): Unit =
