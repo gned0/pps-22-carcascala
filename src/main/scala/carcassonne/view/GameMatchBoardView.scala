@@ -208,7 +208,10 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
 
       filledMeeple.onMouseExited = _ =>
         filledMeeple.effect = null
-
+        
+      filledMeeple.onMouseClicked = (event: MouseEvent) => if event.button == MouseButton.Primary then
+        notifyTilePlacementAttempt(getDrawnTile._1, position, Some(segment))
+      
       var x = 1
       var y = 1
 
