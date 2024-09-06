@@ -1,6 +1,6 @@
 package carcassonne.controller
 
-import carcassonne.model.game.{GameMatch, Player}
+import carcassonne.model.game.{GameState, Player}
 import carcassonne.model.tile.{GameTile, TileSegment}
 import carcassonne.observers.observers.ObserverGameMatchView
 import carcassonne.util.Position
@@ -12,7 +12,7 @@ trait Controller:
   def placeFollower(gameTile: GameTile, segment: TileSegment, player: Player): Unit
   def nextTurn(): Unit
 
-class GameMatchController(model: GameMatch, view: GameMatchBoardView) extends ObserverGameMatchView with Controller:
+class GameMatchController(model: GameState, view: GameMatchBoardView) extends ObserverGameMatchView with Controller:
 
   def initialize(): Unit =
     view.addObserver(this)

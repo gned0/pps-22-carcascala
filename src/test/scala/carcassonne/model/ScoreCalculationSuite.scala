@@ -1,7 +1,7 @@
 package carcassonne.model
 
 import carcassonne.model.board.CarcassonneBoard
-import carcassonne.model.game.{GameMatch, Player, ScoreCalculator}
+import carcassonne.model.game.{GameState, Player, ScoreCalculator}
 import carcassonne.model.tile.{GameTile, GameTileFactory, TileDeck, TileSegment}
 import carcassonne.util.{Color, Position}
 import carcassonne.view.GameMatchBoardView
@@ -16,7 +16,7 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
     val map = CarcassonneBoard()
     val player1 = Player(0, "test", Color.Red)
     val player2 = Player(1, "test2", Color.Blue)
-    val game = GameMatch(List(player1, player2), map, TileDeck())
+    val game = GameState(List(player1, player2), map, TileDeck())
 
     val tile = GameTileFactory.createStartTile()
     val jsonString = """
@@ -51,7 +51,7 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
     val map = CarcassonneBoard()
     val player1 = Player(0, "test", Color.Red)
     val player2 = Player(1, "test2", Color.Blue)
-    val game = GameMatch(List(player1, player2), map, TileDeck())
+    val game = GameState(List(player1, player2), map, TileDeck())
 
     val tile = GameTileFactory.createStartTile()
     val jsonString =
@@ -81,7 +81,7 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
     val map = CarcassonneBoard()
     val player1 = Player(0, "test", Color.Red)
     val player2 = Player(1, "test2", Color.Blue)
-    val game = GameMatch(List(player1, player2), map, TileDeck())
+    val game = GameState(List(player1, player2), map, TileDeck())
 
     val tile = GameTileFactory.createStartTile()
     val jsonString =
@@ -117,7 +117,7 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
     val map = CarcassonneBoard()
     val player1 = Player(0, "test", Color.Red)
     val player2 = Player(1, "test2", Color.Blue)
-    val game = GameMatch(List(player1, player2), map, TileDeck())
+    val game = GameState(List(player1, player2), map, TileDeck())
 
     val tile = GameTileFactory.createStartTile()
     val jsonString =

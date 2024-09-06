@@ -10,11 +10,11 @@ import carcassonne.util.Position
 import scala.annotation.tailrec
 import scala.collection.mutable
 
-object GameMatch:
+object GameState:
   private val MinPlayers = 2
 
-class GameMatch(players: List[Player], board: CarcassonneBoard = CarcassonneBoard(), deck: TileDeck = TileDeck()) extends SubjectGameMatch:
-  require(players.length >= GameMatch.MinPlayers, s"At least ${GameMatch.MinPlayers} players are required to start the game.")
+class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoard(), deck: TileDeck = TileDeck()) extends SubjectGameMatch:
+  require(players.length >= GameState.MinPlayers, s"At least ${GameState.MinPlayers} players are required to start the game.")
 
   private var currentPlayerIndex: Int = 0
 

@@ -1,6 +1,6 @@
 package carcassonne.view
 
-import carcassonne.model.game.{GameMatch, Player}
+import carcassonne.model.game.{GameState, Player}
 import carcassonne.model.tile.TileSegment.N
 import carcassonne.model.tile.{GameTile, GameTileFactory, TileSegment}
 import carcassonne.observers.observers.{ObserverGameMatchBoard, ObserverGameMenuView}

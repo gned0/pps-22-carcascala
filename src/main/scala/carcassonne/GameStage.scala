@@ -2,7 +2,7 @@ package carcassonne
 
 import carcassonne.controller.GameMatchController
 import carcassonne.model.board.CarcassonneBoard
-import carcassonne.model.game.{GameMatch, Player}
+import carcassonne.model.game.{GameState, Player}
 import carcassonne.model.tile.TileDeck
 import carcassonne.util.{Color, PlayerColor}
 import carcassonne.view.{GameBoardView, GameMatchBoardView, GameMatchMenuView, GameStarterView, GameViewContainer}
@@ -46,7 +46,7 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
       case ((name, color), index) => Player(index, name, color)
     }
 
-    val game = GameMatch(players)
+    val game = GameState(players)
     game.addObserverBoard(boardView)
     game.addObserverMenu(gameMenu)
     GameMatchController(game, boardView).initialize()
