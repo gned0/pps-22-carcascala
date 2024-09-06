@@ -1,6 +1,6 @@
 package carcassonne
 
-import carcassonne.controller.GameMatchController
+import carcassonne.controller.GameController
 import carcassonne.model.board.CarcassonneBoard
 import carcassonne.model.game.{GameState, Player}
 import carcassonne.model.tile.TileDeck
@@ -49,7 +49,7 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
     val game = GameState(players)
     game.addObserverBoard(boardView)
     game.addObserverMenu(gameMenu)
-    GameMatchController(game, boardView).initialize()
+    GameController(game, boardView).initialize()
 
     this.setMainView(Seq(gameBoard, gameMenu))
   }
