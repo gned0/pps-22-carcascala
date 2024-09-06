@@ -31,7 +31,7 @@ case class Player(playerId: Int, name: String, color: Color):
    *
    * @param points The number of points to add to the player's score.
    */
-  def addScore(points: Int): Unit = 
+  def addScore(points: Int): Unit =
     score = score + points
 
   /**
@@ -46,7 +46,7 @@ case class Player(playerId: Int, name: String, color: Color):
    *
    * @return `true` if the follower was placed successfully, otherwise `false`.
    */
-  def placeFollower(): Boolean = 
+  def placeFollower(): Boolean =
     if (!hasFreeFollower) return false
     placedFollowers += 1
     true
@@ -57,15 +57,8 @@ case class Player(playerId: Int, name: String, color: Color):
   def returnFollower(): Unit =
     if placedFollowers > 0 then placedFollowers = placedFollowers - 1
 
-  def getPlayerColor: ColorAdjust =
-    val (hueCalculated, brightnessCalculated) = PlayerColor.colorAdjustCalculator(color)
-    new ColorAdjust():
-      hue = hueCalculated
-      brightness = brightnessCalculated
-      contrast = 0.0
-      saturation = 1.0
-      
-  def getSFXColor: FXColor =
-    PlayerColor.getNormalColor(color)
+  def getPlayerColor: ColorAdjust = color.getColorAdjust
+
+  def getSFXColor: FXColor = color.getSFXColor
 
 
