@@ -26,7 +26,7 @@ class GameEndView(players: List[Player]) {
   // Function to create a label for each player showing their score
   private def createPlayerScoreLabels(players: List[Player]): Seq[Label] = {
     players.map { player =>
-      new Label(s"${player.name}: ${player.score}") // Assuming Player has `name` and `score` fields
+      new Label(s"${player.name}: ${player.getScore}") // Assuming Player has `name` and `score` fields
     }
   }
 }

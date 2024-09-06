@@ -42,7 +42,7 @@ object GameController:
 
     private def gameEnded(): Unit =
       println("Game over! Final scores:")
-      model.getPlayers.foreach(p => println(s"${p.name}: ${p.score}"))
+      model.getPlayers.foreach(p => println(s"${p.name}: ${p.getScore}"))
 
     private def sendAvailableFollowerPositions(gameTile: GameTile, position: Position): Unit =
       model.sendAvailableFollowerPositions(gameTile, position)

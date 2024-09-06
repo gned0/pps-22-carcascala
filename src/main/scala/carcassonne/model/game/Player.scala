@@ -4,10 +4,8 @@ import carcassonne.util.{Color, PlayerColor}
 import scalafx.scene.effect.ColorAdjust
 import scalafx.scene.paint.Color as FXColor
 
-/**
- * Represents the different colors that a player can choose.
- */
-
+object Player:
+  private val MaxFollowers = 7
 /**
  * Represents a player in the game.
  *
@@ -15,26 +13,26 @@ import scalafx.scene.paint.Color as FXColor
  * @param name The name of the player.
  * @param color The color associated with the player.
  */
-case class Player(playerId: Int, name: String, color: Color) {
-  var score: Int = 0
+case class Player(playerId: Int, name: String, color: Color):
+  private var score: Int = 0
   private var placedFollowers: Int = 0
-  private val maxFollowers: Int = 7
+  private val maxFollowers: Int = Player.MaxFollowers
+
 
   /**
    * Checks if the player has at least one free follower.
    *
    * @return `true` if there is at least one free follower, otherwise `false`.
    */
-  def hasFreeFollower: Boolean = placedFollowers < maxFollowers
+  private def hasFreeFollower: Boolean = placedFollowers < maxFollowers
 
   /**
    * Increases the player's score by a given amount.
    *
    * @param points The number of points to add to the player's score.
    */
-  def addScore(points: Int): Unit = {
-    score += points
-  }
+  def addScore(points: Int): Unit = 
+    score = score + points
 
   /**
    * Returns the current score of the player.
@@ -48,31 +46,17 @@ case class Player(playerId: Int, name: String, color: Color) {
    *
    * @return `true` if the follower was placed successfully, otherwise `false`.
    */
-  def placeFollower(): Boolean = {
-    if (hasFreeFollower) {
-      placedFollowers += 1
-      true
-    } else {
-      false
-    }
-  }
+  def placeFollower(): Boolean = 
+    if (!hasFreeFollower) return false
+    placedFollowers += 1
+    true
 
   /**
    * Returns a follower, decrementing the count of followers placed.
    */
-  def returnFollower(): Unit = {
-    if (placedFollowers > 0) {
-      placedFollowers -= 1
-    }
-  }
+  def returnFollower(): Unit =
+    if placedFollowers > 0 then placedFollowers = placedFollowers - 1
 
-  /**
-   * Gets the number of followers currently placed.
-   *
-   * @return The number of followers placed.
-   */
-  def getFollowerPlaced: Int = placedFollowers
-  
   def getPlayerColor: ColorAdjust =
     val (hueCalculated, brightnessCalculated) = PlayerColor.colorAdjustCalculator(color)
     new ColorAdjust():
@@ -83,5 +67,5 @@ case class Player(playerId: Int, name: String, color: Color) {
       
   def getSFXColor: FXColor =
     PlayerColor.getNormalColor(color)
-}
+
 
