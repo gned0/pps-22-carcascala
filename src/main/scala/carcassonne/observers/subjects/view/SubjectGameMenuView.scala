@@ -1,4 +1,4 @@
-package carcassonne.observers.subjects
+package carcassonne.observers.subjects.view
 
 import carcassonne.model.tile.{GameTile, GameTileFactory}
 import carcassonne.observers.observers.{ObserverGameMatchView, ObserverGameMenuView}

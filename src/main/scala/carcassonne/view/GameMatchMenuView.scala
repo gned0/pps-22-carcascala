@@ -3,7 +3,7 @@ package carcassonne.view
 import carcassonne.model.game.{GameMatch, Player}
 import carcassonne.model.tile.{GameTile, TileSegment}
 import carcassonne.observers.observers.ObserverGameMatchMenu
-import carcassonne.observers.subjects.SubjectGameMenuView
+import carcassonne.observers.subjects.view.SubjectGameMenuView
 import carcassonne.util.{Logger, Position}
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.control.Button

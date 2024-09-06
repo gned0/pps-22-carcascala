@@ -4,7 +4,7 @@ import carcassonne.model.game.{GameMatch, Player}
 import carcassonne.model.tile.TileSegment.N
 import carcassonne.model.tile.{GameTile, GameTileFactory, TileSegment}
 import carcassonne.observers.observers.{ObserverGameMatchBoard, ObserverGameMenuView}
-import carcassonne.observers.subjects.{SubjectGameMatchView, SubjectGameMenuView, SubjectStarterView}
+import carcassonne.observers.subjects.view.{SubjectGameMatchView, SubjectGameMenuView, SubjectStarterView}
 import carcassonne.util.{Logger, Position}
 import javafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}
 import scalafx.geometry.{Insets, Pos}

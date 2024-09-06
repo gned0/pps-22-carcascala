@@ -1,6 +1,6 @@
 package carcassonne.view
 
-import carcassonne.observers.subjects.SubjectStarterView
+import carcassonne.observers.subjects.view.SubjectStarterView
 import scalafx.application.Platform
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.control.{Button, Label, TextField, Alert, ComboBox}
