@@ -240,14 +240,14 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
     placeTile(position, placeTileStackPane)
 
   override def scoreCalculated(position: Position, gameTile: GameTile): Unit =
-    println("porcodio")
-    val graphicalTile: Option[Node] = this.getChildren.find(node =>
-      GridPane.getColumnIndex(node) == position.x && GridPane.getRowIndex(node) == position.y
-    ).map(_.asInstanceOf[javafx.scene.Node])
-
-    println(graphicalTile.get)
-    println(graphicalTile.get.getClass)
+    val graphicalTile: Option[javafx.scene.Node] = this.getChildrenUnmodifiable.toArray.find {
+      case child: javafx.scene.Node => GridPane.getColumnIndex(child) == position.x && GridPane.getRowIndex(child) == position.y
+    }.map(_.asInstanceOf[javafx.scene.Node])
+    
     graphicalTile match
-      case Some(s: StackPane) => println(s.getChildren); s.getChildren.remove(1)
+      case Some(s) if s.isInstanceOf[javafx.scene.layout.StackPane] =>
+        val stackPane = s.asInstanceOf[javafx.scene.layout.StackPane]
+        println(stackPane.getChildren)
+        stackPane.getChildren.remove(1)
       case Some(_) => println("Other type of element")
       case None => println("No element")
