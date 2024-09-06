@@ -3,7 +3,7 @@ package carcassonne.util
 import scalafx.scene.effect.ColorAdjust
 import scalafx.scene.paint.Color as FXColor
 
-enum Color(val hue: Double, val brightness: Double, val fxColor: FXColor):
+enum Color(val colorHue: Double, val colorBrightness: Double, val fxColor: FXColor):
   case Black extends Color(0, -1, FXColor.Black)
   case Red extends Color(0, 0, FXColor.Red)
   case Yellow extends Color(60, 0, FXColor.Yellow)
@@ -12,8 +12,12 @@ enum Color(val hue: Double, val brightness: Double, val fxColor: FXColor):
   case Purple extends Color(300, 0, FXColor.Purple)
 
   def getColorAdjust: ColorAdjust =
-    val adjustedHue = Color.rangeCalculator((hue + 180) % 360, 0, 360, -1, 1)
-    ColorAdjust(adjustedHue, brightness, 0.0, 1.0)
+    val adjustedHue = Color.rangeCalculator((colorHue + 180) % 360, 0, 360, -1, 1)
+    new ColorAdjust():
+      hue = adjustedHue
+      brightness = colorBrightness
+      saturation = 1.0
+      contrast = 0.0
 
   def getSFXColor: FXColor = fxColor
 

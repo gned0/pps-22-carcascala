@@ -15,6 +15,7 @@ import scalafx.Includes.*
 import scalafx.event.EventIncludes.eventClosureWrapperWithParam
 import scalafx.scene.Node
 import scalafx.scene.control.Button
+import scalafx.scene.effect.ColorAdjust
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
@@ -243,7 +244,7 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
     val graphicalTile: Option[javafx.scene.Node] = this.getChildrenUnmodifiable.toArray.find {
       case child: javafx.scene.Node => GridPane.getColumnIndex(child) == position.x && GridPane.getRowIndex(child) == position.y
     }.map(_.asInstanceOf[javafx.scene.Node])
-    
+
     graphicalTile match
       case Some(s) if s.isInstanceOf[javafx.scene.layout.StackPane] =>
         val stackPane = s.asInstanceOf[javafx.scene.layout.StackPane]
