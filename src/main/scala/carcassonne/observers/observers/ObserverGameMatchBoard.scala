@@ -28,3 +28,5 @@ trait ObserverGameMatchBoard:
   def playerChanged(player: Player): Unit
   
   def availableFollowerPositions(availSegments: List[TileSegment], position: Position): Unit
+
+  def scoreCalculated(position: Position, gameTile: GameTile): Unit

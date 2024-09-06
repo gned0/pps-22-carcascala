@@ -50,7 +50,11 @@ class ScoreCalculator {
   def calculateRoadPoints(meepleSegment: TileSegment,
                           position: Position,
                           map: CarcassonneBoard): Int =
-    recursiveRoadPointsCalculation(meepleSegment, position, map) + 1
+    val roadPoints =  recursiveRoadPointsCalculation(meepleSegment, position, map)
+    if roadPoints != 0 then
+      roadPoints + 1
+    else
+      0
 
   /**
    * Provides a map of direct adjacencies for each TileSegment.

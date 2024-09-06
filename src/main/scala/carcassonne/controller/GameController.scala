@@ -31,6 +31,7 @@ object GameController:
         nextTurn()
 
     def nextTurn(): Unit =
+      model.calculateScore()
       model.nextPlayer()
       takeTurn()
 

@@ -46,3 +46,6 @@ trait SubjectGameMatch:
     
   def notifyAvailableFollowerPositions(availSegments: List[TileSegment], position: Position): Unit =
     observersBoardView.foreach(_.availableFollowerPositions(availSegments, position))
+    
+  def notifyScoreCalculated(position: Position, gameTile: GameTile): Unit =
+    observersBoardView.foreach(_.scoreCalculated(position, gameTile))

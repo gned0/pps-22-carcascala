@@ -137,14 +137,6 @@
   },
   {
     "segments": {
-      "NW": "City", "N": "City", "NE": "City",
-      "W": "City", "C": "City", "E": "City",
-      "SW": "City", "S": "City", "SE": "City"
-    },
-    "imagePath": "CastleCenterEntry.png"
-  },
-  {
-    "segments": {
       "NW": "Field", "N": "Field", "NE": "Field",
       "W": "Field", "C": "RoadEnd", "E": "Field",
       "SW": "Field", "S": "Road", "SE": "Field"

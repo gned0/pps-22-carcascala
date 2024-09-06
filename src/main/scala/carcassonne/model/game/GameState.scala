@@ -3,9 +3,10 @@ package carcassonne.model.game
 import carcassonne.model.tile.TileSegment.{C, E, N, S, W}
 import carcassonne.model.*
 import carcassonne.model.board.CarcassonneBoard
+import carcassonne.model.tile.SegmentType.{City, Road}
 import carcassonne.model.tile.{GameTile, TileDeck, TileSegment}
 import carcassonne.observers.subjects.model.SubjectGameMatch
-import carcassonne.util.Position
+import carcassonne.util.{Logger, Position}
 
 import scala.annotation.tailrec
 import scala.collection.mutable
@@ -33,6 +34,8 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
     if board.placeFollower(gameTile, segment, player) then
       player.placeFollower()
       notifyIsFollowerPlaced(gameTile, segment, player)
+      Logger.log(s"GAMESTATE", s"Player: " + player.name + " placed a follower on tile: " + gameTile +
+        " on segment: " + segment)
       true
     else
       false
@@ -46,6 +49,32 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
     }.toList
     println(segmentMap)
     notifyAvailableFollowerPositions(segmentMap, position)
+
+  def calculateScore(): Unit =
+    val followerTiles = board.getTileMap.get
+        .filter((_, tile) => tile.followerMap.nonEmpty )
+    followerTiles.foreach((position, tile) =>
+      tile.followerMap.foreach((segment, playerID) =>
+        players.filter(p => p.playerId == playerID)
+        .map(p =>
+          if tile.segments(segment) == Road then
+            val score = ScoreCalculator().calculateRoadPoints(segment, position, board)
+            if score != 0 then
+              println("Road: " + score)
+//              p.addScore(score)
+              notifyScoreCalculated(position, tile)
+
+          else if tile.segments(segment) == City then
+            val score = ScoreCalculator().calculateRoadPoints(segment, position, board)
+            if score != 0 then
+              println("City: " + score)
+//              p.addScore(score)
+              notifyScoreCalculated(position, tile)
+              
+        )
+      )
+    )
+
 
   def isDeckEmpty: Boolean = deck.isEmpty
 
