@@ -102,15 +102,14 @@ case class GameTile(
     SE -> NE
   )
 
-
 object GameTile:
 
   def createRandomTile(): GameTile = 
     val segments = TileSegment.values.map { segment =>
       val segmentType = Random.nextInt(3) match {
-        case 0 => SegmentType.City
-        case 1 => SegmentType.Road
-        case 2 => SegmentType.Field
+        case 0 => City
+        case 1 => Road
+        case 2 => Field
       }
       segment -> segmentType
     }.toMap
