@@ -58,55 +58,50 @@ case class GameTile(
    *
    * @return A new GameTile instance with segments rotated clockwise.
    */
-//  def rotateClockwise: GameTile = copy(segments = rotate(segments, clockwise = true))
-//
-//  def rotateCounterClockwise: GameTile = copy(segments = rotate(segments, clockwise = false))
-//
-//  private def rotate(segments: Map[TileSegment, SegmentType], clockwise: Boolean): Map[TileSegment, SegmentType] =
-//    val rotationMap = if clockwise then Map(
-//      NW -> SW, N -> W, NE -> NW, W -> S, C -> C, E -> N, SW -> SE, S -> E, SE -> NE
-//    ) else Map(
-//      NW -> NE, N -> E, NE -> SE, W -> N, C -> C, E -> S, SW -> NW, S -> W, SE -> SW
-//    )
-//    segments.map { case (k, v) => rotationMap(k) -> v }
-
   def rotateClockwise: GameTile =
     GameTile(
-      rotateSegmentsClockwise(segments),
+      rotateSegments(segments, rotateClockwiseMapping),
       imagePath
     )
 
+  /**
+   * Rotates the tile 90 degrees counter-clockwise.
+   *
+   * @return A new GameTile instance with segments rotated counter-clockwise.
+   */
   def rotateCounterClockwise: GameTile =
     GameTile(
-      rotateSegmentsCounterClockwise(segments),
+      rotateSegments(segments, rotateCounterClockwiseMapping),
       imagePath
     )
 
-  private def rotateSegmentsClockwise(matrix: Map[TileSegment, SegmentType]): Map[TileSegment, SegmentType] =
-    Map(
-      TileSegment.NW -> matrix.getOrElse(TileSegment.SW, SegmentType.Field),
-      TileSegment.N -> matrix.getOrElse(TileSegment.W, SegmentType.Field),
-      TileSegment.NE -> matrix.getOrElse(TileSegment.NW, SegmentType.Field),
-      TileSegment.W -> matrix.getOrElse(TileSegment.S, SegmentType.Field),
-      TileSegment.C -> matrix.getOrElse(TileSegment.C, SegmentType.Field),
-      TileSegment.E -> matrix.getOrElse(TileSegment.N, SegmentType.Field),
-      TileSegment.SW -> matrix.getOrElse(TileSegment.SE, SegmentType.Field),
-      TileSegment.S -> matrix.getOrElse(TileSegment.E, SegmentType.Field),
-      TileSegment.SE -> matrix.getOrElse(TileSegment.NE, SegmentType.Field)
-    )
+  private def rotateSegments(matrix: Map[TileSegment, SegmentType], mapping: Map[TileSegment, TileSegment]): Map[TileSegment, SegmentType] =
+    matrix.map { case (segment, segmentType) => mapping.getOrElse(segment, segment) -> segmentType }
 
-  private def rotateSegmentsCounterClockwise(matrix: Map[TileSegment, SegmentType]): Map[TileSegment, SegmentType] =
-    Map(
-      TileSegment.NW -> matrix.getOrElse(TileSegment.NE, SegmentType.Field),
-      TileSegment.N -> matrix.getOrElse(TileSegment.E, SegmentType.Field),
-      TileSegment.NE -> matrix.getOrElse(TileSegment.SE, SegmentType.Field),
-      TileSegment.W -> matrix.getOrElse(TileSegment.N, SegmentType.Field),
-      TileSegment.C -> matrix.getOrElse(TileSegment.C, SegmentType.Field),
-      TileSegment.E -> matrix.getOrElse(TileSegment.S, SegmentType.Field),
-      TileSegment.SW -> matrix.getOrElse(TileSegment.NW, SegmentType.Field),
-      TileSegment.S -> matrix.getOrElse(TileSegment.W, SegmentType.Field),
-      TileSegment.SE -> matrix.getOrElse(TileSegment.SW, SegmentType.Field)
-    )
+  private val rotateClockwiseMapping: Map[TileSegment, TileSegment] = Map(
+    NW -> NE,
+    N -> E,
+    NE -> SE,
+    W -> N,
+    C -> C,
+    E -> S,
+    SW -> NW,
+    S -> W,
+    SE -> SW
+  )
+
+  private val rotateCounterClockwiseMapping: Map[TileSegment, TileSegment] = Map(
+    NW -> SW,
+    N -> W,
+    NE -> NW,
+    W -> S,
+    C -> C,
+    E -> N,
+    SW -> SE,
+    S -> E,
+    SE -> NE
+  )
+
 
 object GameTile:
 
