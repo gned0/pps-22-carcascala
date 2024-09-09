@@ -63,7 +63,7 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
 
     rotateClockwise.onMouseClicked = _ => rotateDrawnTileClockwise(newTileDrawn, tileDrawnImage)
     rotateCounterClockwise.onMouseClicked = _ => rotateDrawnTileCounterClockwise(newTileDrawn, tileDrawnImage)
-    Logger.log(s"MENU VIEW", "Drawn tile rotated counter clockwise")
+    Logger.log(s"MENU VIEW", "Drawn tile rotated ch3 clockwise")
 
 
   private def redrawTileDrawn(tileDrawn: GameTile, tileDrawnImage: ImageView): Unit =

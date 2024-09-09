@@ -2,7 +2,8 @@ package carcassonne.model.board
 
 import carcassonne.model.*
 import carcassonne.model.game.Player
-import carcassonne.model.tile.TileSegment.{N, NE, adjacentSegments}
+import carcassonne.model.tile.SegmentType.RoadEnd
+import carcassonne.model.tile.TileSegment.{C, N, NE, adjacentSegments}
 import carcassonne.model.tile.{GameTile, SegmentType, TileSegment}
 import carcassonne.util.{Logger, Position}
 
@@ -59,7 +60,7 @@ class CarcassonneBoard:
     val result: mutable.Set[(GameTile, TileSegment)] = mutable.Set.empty
 
     def dfs(position: Position, segment: TileSegment): Unit =
-      if (visited.contains((position, segment))) return
+      if (board(position).segments(segment) == RoadEnd) return
 
       visited += ((position, segment))
 
@@ -68,47 +69,124 @@ class CarcassonneBoard:
 
         val segmentType = currentTile.segments(segment)
 
-        // Check connected segments on the same tile
-        currentTile.segments.foreach { case (seg, segType) =>
-          if (segType == segmentType && seg != segment && adjacentSegments(segment).contains(seg))
-            dfs(position, seg)
-        }
-
-        // Check neighboring tiles
-        getNeighborTiles(position, segment).foreach { case (neighborPos, neighborSegment) =>
-          board.get(neighborPos).foreach { neighborTile =>
-            if (neighborTile.segments(neighborSegment) == segmentType)
-              dfs(neighborPos, neighborSegment)
-          }
-        }
+        getAdjacentTileSegments(segment, position, segmentType).foreach((adjPosition, adjSegment) =>
+            if (!visited.contains((adjPosition, adjSegment)))
+              dfs(adjPosition, adjSegment)
+          )
       }
 
     val startPosition = board.find(_._2 == startTile).map(_._1)
     startPosition.foreach(pos => dfs(pos, startSegment))
+    println()
     result.toSet
 
-  private def getNeighborPositions(position: Position): List[(Position, List[TileSegment])] =
-    List(
-      (Position(position.x, position.y - 1), List(TileSegment.SW, TileSegment.S, TileSegment.SE)), // west
-      (Position(position.x + 1, position.y), List(TileSegment.NW, TileSegment.W, TileSegment.SW)), // south
-      (Position(position.x, position.y + 1), List(TileSegment.NW, TileSegment.N, TileSegment.NE)), // east
-      (Position(position.x - 1, position.y), List(TileSegment.NE, TileSegment.E, TileSegment.SE)) // north
-    )
+  private def getAdjacentTileSegments(segment: TileSegment,
+                                      tilePosition: Position,
+                                      segmentType: SegmentType): Set[(Position, TileSegment)] =
+    adjacentSegmentsCurrentTile(segment, tilePosition, segmentType) union
+      adjacentSegmentsAcrossTiles(segment, tilePosition, segmentType)
 
-  private def getNeighborTiles(position: Position, tileSegment: TileSegment): List[(Position, TileSegment)] =
-    tileSegment match
-      case TileSegment.N => List((Position(position.x - 1, position.y), TileSegment.S))
-      case TileSegment.E => List((Position(position.x, position.y + 1), TileSegment.W))
-      case TileSegment.S => List((Position(position.x + 1, position.y), TileSegment.N))
-      case TileSegment.W => List((Position(position.x, position.y - 1), TileSegment.E))
-      case TileSegment.NE => List((Position(position.x - 1, position.y), TileSegment.SE),
-                                  (Position(position.x, position.y + 1), TileSegment.NW))
-      case TileSegment.NW => List((Position(position.x - 1, position.y), TileSegment.SW),
-                                    (Position(position.x, position.y - 1), TileSegment.NE))
-      case TileSegment.SE => List((Position(position.x + 1, position.y), TileSegment.NE),
-                                    (Position(position.x, position.y + 1), TileSegment.SW))
-      case TileSegment.SW => List((Position(position.x + 1, position.y), TileSegment.NW),
-                                    (Position(position.x, position.y - 1), TileSegment.SE))
-      case _ => List.empty
+  private def adjacentSegmentsCurrentTile(segment: TileSegment,
+                                          tilePosition: Position,
+                                          segmentType: SegmentType): Set[(Position, TileSegment)] = {
+    val adjacencies: Set[(Position, TileSegment)] = segment match {
+      case TileSegment.NW => Set(
+        (Position(tilePosition.x - 1, tilePosition.y - 1), TileSegment.SE),
+        (Position(tilePosition.x - 1, tilePosition.y), TileSegment.NE),
+        (Position(tilePosition.x, tilePosition.y - 1), TileSegment.SW)
+      )
+      case TileSegment.N => Set((Position(tilePosition.x, tilePosition.y - 1), TileSegment.S))
+      case TileSegment.NE => Set(
+        (Position(tilePosition.x + 1, tilePosition.y - 1), TileSegment.SW),
+        (Position(tilePosition.x + 1, tilePosition.y), TileSegment.NW),
+        (Position(tilePosition.x, tilePosition.y - 1), TileSegment.SE),
+      )
+      case TileSegment.W => Set((Position(tilePosition.x - 1, tilePosition.y), TileSegment.E))
+      case TileSegment.C => Set.empty
+      case TileSegment.E => Set((Position(tilePosition.x + 1, tilePosition.y), TileSegment.W))
+      case TileSegment.SW => Set(
+        (Position(tilePosition.x - 1, tilePosition.y + 1), TileSegment.NE),
+        (Position(tilePosition.x - 1, tilePosition.y), TileSegment.SE),
+        (Position(tilePosition.x, tilePosition.y + 1), TileSegment.NW)
+      )
+      case TileSegment.S => Set((Position(tilePosition.x, tilePosition.y + 1), TileSegment.N))
+      case TileSegment.SE => Set(
+        (Position(tilePosition.x + 1, tilePosition.y + 1), TileSegment.NW),
+        (Position(tilePosition.x + 1, tilePosition.y), TileSegment.SW),
+        (Position(tilePosition.x, tilePosition.y + 1), TileSegment.NE)
+      )
+    }
+    filterSegmentTypes(adjacencies, segmentType)
+  }
 
+  private def adjacentSegmentsAcrossTiles(segment: TileSegment,
+                                          tilePosition: Position,
+                                          segmentType: SegmentType): Set[(Position, TileSegment)] = {
+    val adjacencies: Set[(Position, TileSegment)] = segment match {
+      case TileSegment.NW => Set(
+        (tilePosition, TileSegment.N),
+        (tilePosition, TileSegment.C),
+        (tilePosition, TileSegment.W)
+      )
+      case TileSegment.N => Set(
+        (tilePosition, TileSegment.NW),
+        (tilePosition, TileSegment.W),
+        (tilePosition, TileSegment.C),
+        (tilePosition, TileSegment.E),
+        (tilePosition, TileSegment.NE)
+      )
+      case TileSegment.NE => Set(
+        (tilePosition, TileSegment.N),
+        (tilePosition, TileSegment.C),
+        (tilePosition, TileSegment.E)
+      )
+      case TileSegment.W => Set(
+        (tilePosition, TileSegment.NW),
+        (tilePosition, TileSegment.N),
+        (tilePosition, TileSegment.C),
+        (tilePosition, TileSegment.S),
+        (tilePosition, TileSegment.SW)
+      )
+      case TileSegment.C => Set(
+        (tilePosition, TileSegment.NE),
+        (tilePosition, TileSegment.N),
+        (tilePosition, TileSegment.NE),
+        (tilePosition, TileSegment.W),
+        (tilePosition, TileSegment.E),
+        (tilePosition, TileSegment.SE),
+        (tilePosition, TileSegment.S),
+        (tilePosition, TileSegment.SE)
+      )
+      case TileSegment.E => Set(
+        (tilePosition, TileSegment.NE),
+        (tilePosition, TileSegment.N),
+        (tilePosition, TileSegment.C),
+        (tilePosition, TileSegment.S),
+        (tilePosition, TileSegment.SE)
+      )
+      case TileSegment.SW => Set(
+        (tilePosition, TileSegment.W),
+        (tilePosition, TileSegment.C),
+        (tilePosition, TileSegment.S)
+      )
+      case TileSegment.S => Set(
+        (tilePosition, TileSegment.SW),
+        (tilePosition, TileSegment.W),
+        (tilePosition, TileSegment.C),
+        (tilePosition, TileSegment.E),
+        (tilePosition, TileSegment.SE)
+      )
+      case TileSegment.SE => Set(
+        (tilePosition, TileSegment.E),
+        (tilePosition, TileSegment.C),
+        (tilePosition, TileSegment.S)
+      )
+    }
+    filterSegmentTypes(adjacencies, segmentType)
+  }
 
+  private def filterSegmentTypes(adjacencies: Set[(Position, TileSegment)],
+                         segmentType: SegmentType): Set[(Position, TileSegment)] =
+    adjacencies.filter { case (adjPosition, adjSegment) =>
+      getTile(adjPosition).exists(_.segments(adjSegment) == segmentType)
+    }

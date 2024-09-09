@@ -44,7 +44,8 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
     val segmentMap = gameTile.segments.collect {
       case (segment, _) if {
         val connectedFeature = board.getConnectedFeature(gameTile, segment)
-        !connectedFeature.exists { case (tile, seg) => tile.followerMap.contains(seg) }
+        connectedFeature.nonEmpty && 
+          !connectedFeature.exists { case (tile, seg) => tile.followerMap.contains(seg) }
       } => segment
     }.toList
     println(segmentMap)
@@ -62,14 +63,14 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
             if score != 0 then
               println("Road: " + score)
 //              p.addScore(score)
-              notifyScoreCalculated(position, tile)
+//              notifyScoreCalculated(position, tile)
 
           else if tile.segments(segment) == City then
             val score = ScoreCalculator().calculateRoadPoints(segment, position, board)
             if score != 0 then
               println("City: " + score)
 //              p.addScore(score)
-              notifyScoreCalculated(position, tile)
+//              notifyScoreCalculated(position, tile)
               
         )
       )
