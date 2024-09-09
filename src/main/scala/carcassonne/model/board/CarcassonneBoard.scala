@@ -2,102 +2,48 @@ package carcassonne.model.board
 
 import carcassonne.model.*
 import carcassonne.model.game.Player
-import carcassonne.model.tile.{GameTile, TileSegment}
+import carcassonne.model.tile.TileSegment.{N, NE, adjacentSegments}
+import carcassonne.model.tile.{GameTile, SegmentType, TileSegment}
 import carcassonne.util.{Logger, Position}
 
-/**
- * Represents the game map, which holds the placed tiles and manages the graph of tile connections.
- *
- * This class extends `GameBoard[GameTile]` and `Graph[Position]`, meaning it can manage a board of tiles
- * and handle graph-related operations for connected regions.
- */
-class CarcassonneBoard extends GameBoard[GameTile] with Graph[Position]:
+import scala.collection.mutable
 
-  /**
-   * Places a tile on the map at the specified position and updates the graph structure.
-   *
-   * @param tile The `GameTile` to place.
-   * @param position The `Position` where the tile should be placed.
-   * @throws IllegalArgumentException if a tile is already placed at the position or if the placement is invalid.
-   */
+class CarcassonneBoard:
+  private val board: mutable.Map[Position, GameTile] = mutable.Map.empty
+
   def placeTile(tile: GameTile, position: Position): Boolean =
-    if getElement(position).isDefined then
-      throw IllegalArgumentException(s"Tile already placed at position $position")
-
-    if isValidTilePlacement(tile, position) then
-      placeElement(tile, position)
+    if (board.contains(position)) throw IllegalArgumentException(s"Tile already placed at position $position")
+    else if (isValidTilePlacement(tile, position))
+      board(position) = tile
       Logger.log("MODEL", s"Tile placed at $position")
-
-      addNode(position)
-
-      updateGraphEdges(tile, position)
       true
     else
       throw IllegalArgumentException(s"Invalid tile placement at position $position")
 
-  /**
-   * Updates the graph edges based on the neighboring positions and tile segments.
-   *
-   * @param tile The `GameTile` that has just been placed.
-   * @param position The `Position` where the tile is placed.
-   */
-  private def updateGraphEdges(tile: GameTile, position: Position): Unit =
-    val neighborTiles = getNeighborTiles(position)
-
-    neighborTiles.foreach { case (neighborPos, tileSegment, neighborSegment) =>
-      getElement(neighborPos).foreach { neighborTile =>
-        if tile.segments(tileSegment) == neighborTile.segments(neighborSegment) then
-          addEdge(position, neighborPos)
-      }
-    }
-
-  /**
-   * Validates whether a tile can be placed at the specified position.
-   *
-   * @param tile The `GameTile` to validate.
-   * @param position The `Position` where the tile is to be placed.
-   * @return `true` if the placement is valid, `false` otherwise.
-   */
   private def isValidTilePlacement(tile: GameTile, position: Position): Boolean =
-    val neighborTiles = getNeighborTiles(position)
+    val neighborPositions = List(
+      (Position(position.x, position.y - 1), TileSegment.N, TileSegment.S),
+      (Position(position.x + 1, position.y), TileSegment.E, TileSegment.W),
+      (Position(position.x, position.y + 1), TileSegment.S, TileSegment.N),
+      (Position(position.x - 1, position.y), TileSegment.W, TileSegment.E)
+    )
 
-    neighborTiles.forall { case (pos, tileSegment, neighborSegment) =>
-      getElement(pos).forall { neighborTile =>
+    neighborPositions.forall { case (pos, tileSegment, neighborSegment) =>
+      board.get(pos).forall { neighborTile =>
         tile.segments(tileSegment) == neighborTile.segments(neighborSegment)
       }
     }
 
-  private def getNeighborTiles(position: Position) = {
-    val neighborTiles = List(
-      (Position(position.x, position.y - 1), TileSegment.N, TileSegment.S), // North neighbor
-      (Position(position.x + 1, position.y), TileSegment.E, TileSegment.W), // East neighbor
-      (Position(position.x, position.y + 1), TileSegment.S, TileSegment.N), // South neighbor
-      (Position(position.x - 1, position.y), TileSegment.W, TileSegment.E) // West neighbor
-    )
-    neighborTiles
-  }
+  def getTile(position: Position): Option[GameTile] = board.get(position)
 
-  /**
-   * Retrieves the tile at the specified position, if any.
-   *
-   * @param position The `Position` to retrieve the tile from.
-   * @return An `Option` containing the `GameTile` if one exists at the position, or `None` otherwise.
-   */
-  def getTile(position: Position): Option[GameTile] =
-    getElement(position)
-
-  /**
-   * Retrieves the entire map of placed tiles.
-   *
-   * @return An `Option` containing a `Map` of `Position` to `GameTile`.
-   */
   def getTileMap: Option[Map[Position, GameTile]] =
-    getElementMap
+    if (board.isEmpty) None
+    else Some(board.toMap)
 
   def placeFollower(gameTile: GameTile, segment: TileSegment, player: Player): Boolean =
     if (gameTile.followerMap.contains(segment)) return false
 
-    val connectedFeature = this.getConnectedFeature(gameTile, segment)
+    val connectedFeature = getConnectedFeature(gameTile, segment)
 
     val isFeatureOccupied = connectedFeature.exists { case (tile, seg) =>
       tile.followerMap.contains(seg)
@@ -106,66 +52,63 @@ class CarcassonneBoard extends GameBoard[GameTile] with Graph[Position]:
     if (isFeatureOccupied) return false
 
     gameTile.followerMap = gameTile.followerMap.updated(segment, player.playerId)
-    true 
+    true
 
-  /**
-   * Retrieves the connected feature starting from a specific tile and segment.
-   * Uses breadth-first search (BFS) to find all connected tiles and segments.
-   *
-   * @param startTile    The starting `GameTile`.
-   * @param startSegment The starting `TileSegment`.
-   * @return A set of tuples representing the connected tiles and segments.
-   */
-  def getConnectedFeature(startTile: GameTile, startSegment: TileSegment): Set[(GameTile, TileSegment)] = {
-    var visited: Set[(Position, TileSegment)] = Set()
+  def getConnectedFeature(startTile: GameTile, startSegment: TileSegment): Set[(GameTile, TileSegment)] =
+    var visited: Set[(Position, TileSegment)] = Set.empty
+    val result: mutable.Set[(GameTile, TileSegment)] = mutable.Set.empty
 
-    def oppositeSegment(segment: TileSegment): TileSegment = segment match {
-      case TileSegment.N => TileSegment.S
-      case TileSegment.S => TileSegment.N
-      case TileSegment.E => TileSegment.W
-      case TileSegment.W => TileSegment.E
-      case other => other
-    }
-
-    def getNeighborPosition(position: Position, segment: TileSegment): Position = segment match {
-      case TileSegment.N => Position(position.x, position.y - 1)
-      case TileSegment.S => Position(position.x, position.y + 1)
-      case TileSegment.E => Position(position.x + 1, position.y)
-      case TileSegment.W => Position(position.x - 1, position.y)
-      case _ => position 
-    }
-
-    // Recursive dfs to find connected segments
-    def dfs(position: Position, segment: TileSegment): Set[(GameTile, TileSegment)] = {
-      if (visited.contains((position, segment))) return Set()
+    def dfs(position: Position, segment: TileSegment): Unit =
+      if (visited.contains((position, segment))) return
 
       visited += ((position, segment))
 
-      val currentTileOpt = getTile(position)
+      board.get(position).foreach { currentTile =>
+        result += ((currentTile, segment))
 
-      currentTileOpt match {
-        case None => Set() 
-        case Some(currentTile) =>
-          val currentSet = Set((currentTile, segment))
-          
-          val connectedSegments = currentTile.segments.collect {
-            case (seg, segType) if segType == currentTile.segments(segment) && seg != segment => seg
+        val segmentType = currentTile.segments(segment)
+
+        // Check connected segments on the same tile
+        currentTile.segments.foreach { case (seg, segType) =>
+          if (segType == segmentType && seg != segment && adjacentSegments(segment).contains(seg))
+            dfs(position, seg)
+        }
+
+        // Check neighboring tiles
+        getNeighborTiles(position, segment).foreach { case (neighborPos, neighborSegment) =>
+          board.get(neighborPos).foreach { neighborTile =>
+            if (neighborTile.segments(neighborSegment) == segmentType)
+              dfs(neighborPos, neighborSegment)
           }
-
-          val sameTileConnections = connectedSegments.flatMap(seg => dfs(position, seg))
-
-          val neighborPosition = getNeighborPosition(position, segment)
-          val neighborSegment = oppositeSegment(segment)
-          val neighborConnections = dfs(neighborPosition, neighborSegment)
-
-          currentSet ++ sameTileConnections ++ neighborConnections
+        }
       }
-    }
 
-    val startPositionOpt = getElementMap.flatMap(_.find(_._2 == startTile).map(_._1))
+    val startPosition = board.find(_._2 == startTile).map(_._1)
+    startPosition.foreach(pos => dfs(pos, startSegment))
+    result.toSet
 
-    startPositionOpt match {
-      case None => Set() 
-      case Some(startPosition) => dfs(startPosition, startSegment)
-    }
-  }
+  private def getNeighborPositions(position: Position): List[(Position, List[TileSegment])] =
+    List(
+      (Position(position.x, position.y - 1), List(TileSegment.SW, TileSegment.S, TileSegment.SE)), // west
+      (Position(position.x + 1, position.y), List(TileSegment.NW, TileSegment.W, TileSegment.SW)), // south
+      (Position(position.x, position.y + 1), List(TileSegment.NW, TileSegment.N, TileSegment.NE)), // east
+      (Position(position.x - 1, position.y), List(TileSegment.NE, TileSegment.E, TileSegment.SE)) // north
+    )
+
+  private def getNeighborTiles(position: Position, tileSegment: TileSegment): List[(Position, TileSegment)] =
+    tileSegment match
+      case TileSegment.N => List((Position(position.x - 1, position.y), TileSegment.S))
+      case TileSegment.E => List((Position(position.x, position.y + 1), TileSegment.W))
+      case TileSegment.S => List((Position(position.x + 1, position.y), TileSegment.N))
+      case TileSegment.W => List((Position(position.x, position.y - 1), TileSegment.E))
+      case TileSegment.NE => List((Position(position.x - 1, position.y), TileSegment.SE),
+                                  (Position(position.x, position.y + 1), TileSegment.NW))
+      case TileSegment.NW => List((Position(position.x - 1, position.y), TileSegment.SW),
+                                    (Position(position.x, position.y - 1), TileSegment.NE))
+      case TileSegment.SE => List((Position(position.x + 1, position.y), TileSegment.NE),
+                                    (Position(position.x, position.y + 1), TileSegment.SW))
+      case TileSegment.SW => List((Position(position.x + 1, position.y), TileSegment.NW),
+                                    (Position(position.x, position.y - 1), TileSegment.SE))
+      case _ => List.empty
+
+
