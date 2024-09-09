@@ -6,6 +6,19 @@ enum TileSegment:
   case N, NE, E, SE, S, SW, W, NW, C
 
 object TileSegment:
+
+  def adjacentSegments(segment: TileSegment): Set[TileSegment] = segment match {
+    case TileSegment.N => Set(TileSegment.NW, TileSegment.NE, TileSegment.C)
+    case TileSegment.NE => Set(TileSegment.N, TileSegment.E)
+    case TileSegment.E => Set(TileSegment.NE, TileSegment.SE, TileSegment.C)
+    case TileSegment.SE => Set(TileSegment.E, TileSegment.S)
+    case TileSegment.S => Set(TileSegment.SE, TileSegment.SW, TileSegment.C)
+    case TileSegment.SW => Set(TileSegment.S, TileSegment.W)
+    case TileSegment.W => Set(TileSegment.SW, TileSegment.NW, TileSegment.C)
+    case TileSegment.NW => Set(TileSegment.W, TileSegment.N)
+    case TileSegment.C => Set(TileSegment.N, TileSegment.E, TileSegment.S, TileSegment.W)
+  }
+  
   implicit val tileSegmentFormat: Format[TileSegment] = new Format[TileSegment] {
     def reads(json: JsValue): JsResult[TileSegment] = json.as[String] match {
       case "N"  => JsSuccess(TileSegment.N)
