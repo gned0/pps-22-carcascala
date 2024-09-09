@@ -177,7 +177,15 @@ class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
     map.placeTile(tile, position) shouldBe true
     map.getConnectedFeature(tile, TileSegment.N) shouldBe Set((tile, TileSegment.N))
     map.getConnectedFeature(tile, TileSegment.C) shouldBe Set((tile, TileSegment.C), (tile, TileSegment.E))
-    map.getConnectedFeature(tile, TileSegment.S).map((tile, segment) => (tile.imagePath, segment)) shouldBe Set((tile, TileSegment.S), (tile, TileSegment.SW), (tile, TileSegment.SE)).map((tile, segment) => (tile.imagePath, segment))
+    map.getConnectedFeature(tile, TileSegment.S).map((tile, segment) => (tile.imagePath, segment)) shouldBe
+      Set(
+        (tile, TileSegment.S),
+        (tile, TileSegment.SW),
+        (tile, TileSegment.SE),
+        (tile, TileSegment.SW),
+        (tile, TileSegment.W),
+        (tile, TileSegment.NW)
+      ).map((tile, segment) => (tile.imagePath, segment))
   }
 
   test("getConnectedFeature should return connected features for adjacent tiles with matching edges") {
@@ -294,8 +302,7 @@ class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
     val featureField = map.getConnectedFeature(tile1, TileSegment.SE).map((tile, segment) => (tile.imagePath, segment))
     val expectedFeatureField = Set(
       (tile1, TileSegment.SE),
-      (tile2, TileSegment.SW),
-      (tile3, TileSegment.S)
+      (tile3, TileSegment.NE)
     ).map((tile, segment) => (tile.imagePath, segment))
 
     featureField shouldBe expectedFeatureField
