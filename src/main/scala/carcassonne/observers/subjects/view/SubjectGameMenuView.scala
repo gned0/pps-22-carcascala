@@ -1,6 +1,6 @@
 package carcassonne.observers.subjects.view
 
-import carcassonne.model.tile.{GameTile, GameTileFactory}
+import carcassonne.model.tile.GameTile
 import carcassonne.observers.observers.{ObserverGameMatchView, ObserverGameMenuView}
 import scalafx.scene.image.{Image, ImageView}
 

@@ -2,7 +2,7 @@ package carcassonne.view
 
 import carcassonne.model.game.{GameState, Player}
 import carcassonne.model.tile.TileSegment.N
-import carcassonne.model.tile.{GameTile, GameTileFactory, TileSegment}
+import carcassonne.model.tile.{GameTile, TileSegment}
 import carcassonne.observers.observers.{ObserverGameMatchBoard, ObserverGameMenuView}
 import carcassonne.observers.subjects.view.{SubjectGameMatchView, SubjectGameMenuView, SubjectStarterView}
 import carcassonne.util.{Logger, Position}

@@ -1,7 +1,8 @@
 package carcassonne.model
 
-import carcassonne.model.tile.{GameTile, GameTileFactory, SegmentType, TileSegment}
-import carcassonne.model.tile.TileSegment.N
+import carcassonne.model.tile.SegmentType.{City, Field, Road}
+import carcassonne.model.tile.{GameTile, SegmentType, TileSegment}
+import carcassonne.model.tile.TileSegment.*
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 import play.api.libs.json.Json
@@ -65,11 +66,11 @@ class GameTileSuite extends AnyFunSuite with Matchers:
   }
 
   test("The start tile should have correct segments") {
-    GameTileFactory.createStartTile().segments(TileSegment.N) shouldBe SegmentType.City
-    GameTileFactory.createStartTile().segments(TileSegment.E) shouldBe SegmentType.Road
-    GameTileFactory.createStartTile().segments(TileSegment.S) shouldBe SegmentType.Field
-    GameTileFactory.createStartTile().segments(TileSegment.W) shouldBe SegmentType.Road
-    GameTileFactory.createStartTile().segments(TileSegment.C) shouldBe SegmentType.Road
+    GameTile.createStartTile().segments(TileSegment.N) shouldBe SegmentType.City
+    GameTile.createStartTile().segments(TileSegment.E) shouldBe SegmentType.Road
+    GameTile.createStartTile().segments(TileSegment.S) shouldBe SegmentType.Field
+    GameTile.createStartTile().segments(TileSegment.W) shouldBe SegmentType.Road
+    GameTile.createStartTile().segments(TileSegment.C) shouldBe SegmentType.Road
   }
 
   test("GameTile should be correctly deserialized from JSON") {
@@ -92,3 +93,48 @@ class GameTileSuite extends AnyFunSuite with Matchers:
     tile.segments(TileSegment.W) shouldBe SegmentType.Road
     tile.segments(TileSegment.C) shouldBe SegmentType.Road
   }
+
+  test("Center segment (C) should remain unchanged after rotation") {
+    val tile = GameTile(
+      Map(
+        NW -> Field, N -> City, NE -> Field,
+        W -> Road, C -> Road, E -> Road,
+        SW -> Field, S -> Field, SE -> Field
+      ),
+      "test.png"
+    )
+    val rotatedTileClockwise = tile.rotateClockwise
+    val rotatedTileCounterClockwise = tile.rotateCounterClockwise
+    rotatedTileClockwise.segments(C) shouldBe SegmentType.Road
+    rotatedTileCounterClockwise.segments(C) shouldBe SegmentType.Road
+  }
+
+  test("TileSegment adjacent segments should be correctly calculated") {
+    N.adjacentSegments shouldBe Set(NW, NE, C)
+    NE.adjacentSegments shouldBe Set(N, E)
+    E.adjacentSegments shouldBe Set(NE, SE, C)
+    SE.adjacentSegments shouldBe Set(E, S)
+    S.adjacentSegments shouldBe Set(SE, SW, C)
+    SW.adjacentSegments shouldBe Set(S, W)
+    W.adjacentSegments shouldBe Set(SW, NW, C)
+    NW.adjacentSegments shouldBe Set(W, N)
+    C.adjacentSegments shouldBe Set(N, E, S, W)
+  }
+
+//  test("Random tile creation should generate valid segments and imagePath") {
+//    val randomTile = GameTile.createRandomTile
+//    randomTile.segments.keys should contain allElementsOf TileSegment.values.toSet
+//    randomTile.imagePath should startWith("RandomTile")
+//    randomTile.imagePath should endWith(".png")
+//  }
+
+//  test("GameTile instance should remain immutable") {
+//    val tile = GameTile(
+//      Map(N -> City, E -> Road, S -> Field, W -> City, NW -> Field, NE -> Field, SW -> Field, SE -> Field, C -> City),
+//      "test.png"
+//    )
+//    val newTile = tile.rotateClockwise
+//    newTile should not be theSameInstanceAs(tile)
+//    newTile.segments(N) shouldBe SegmentType.Road
+//    tile.segments(N) shouldBe SegmentType.City // Ensure the original tile remains unchanged
+//  }

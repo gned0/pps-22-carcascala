@@ -3,7 +3,7 @@ package carcassonne.model.board
 import carcassonne.model.*
 import carcassonne.model.game.Player
 import carcassonne.model.tile.SegmentType.RoadEnd
-import carcassonne.model.tile.TileSegment.{C, N, NE, adjacentSegments}
+import carcassonne.model.tile.TileSegment
 import carcassonne.model.tile.{GameTile, SegmentType, TileSegment}
 import carcassonne.util.{Logger, Position}
 

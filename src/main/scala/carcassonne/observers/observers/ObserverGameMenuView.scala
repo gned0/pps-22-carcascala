@@ -1,14 +1,14 @@
 package carcassonne.observers.observers
 
 import carcassonne.model.game.Player
-import carcassonne.model.tile.{GameTile, GameTileFactory}
+import carcassonne.model.tile.GameTile
 import scalafx.scene.image.{Image, ImageView}
 
 trait ObserverGameMenuView:
   
-  private var _drawnTile: (GameTile, ImageView) = (GameTileFactory.createStartTile(),
+  private var _drawnTile: (GameTile, ImageView) = (GameTile.createStartTile(),
     ImageView(
-      new Image(getClass.getResource("../../tiles/" + GameTileFactory.createStartTile().imagePath).toExternalForm)
+      new Image(getClass.getResource("../../tiles/" + GameTile.createStartTile().imagePath).toExternalForm)
     )
   )
 

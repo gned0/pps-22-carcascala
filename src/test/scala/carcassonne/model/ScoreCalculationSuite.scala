@@ -2,7 +2,7 @@ package carcassonne.model
 
 import carcassonne.model.board.CarcassonneBoard
 import carcassonne.model.game.{GameState, Player, ScoreCalculator}
-import carcassonne.model.tile.{GameTile, GameTileFactory, TileDeck, TileSegment}
+import carcassonne.model.tile.{GameTile, TileDeck, TileSegment}
 import carcassonne.util.{Color, Position}
 import carcassonne.view.GameMatchBoardView
 import org.scalatest.funsuite.AnyFunSuite
@@ -18,7 +18,7 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
     val player2 = Player(1, "test2", Color.Blue)
     val game = GameState(List(player1, player2), map, TileDeck())
 
-    val tile = GameTileFactory.createStartTile()
+    val tile = GameTile.createStartTile()
     val jsonString = """
       {
         "segments": {
@@ -53,7 +53,7 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
     val player2 = Player(1, "test2", Color.Blue)
     val game = GameState(List(player1, player2), map, TileDeck())
 
-    val tile = GameTileFactory.createStartTile()
+    val tile = GameTile.createStartTile()
     val jsonString =
       """
         {
@@ -83,7 +83,7 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
     val player2 = Player(1, "test2", Color.Blue)
     val game = GameState(List(player1, player2), map, TileDeck())
 
-    val tile = GameTileFactory.createStartTile()
+    val tile = GameTile.createStartTile()
     val jsonString =
       """
         {
@@ -119,7 +119,7 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
     val player2 = Player(1, "test2", Color.Blue)
     val game = GameState(List(player1, player2), map, TileDeck())
 
-    val tile = GameTileFactory.createStartTile()
+    val tile = GameTile.createStartTile()
     val jsonString =
       """
           {
