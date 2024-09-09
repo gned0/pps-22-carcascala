@@ -280,10 +280,25 @@ class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
       ),
       "test3.png"
     )
+    val tile4 = GameTile(
+      Map(
+        TileSegment.N -> SegmentType.Field,
+        TileSegment.E -> SegmentType.Road,
+        TileSegment.S -> SegmentType.Field,
+        TileSegment.W -> SegmentType.Road,
+        TileSegment.NW -> SegmentType.Field,
+        TileSegment.NE -> SegmentType.Field,
+        TileSegment.SW -> SegmentType.Field,
+        TileSegment.SE -> SegmentType.Field,
+        TileSegment.C -> SegmentType.RoadEnd
+      ),
+      "test4.png"
+    )
 
     map.placeTile(tile1, Position(0, 0)) shouldBe true
     map.placeTile(tile2, Position(1, 0)) shouldBe true
     map.placeTile(tile3, Position(0, 1)) shouldBe true
+    map.placeTile(tile4, Position(2, 0))
 
     val featureRoad = map.getConnectedFeature(tile1, TileSegment.E).map((tile, segment) => (tile.imagePath, segment))
     val expectedFeatureRoad = Set(
@@ -294,10 +309,12 @@ class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
       (tile2, TileSegment.C),
       (tile2, TileSegment.E),
       (tile3, TileSegment.N),
-      (tile3, TileSegment.C)
+      (tile3, TileSegment.C),
+      (tile4, TileSegment.W)
     ).map((tile, segment) => (tile.imagePath, segment))
 
     featureRoad shouldBe expectedFeatureRoad
+
 
     val featureField = map.getConnectedFeature(tile1, TileSegment.SE).map((tile, segment) => (tile.imagePath, segment))
     val expectedFeatureField = Set(
@@ -307,5 +324,20 @@ class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
 
     featureField shouldBe expectedFeatureField
 
+
+    val featureRoadEnd = map.getConnectedFeature(tile2, TileSegment.E).map((tile, segment) => (tile.imagePath, segment))
+    val expectedFeatureRoadEnd = Set(
+      (tile1, TileSegment.S),
+      (tile1, TileSegment.C),
+      (tile1, TileSegment.E),
+      (tile2, TileSegment.W),
+      (tile2, TileSegment.C),
+      (tile2, TileSegment.E),
+      (tile3, TileSegment.N),
+      (tile3, TileSegment.C),
+      (tile4, TileSegment.W)
+    ).map((tile, segment) => (tile.imagePath, segment))
+
+    featureRoadEnd shouldBe expectedFeatureRoadEnd
   }
 }
