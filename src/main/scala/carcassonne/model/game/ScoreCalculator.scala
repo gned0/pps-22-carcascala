@@ -58,15 +58,15 @@ class ScoreCalculator {
       val neighbors = getAdjacentTilesAndSegments(pos, segment)
       for ((adjPos, adjSegment) <- neighbors) {
         adjPos match {
-          case Some(connectedPos) =>
-            val isConnectedCity = map.getTile(connectedPos).get.segments.getOrElse(adjSegment, SegmentType.Field) match {
+          case Some(connectedPos) if map.getTile(connectedPos).nonEmpty =>
+            val isConnectedCity = map.getTile(connectedPos).get.segments(adjSegment) match {
               case SegmentType.City => true
               case _ => false
             }
             if (!isConnectedCity) {
               return false
             }
-          case None =>
+          case _ =>
             return false
         }
       }
@@ -86,24 +86,20 @@ class ScoreCalculator {
       case TileSegment.E => List((Some(Position(position.x + 1, position.y)), TileSegment.W))
       case TileSegment.W => List((Some(Position(position.x - 1, position.y)), TileSegment.E))
       case TileSegment.NE => List(
-        (Some(Position(position.x, position.y - 1)), TileSegment.SE),
-        (Some(Position(position.x + 1, position.y)), TileSegment.NW),
-        (Some(Position(position.x + 1, position.y - 1)), TileSegment.SW)
+        (Some(Position(position.x, position.y - 1)), TileSegment.S),
+        (Some(Position(position.x + 1, position.y)), TileSegment.W)
       )
       case TileSegment.NW => List(
-        (Some(Position(position.x, position.y - 1)), TileSegment.SW),
-        (Some(Position(position.x - 1, position.y)), TileSegment.NE),
-        (Some(Position(position.x - 1, position.y - 1)), TileSegment.SE)
+        (Some(Position(position.x, position.y - 1)), TileSegment.S),
+        (Some(Position(position.x - 1, position.y)), TileSegment.E)
       )
       case TileSegment.SE => List(
-        (Some(Position(position.x, position.y + 1)), TileSegment.NE),
-        (Some(Position(position.x + 1, position.y)), TileSegment.SW),
-        (Some(Position(position.x + 1, position.y + 1)), TileSegment.NW)
+        (Some(Position(position.x, position.y + 1)), TileSegment.N),
+        (Some(Position(position.x + 1, position.y)), TileSegment.W)
       )
       case TileSegment.SW => List(
-        (Some(Position(position.x, position.y + 1)), TileSegment.NW),
-        (Some(Position(position.x - 1, position.y)), TileSegment.SE),
-        (Some(Position(position.x - 1, position.y + 1)), TileSegment.NE)
+        (Some(Position(position.x, position.y + 1)), TileSegment.N),
+        (Some(Position(position.x - 1, position.y)), TileSegment.E)
       )
       case _ => List()
     }
