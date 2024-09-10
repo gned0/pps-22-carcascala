@@ -65,7 +65,7 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
 //              notifyScoreCalculated(position, tile)
 
           else if tile.segments(segment) == City then
-            val score = ScoreCalculator().calculateRoadPoints(segment, position, board)
+            val score = ScoreCalculator().calculateCityPoints(segment, position, board, false)
             if score != 0 then
               println("City: " + score)
 //              p.addScore(score)

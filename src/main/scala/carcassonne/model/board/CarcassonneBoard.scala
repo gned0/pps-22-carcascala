@@ -36,6 +36,8 @@ class CarcassonneBoard:
     }
 
   def getTile(position: Position): Option[GameTile] = board.get(position)
+  
+  def getPosition(tile: GameTile): Option[Position] = board.find(_._2 == tile).map(_._1)
 
   def getTileMap: Option[Map[Position, GameTile]] =
     if (board.isEmpty) None
