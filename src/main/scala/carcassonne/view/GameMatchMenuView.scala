@@ -20,7 +20,7 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     fill = Color.White
     alignment = Pos.Center
     font = Font.font("Arial", FontWeight.Bold, 20)
-  private val meepleNumber: Text = new Text("Meeple Number: "):
+  private val followerNumber: Text = new Text("Follower Number: "):
     fill = Color.White
     alignment = Pos.Center
     font = Font.font("Arial", 15)
@@ -31,7 +31,7 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
 
   this.children = Seq(
     playerText,
-    meepleNumber,
+    followerNumber,
     drawnTilePane,
     new HBox:
       alignment = Pos.TopCenter
@@ -97,7 +97,7 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     setCurrentPlayer(player)
     playerText.text = "Current Player: " + player.name
     playerText.fill = player.getSFXColor
-    meepleNumber.text = "Meeple Number: " + player.getFollowers
-    meepleNumber.fill = player.getSFXColor
+    followerNumber.text = "Follower Number: " + player.getFollowers
+    followerNumber.fill = player.getSFXColor
 
 }

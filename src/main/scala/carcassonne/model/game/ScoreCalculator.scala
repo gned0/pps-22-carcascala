@@ -12,15 +12,15 @@ class ScoreCalculator {
   /**
    * Calculates the points for a city based on the given meeple segment and position.
    *
-   * @param meepleSegment The segment of the tile where the meeple is placed.
+   * @param followerSegment The segment of the tile where the meeple is placed.
    * @param position The position of the tile on the board.
    * @param map The current state of the Carcassonne board.
    * @return The total points for the city.
    */
-  def calculateCityPoints(meepleSegment: TileSegment,
+  def calculateCityPoints(followerSegment: TileSegment,
                           position: Position,
                           map: CarcassonneBoard): Int =
-    val cityPoints = recursiveCityPointsCalculation(meepleSegment, position, map)
+    val cityPoints = recursiveCityPointsCalculation(followerSegment, position, map)
     if cityPoints != 0 then
       (cityPoints + 1) * 2
     else
@@ -29,28 +29,28 @@ class ScoreCalculator {
   /**
    * Calculates the points for a field based on the given meeple segment and position.
    *
-   * @param meepleSegment The segment of the tile where the meeple is placed.
+   * @param followerSegment The segment of the tile where the meeple is placed.
    * @param position The position of the tile on the board.
    * @param map The current state of the Carcassonne board.
    * @return The total points for the field.
    */
-  def calculateFieldPoints(meepleSegment: TileSegment,
+  def calculateFieldPoints(followerSegment: TileSegment,
                            position: Position,
                            map: CarcassonneBoard): Int =
-    recursiveFieldPointsCalculation(meepleSegment, position, map)
+    recursiveFieldPointsCalculation(followerSegment, position, map)
 
   /**
    * Calculates the points for a road based on the given meeple segment and position.
    *
-   * @param meepleSegment The segment of the tile where the meeple is placed.
+   * @param followerSegment The segment of the tile where the meeple is placed.
    * @param position The position of the tile on the board.
    * @param map The current state of the Carcassonne board.
    * @return The total points for the road.
    */
-  def calculateRoadPoints(meepleSegment: TileSegment,
+  def calculateRoadPoints(followerSegment: TileSegment,
                           position: Position,
                           map: CarcassonneBoard): Int =
-    val roadPoints =  recursiveRoadPointsCalculation(meepleSegment, position, map)
+    val roadPoints =  recursiveRoadPointsCalculation(followerSegment, position, map)
     if roadPoints != 0 then
       roadPoints + 1
     else
@@ -210,33 +210,33 @@ class ScoreCalculator {
   /**
    * Recursively calculates the points for a field.
    *
-   * @param meepleSegment The segment of the tile where the meeple is placed.
+   * @param followerSegment The segment of the tile where the meeple is placed.
    * @param position The position of the tile on the board.
    * @param map The current state of the Carcassonne board.
    * @return The total points for the field.
    */
-  private def recursiveFieldPointsCalculation(meepleSegment: TileSegment,
+  private def recursiveFieldPointsCalculation(followerSegment: TileSegment,
                                               position: Position,
                                               map: CarcassonneBoard): Int =
     var citiesToCheck: List[(TileSegment, Position)] = List.empty
     var fieldsVisited: List[(TileSegment, Position)] = List.empty
 
-    def exploreField(meepleSegment: TileSegment, position: Position): Unit =
-      fieldsVisited = fieldsVisited :+ (meepleSegment, position)
+    def exploreField(followerSegment: TileSegment, position: Position): Unit =
+      fieldsVisited = fieldsVisited :+ (followerSegment, position)
 
       val currentTile = map.getTile(position).get
 
-      for adjSegment <- adjacentFieldSegments(meepleSegment, currentTile) do
+      for adjSegment <- adjacentFieldSegments(followerSegment, currentTile) do
         if !fieldsVisited.contains((adjSegment, position)) then
           exploreField(adjSegment, position)
 
-      for (adjPosition, adjSegment) <- adjacentFieldSegmentsAcrossTiles(meepleSegment, position, map) do
+      for (adjPosition, adjSegment) <- adjacentFieldSegmentsAcrossTiles(followerSegment, position, map) do
         if map.getTileMap.get.contains(adjPosition) && !fieldsVisited.contains(adjSegment, Position(adjPosition.x, adjPosition.y)) then
           exploreField(adjSegment, adjPosition)
 
-      isAdjacentToCity(meepleSegment, position, currentTile, map).foreach((pos, seg) => if !citiesToCheck.contains((seg, pos)) then citiesToCheck = citiesToCheck :+ (seg, pos))
+      isAdjacentToCity(followerSegment, position, currentTile, map).foreach((pos, seg) => if !citiesToCheck.contains((seg, pos)) then citiesToCheck = citiesToCheck :+ (seg, pos))
 
-    exploreField(meepleSegment, position)
+    exploreField(followerSegment, position)
 
     val combinations = (2 to citiesToCheck.length).flatMap(citiesToCheck.combinations).
       filter(list => areSegmentsPartOfSameCity(list.map((seg, pos) => (pos, seg)).toSet, map)).
@@ -250,12 +250,12 @@ class ScoreCalculator {
   /**
    * Recursively calculates the points for a road.
    *
-   * @param meepleSegment The segment of the tile where the meeple is placed.
+   * @param followerSegment The segment of the tile where the meeple is placed.
    * @param position The position of the tile on the board.
    * @param map The current state of the Carcassonne board.
    * @return The total points for the road.
    */
-  private def recursiveRoadPointsCalculation(meepleSegment: TileSegment,
+  private def recursiveRoadPointsCalculation(followerSegment: TileSegment,
                                              position: Position,
                                              map: CarcassonneBoard): Int =
     val originalPos = position
@@ -304,17 +304,17 @@ class ScoreCalculator {
           } match {
             case (newSegments, newAcc) => helper(newSegments, newAcc)
           }
-    helper(List((meepleSegment, position)), 0)
+    helper(List((followerSegment, position)), 0)
 
   /**
    * Recursively calculates the points for a city.
    *
-   * @param meepleSegment The segment of the tile where the meeple is placed.
+   * @param followerSegment The segment of the tile where the meeple is placed.
    * @param position The position of the tile on the board.
    * @param map The current state of the Carcassonne board.
    * @return The total points for the city.
    */
-  private def recursiveCityPointsCalculation(meepleSegment: TileSegment,
+  private def recursiveCityPointsCalculation(followerSegment: TileSegment,
                                              position: Position,
                                              map: CarcassonneBoard): Int =
     @tailrec
@@ -348,5 +348,5 @@ class ScoreCalculator {
             case None =>
               helper(tail, acc)
 
-    helper(List((meepleSegment, position)), 0)
+    helper(List((followerSegment, position)), 0)
 }
