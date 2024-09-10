@@ -9,7 +9,6 @@ import scala.util.Random
 import scala.collection.immutable.LazyList
 
 trait TileDeck:
-  def isEmpty: Boolean
   def draw(): Option[GameTile]
 
 object TileDeck:
@@ -25,8 +24,6 @@ object TileDeck:
 
   private class TileDeckImpl(initialTiles: LazyList[GameTile]) extends TileDeck:
     private var tiles: LazyList[GameTile] = Random.shuffle(initialTiles)
-
-    override def isEmpty: Boolean = tiles.isEmpty
 
     override def draw(): Option[GameTile] =
       tiles.headOption.map { head =>
