@@ -29,6 +29,9 @@ object GameController:
       if model.placeFollower(gameTile, segment, player) then
         nextTurn()
 
+    def skipFollowerPlacement(): Unit =
+      nextTurn()
+    
     def nextTurn(): Unit =
       model.calculateScore()
       model.nextPlayer()

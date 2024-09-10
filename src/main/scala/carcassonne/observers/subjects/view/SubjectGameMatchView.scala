@@ -34,3 +34,6 @@ trait SubjectGameMatchView:
 
   def notifyFollowerPlacement(gameTile: GameTile, segment: TileSegment, player: Player): Unit =
     observers.foreach(_.placeFollower(gameTile, segment, player))
+    
+  def notifySkipFollowerPlacement(): Unit =
+    observers.foreach(_.skipFollowerPlacement())

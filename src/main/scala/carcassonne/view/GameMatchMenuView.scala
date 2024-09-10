@@ -28,16 +28,22 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     alignment = Pos.TopCenter
   val rotateCounterClockwise: Button = new Button("Counter Clockwise"):
     alignment = Pos.TopCenter
+  val skipFollowerPlacement: Button = new Button("Skip Follower Placement"):
+    alignment = Pos.TopCenter
+    disable = true
+
 
   this.children = Seq(
     playerText,
     meepleNumber,
     drawnTilePane,
+    skipFollowerPlacement,
     new HBox:
       alignment = Pos.TopCenter
       children = Seq(
         rotateClockwise,
-        rotateCounterClockwise
+        rotateCounterClockwise,
+
       )
   )
   this.alignment = Pos.TopCenter
@@ -71,6 +77,9 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     addDrawnTilePaneElements(tileDrawn, tileDrawnImage)
 
   override def tileDrawn(tileDrawn: GameTile): Unit =
+    skipFollowerPlacement.disable = true
+    rotateClockwise.disable = false
+    rotateCounterClockwise.disable = false
     Logger.log("MENU VIEW", "Tile drawn")
     drawnTilePane.getChildren.clear()
     val tileDrawnImage = new ImageView(new Image(getClass.getResource("../../tiles/" + tileDrawn.imagePath).toExternalForm))
@@ -99,4 +108,11 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     playerText.fill = player.getSFXColor
 //    meepleNumber.text = "Meeple Number: " + player.fo
     meepleNumber.fill = player.getSFXColor
+
+  override def availableFollowerPositions(availSegments: List[TileSegment], position: Position): Unit =
+    skipFollowerPlacement.disable = false
+    rotateClockwise.disable = true
+    rotateCounterClockwise.disable = true
+    skipFollowerPlacement.onMouseClicked = _ => notifySkipFollowerPlacement(position: Position)
+
 }

@@ -2,6 +2,7 @@ package carcassonne.observers.subjects.view
 
 import carcassonne.model.tile.GameTile
 import carcassonne.observers.observers.{ObserverGameMatchView, ObserverGameMenuView}
+import carcassonne.util.Position
 import scalafx.scene.image.{Image, ImageView}
 
 trait SubjectGameMenuView:
@@ -23,3 +24,6 @@ trait SubjectGameMenuView:
 
   def setDrawnTile(tile: GameTile, tileImage: ImageView): Unit =
     observers.foreach(_.setDrawnTile((tile, tileImage)))
+    
+  def notifySkipFollowerPlacement(position: Position): Unit =
+    observers.foreach(_.skipFollowerPlacement(position))

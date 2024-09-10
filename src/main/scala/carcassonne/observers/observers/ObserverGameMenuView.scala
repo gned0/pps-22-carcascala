@@ -2,6 +2,7 @@ package carcassonne.observers.observers
 
 import carcassonne.model.game.Player
 import carcassonne.model.tile.GameTile
+import carcassonne.util.Position
 import scalafx.scene.image.{Image, ImageView}
 
 trait ObserverGameMenuView:
@@ -23,5 +24,5 @@ trait ObserverGameMenuView:
   
   def setDrawnTile(drawnTile: (GameTile, ImageView)): Unit =
     _drawnTile = drawnTile
-    
   
+  def skipFollowerPlacement(position: Position): Unit

@@ -1,7 +1,8 @@
 package carcassonne.observers.observers
 
 import carcassonne.model.game.Player
-import carcassonne.model.tile.GameTile
+import carcassonne.model.tile.{GameTile, TileSegment}
+import carcassonne.util.Position
 
 trait ObserverGameMatchMenu {
   
@@ -15,4 +16,6 @@ trait ObserverGameMatchMenu {
   def tileDrawn(tileDrawn: GameTile): Unit
 
   def playerChanged(player: Player): Unit
+  
+  def availableFollowerPositions(availSegments: List[TileSegment], position: Position): Unit
 }

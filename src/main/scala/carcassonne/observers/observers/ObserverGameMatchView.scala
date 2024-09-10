@@ -18,3 +18,5 @@ trait ObserverGameMatchView:
   def placeTile(gameTile: GameTile, position: Position): Unit
   
   def placeFollower(gameTile: GameTile, segment: TileSegment, player: Player): Unit
+  
+  def skipFollowerPlacement(): Unit

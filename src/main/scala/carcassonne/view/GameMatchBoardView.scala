@@ -252,3 +252,17 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
         stackPane.getChildren.remove(1)
       case Some(_) => println("Other type of element")
       case None => println("No element")
+
+  override def skipFollowerPlacement(position: Position): Unit =
+    val graphicalTile: Option[javafx.scene.Node] = this.getChildrenUnmodifiable.toArray.find {
+      case child: javafx.scene.Node => GridPane.getColumnIndex(child) == position.x && GridPane.getRowIndex(child) == position.y
+    }.map(_.asInstanceOf[javafx.scene.Node])
+
+    graphicalTile match
+      case Some(s) if s.isInstanceOf[javafx.scene.layout.StackPane] =>
+        val stackPane = s.asInstanceOf[javafx.scene.layout.StackPane]
+        println(stackPane.getChildren)
+        stackPane.getChildren.remove(1)
+      case Some(_) => println("Other type of element")
+      case None => println("No element")
+    notifySkipFollowerPlacement()
