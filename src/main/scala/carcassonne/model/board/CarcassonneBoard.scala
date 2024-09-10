@@ -57,6 +57,10 @@ class CarcassonneBoard:
     gameTile.followerMap = gameTile.followerMap.updated(segment, player.playerId)
     true
 
+  def removeFollower(gameTile: GameTile): Boolean =
+    gameTile.followerMap = Map.empty
+    true
+
   def getConnectedFeature(gameTile: GameTile, startSegment: TileSegment): Set[(Position, TileSegment)] =
     var visited: Set[(Position, TileSegment)] = Set.empty
     val result: mutable.Set[(Position, TileSegment)] = mutable.Set.empty

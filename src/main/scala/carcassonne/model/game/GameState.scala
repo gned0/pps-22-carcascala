@@ -66,6 +66,8 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
             if score != 0 then
               println("Road: " + score)
               p.addScore(score)
+              p.returnFollower()
+              board.removeFollower(board.getTile(position).get)
               notifyScoreCalculated(position, tile)
 
           else if tile.segments(segment) == City then
@@ -73,6 +75,8 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
             if score != 0 then
               println("City: " + score)
               p.addScore(score)
+              p.returnFollower()
+              board.removeFollower(board.getTile(position).get)
               notifyScoreCalculated(position, tile)
               
         )
