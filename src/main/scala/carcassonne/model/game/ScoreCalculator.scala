@@ -65,20 +65,22 @@ class ScoreCalculator {
                                     position: Position,
                                     map: CarcassonneBoard): Int =
     val connectedFeatures = map.getConnectedFeature(map.getTile(position).get, meepleSegment)
-    Logger.log(s"SCORECALCULATOR CITY", connectedFeatures.toString())
-    Logger.log(s"SCORECALCULATOR CITY", isCityFinished(connectedFeatures, map).toString)
-    0
+    if isCityFinished(connectedFeatures, map) then
+      val uniqueTiles: Set[(GameTile, TileSegment)] = connectedFeatures
+        .groupBy(_._1)                // Group by GameTile
+        .map { case (gameTile, tuples) => tuples.head } // Take the first tuple from each group
+        .toSet
+      uniqueTiles.size
+    else
+      0
 
-
-
-//  private def isCityFinished(connectedFeatures: Set[(GameTile, TileSegment)]): Boolean =
   private def isCityFinished(connectedFeatures: Set[(GameTile, TileSegment)], map: CarcassonneBoard): Boolean = {
     // Iterate over all the tiles in the connected city
     for ((tile, segment) <- connectedFeatures) {
       // For each city segment, check its neighbors
       val neighbors = getAdjacentTilesAndSegments(tile, segment, map, map.getPosition(tile).get)
-      Logger.log("SCORECALCULATOR CITY", "Tile: " + tile.toString + " Segment: " + segment.toString)
-      Logger.log(s"SCORECALCULATOR CITY", neighbors.toString())
+//      Logger.log("SCORECALCULATOR CITY", "Tile: " + tile.toString + " Segment: " + segment.toString)
+//      Logger.log(s"SCORECALCULATOR CITY", neighbors.toString())
 
       for ((adjTile, adjSegment) <- neighbors) {
         adjTile match {

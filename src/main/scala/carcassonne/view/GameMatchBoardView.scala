@@ -246,7 +246,6 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
     graphicalTile match
       case Some(s) if s.isInstanceOf[javafx.scene.layout.StackPane] =>
         val stackPane = s.asInstanceOf[javafx.scene.layout.StackPane]
-        println(stackPane.getChildren)
         stackPane.getChildren.remove(1)
       case Some(_) => println("Other type of element")
       case None => println("No element")
@@ -259,7 +258,6 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
     graphicalTile match
       case Some(s) if s.isInstanceOf[javafx.scene.layout.StackPane] =>
         val stackPane = s.asInstanceOf[javafx.scene.layout.StackPane]
-        println(stackPane.getChildren)
         stackPane.getChildren.remove(1)
       case Some(_) => println("Other type of element")
       case None => println("No element")
