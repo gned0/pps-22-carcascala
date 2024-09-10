@@ -40,6 +40,8 @@ case class Player(playerId: Int, name: String, color: Color):
    * @return The current score.
    */
   def getScore: Int = score
+  
+  def getFollowers: Int = maxFollowers - placedFollowers
 
   /**
    * Places a follower if possible, incrementing the count of followers placed.

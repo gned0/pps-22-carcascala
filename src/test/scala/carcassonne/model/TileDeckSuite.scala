@@ -9,7 +9,7 @@ class TileDeckSuite extends AnyFunSuite with Matchers {
 
   test("TileDeck should initialize with tiles from the default config file") {
     val deck = TileDeck()
-    deck.isEmpty shouldBe false
+    deck.draw() should not be None
   }
 
   test("TileDeck should return None when drawing from an empty deck") {
@@ -18,7 +18,6 @@ class TileDeckSuite extends AnyFunSuite with Matchers {
     // Draw all tiles
     while (deck.draw().isDefined) {}
 
-    deck.isEmpty shouldBe true
     deck.draw() shouldBe None
   }
 
@@ -26,7 +25,7 @@ class TileDeckSuite extends AnyFunSuite with Matchers {
     val deck = TileDeck()
     val tiles = Iterator.continually(deck.draw()).takeWhile(_.isDefined).map(_.get).toList
 
-    tiles should not be empty
+    tiles should not be empty 
   }
 
   test("TileDeck should shuffle tiles") {
@@ -36,7 +35,7 @@ class TileDeckSuite extends AnyFunSuite with Matchers {
     val tiles1 = Iterator.continually(deck1.draw()).takeWhile(_.isDefined).map(_.get).toList
     val tiles2 = Iterator.continually(deck2.draw()).takeWhile(_.isDefined).map(_.get).toList
 
-    tiles1 should not be tiles2
+    tiles1 should not be tiles2 
   }
 
   test("TileDeck should throw an exception if the config file does not exist") {

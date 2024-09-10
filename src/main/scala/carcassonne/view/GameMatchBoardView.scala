@@ -132,7 +132,7 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
     val drawnTileImage = getDrawnTile._2
 
     // Replace the tile that has been just removed with new attributes
-    val meepleGrid = new GridPane():
+    val followerGrid = new GridPane():
       hgap = 0
       vgap = 0
       padding = Insets(0)
@@ -163,17 +163,17 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
         }
       )
 
-    meepleGrid.prefHeight <== drawnTileImage.fitHeight.toDouble
-    meepleGrid.prefWidth <== drawnTileImage.fitWidth.toDouble
+    followerGrid.prefHeight <== drawnTileImage.fitHeight.toDouble
+    followerGrid.prefWidth <== drawnTileImage.fitWidth.toDouble
 
     availSegments.foreach( segment =>
-      val meepleImageView = new ImageView(new Image(getClass.getResource("../../Meeple.png").toExternalForm)):
+      val followerImageView = new ImageView(new Image(getClass.getResource("../../follower.png").toExternalForm)):
         fitWidth = (drawnTileImage.fitWidth.toDouble - 5) / 3.3
         fitHeight = (drawnTileImage.fitHeight.toDouble - 5) / 3.3
         preserveRatio = true
 
       // Create the overlay meeple with the desired fill color
-      val filledMeeple = new ImageView(new Image(getClass.getResource("../../MeepleFill.png").toExternalForm)):
+      val filledFollower = new ImageView(new Image(getClass.getResource("../../follower_filled.png").toExternalForm)):
         fitWidth = (drawnTileImage.fitWidth.toDouble - 5) / 3.3
         fitHeight = (drawnTileImage.fitHeight.toDouble - 5) / 3.3
         opacity = 0.5 // Set the opacity to make it semi-transparent
@@ -183,15 +183,15 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
 
       // Create a StackPane to hold the ImageView and Rectangle
       val stackPane = new StackPane {
-        children = Seq(meepleImageView, filledMeeple)
+        children = Seq(followerImageView, filledFollower)
       }
 
       // Add hover effect to show/hide the rectangle
-      filledMeeple.onMouseEntered = _ =>
-        filledMeeple.effect = getCurrentPlayer.getPlayerColor
+      filledFollower.onMouseEntered = _ =>
+        filledFollower.effect = getCurrentPlayer.getPlayerColor
 
-      filledMeeple.onMouseExited = _ =>
-        filledMeeple.effect = null
+      filledFollower.onMouseExited = _ =>
+        filledFollower.effect = null
 
       var x = 1
       var y = 1
@@ -215,17 +215,17 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
           y += 1
         case _ =>
 
-      filledMeeple.onMouseClicked = (event: MouseEvent) => if event.button == MouseButton.Primary then
-        filledMeeple.onMouseEntered = null
-        filledMeeple.onMouseExited = null
-        filledMeeple.effect = getCurrentPlayer.getPlayerColor
+      filledFollower.onMouseClicked = (event: MouseEvent) => if event.button == MouseButton.Primary then
+        filledFollower.onMouseEntered = null
+        filledFollower.onMouseExited = null
+        filledFollower.effect = getCurrentPlayer.getPlayerColor
         notifyFollowerPlacement(getDrawnTile._1, segment, getCurrentPlayer)
-        meepleGrid.getChildren.removeIf(node =>
+        followerGrid.getChildren.removeIf(node =>
           GridPane.getColumnIndex(node) != x || GridPane.getRowIndex(node) != y
         )
-        filledMeeple.onMouseClicked = null
+        filledFollower.onMouseClicked = null
 
-      meepleGrid.add(stackPane, x, y)
+      followerGrid.add(stackPane, x, y)
     )
 
     val placeTileStackPane = new StackPane():
@@ -233,7 +233,7 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
       maxWidth = 10
       children = Seq(
         drawnTileImage,
-        meepleGrid
+        followerGrid
       )
 
     placeTile(position, placeTileStackPane)

@@ -22,8 +22,12 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
   private def currentPlayer: Player = players(currentPlayerIndex)
 
   def drawTile(): Unit =
-    val tile = deck.draw()
-    tile.foreach(t => notifyTileDrawn(t))
+    deck.draw() match
+      case Some(tile) =>
+        notifyTileDrawn(tile)
+      case None =>
+        notifyGameEnded(players)
+
 
   def placeTile(gameTile: GameTile, position: Position): Boolean =
     val isTilePlaced = board.placeTile(gameTile, position)
@@ -74,10 +78,6 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
         )
       )
     )
-
-
-  def isDeckEmpty: Boolean = deck.isEmpty
-
   def nextPlayer(): Unit =
     currentPlayerIndex = (currentPlayerIndex + 1) % players.length
     notifyPlayerChanged(currentPlayer)

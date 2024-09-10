@@ -19,7 +19,7 @@ object GameController:
     def initialize(): Unit =
       view.addObserver(this)
       model.initializeFirstPlayer()
-      takeTurn()
+      model.drawTile()
 
     def placeTile(gameTile: GameTile, position: Position): Unit =
       model.placeTile(gameTile, position)
@@ -35,17 +35,7 @@ object GameController:
     def nextTurn(): Unit =
       model.calculateScore()
       model.nextPlayer()
-      takeTurn()
-
-    private def takeTurn(): Unit =
-      if model.isDeckEmpty then
-        gameEnded()
-      else
-        model.drawTile()
-
-    private def gameEnded(): Unit =
-      println("Game over! Final scores:")
-      model.getPlayers.foreach(p => println(s"${p.name}: ${p.getScore}"))
+      model.drawTile()
 
     private def sendAvailableFollowerPositions(gameTile: GameTile, position: Position): Unit =
       model.sendAvailableFollowerPositions(gameTile, position)
