@@ -43,7 +43,7 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
 
 
     game.placeFollower(tile, TileSegment.N, player1)
-    ScoreCalculator().calculateCityPoints(TileSegment.N, Position(10, 10), map) shouldBe 12
+    ScoreCalculator().calculateCityPoints(TileSegment.N, Position(10, 10), map, false) shouldBe 12
   }
 
   test("Test calculate Road points") {
