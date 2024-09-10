@@ -22,7 +22,6 @@ object GameController:
       takeTurn()
 
     def placeTile(gameTile: GameTile, position: Position): Unit =
-      println(gameTile)
       model.placeTile(gameTile, position)
       sendAvailableFollowerPositions(gameTile, position)
 

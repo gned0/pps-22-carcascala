@@ -48,7 +48,6 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
           !connectedFeature.exists { case (tile, seg) => tile.followerMap.contains(seg) }
       } => segment
     }.toList
-    println(segmentMap)
     notifyAvailableFollowerPositions(segmentMap, position)
 
   def calculateScore(): Unit =

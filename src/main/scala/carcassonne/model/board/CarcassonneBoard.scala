@@ -77,7 +77,6 @@ class CarcassonneBoard:
 
     val startPosition = board.find(_._2 == startTile).map(_._1)
     startPosition.foreach(pos => dfs(pos, startSegment))
-    println()
     result.toSet
 
   private def getAdjacentTileSegments(segment: TileSegment,
