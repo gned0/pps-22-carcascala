@@ -8,9 +8,12 @@ import scalafx.scene.image.{Image, ImageView}
 trait ObserverGameMenuView:
   
   private var _drawnTile: (GameTile, ImageView) = (GameTile.createStartTile(),
-    ImageView(
+    new ImageView(
       new Image(getClass.getResource("../../tiles/" + GameTile.createStartTile().imagePath).toExternalForm)
-    )
+    ):
+      fitWidth = 100
+      fitHeight = 100
+      preserveRatio = true
   )
 
   private var currentPlayer: Player = _

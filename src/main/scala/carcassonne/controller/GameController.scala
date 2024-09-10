@@ -31,7 +31,7 @@ object GameController:
 
     def skipFollowerPlacement(): Unit =
       nextTurn()
-    
+
     def nextTurn(): Unit =
       model.calculateScore()
       model.nextPlayer()

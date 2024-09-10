@@ -84,6 +84,7 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
 
   def initializeFirstPlayer(): Unit =
     notifyPlayerChanged(currentPlayer)
+    placeTile(GameTile.createStartTile(), Position(500, 500))
   
   def getPlayers: List[Player] = players
 

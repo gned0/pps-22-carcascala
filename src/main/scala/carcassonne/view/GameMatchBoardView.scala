@@ -47,13 +47,11 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
 
   this.alignment = Pos.Center
 
-  // Initial coordinates for the placeholder tile
-  val x = 100
-  val y = 100
-
-  createPlaceholderTile(Position(x, y))
+  def initialize: Unit =
+    notifyTilePlacementAttempt(GameTile.createStartTile(), Position(500, 500))
   /**
    * Places a tile at the specified position in the view.
+ *
    * @param position the position where the tile should be placed
    * @param tiles the current state of the game map tiles
    */
