@@ -48,8 +48,8 @@ class CarcassonneBoard:
 
     val connectedFeature = getConnectedFeature(gameTile, segment)
 
-    val isFeatureOccupied = connectedFeature.exists { case (tile, seg) =>
-      tile.followerMap.contains(seg)
+    val isFeatureOccupied = connectedFeature.exists { case (pos, seg) =>
+      getTile(pos).get.followerMap.contains(seg)
     }
 
     if (isFeatureOccupied) return false
@@ -57,9 +57,9 @@ class CarcassonneBoard:
     gameTile.followerMap = gameTile.followerMap.updated(segment, player.playerId)
     true
 
-  def getConnectedFeature(gameTile: GameTile, startSegment: TileSegment): Set[(GameTile, TileSegment)] =
+  def getConnectedFeature(gameTile: GameTile, startSegment: TileSegment): Set[(Position, TileSegment)] =
     var visited: Set[(Position, TileSegment)] = Set.empty
-    val result: mutable.Set[(GameTile, TileSegment)] = mutable.Set.empty
+    val result: mutable.Set[(Position, TileSegment)] = mutable.Set.empty
 
     def dfs(position: Position, segment: TileSegment): Unit =
       if (board(position).segments(segment) == RoadEnd) return
@@ -67,7 +67,7 @@ class CarcassonneBoard:
       visited += ((position, segment))
 
       board.get(position).foreach { currentTile =>
-        result += ((currentTile, segment))
+        result += ((position, segment))
 
         val segmentType = currentTile.segments(segment)
 

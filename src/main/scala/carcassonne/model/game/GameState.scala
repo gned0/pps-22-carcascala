@@ -49,7 +49,7 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
       case (segment, _) if {
         val connectedFeature = board.getConnectedFeature(gameTile, segment)
         connectedFeature.nonEmpty && 
-          !connectedFeature.exists { case (tile, seg) => tile.followerMap.contains(seg) }
+          !connectedFeature.exists { case (pos, seg) => board.getTile(pos).get.followerMap.contains(seg) }
       } => segment
     }.toList
     notifyAvailableFollowerPositions(segmentMap, position)
@@ -65,8 +65,8 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
             val score = ScoreCalculator().calculateRoadPoints(segment, position, board)
             if score != 0 then
               println("Road: " + score)
-//              p.addScore(score)
-//              notifyScoreCalculated(position, tile)
+              p.addScore(score)
+              notifyScoreCalculated(position, tile)
 
           else if tile.segments(segment) == City then
             val score = ScoreCalculator().calculateCityPoints(segment, position, board, false)

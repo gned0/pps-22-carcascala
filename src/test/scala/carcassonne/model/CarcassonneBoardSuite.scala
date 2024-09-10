@@ -177,7 +177,7 @@ class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
     map.placeTile(tile, position) shouldBe true
     map.getConnectedFeature(tile, TileSegment.N) shouldBe Set((tile, TileSegment.N))
     map.getConnectedFeature(tile, TileSegment.C) shouldBe Set((tile, TileSegment.C), (tile, TileSegment.E))
-    map.getConnectedFeature(tile, TileSegment.S).map((tile, segment) => (tile.imagePath, segment)) shouldBe
+    map.getConnectedFeature(tile, TileSegment.S).map((pos, segment) => (map.getTile(pos).get.imagePath, segment)) shouldBe
       Set(
         (tile, TileSegment.S),
         (tile, TileSegment.SW),
@@ -300,7 +300,7 @@ class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
     map.placeTile(tile3, Position(0, 1)) shouldBe true
     map.placeTile(tile4, Position(2, 0))
 
-    val featureRoad = map.getConnectedFeature(tile1, TileSegment.E).map((tile, segment) => (tile.imagePath, segment))
+    val featureRoad = map.getConnectedFeature(tile1, TileSegment.E).map((pos, segment) => (map.getTile(pos).get.imagePath, segment))
     val expectedFeatureRoad = Set(
       (tile1, TileSegment.E),
       (tile1, TileSegment.C),
@@ -316,7 +316,7 @@ class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
     featureRoad shouldBe expectedFeatureRoad
 
 
-    val featureField = map.getConnectedFeature(tile1, TileSegment.SE).map((tile, segment) => (tile.imagePath, segment))
+    val featureField = map.getConnectedFeature(tile1, TileSegment.SE).map((pos, segment) => (map.getTile(pos).get.imagePath, segment))
     val expectedFeatureField = Set(
       (tile1, TileSegment.SE),
       (tile3, TileSegment.NE)
@@ -325,7 +325,7 @@ class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
     featureField shouldBe expectedFeatureField
 
 
-    val featureRoadEnd = map.getConnectedFeature(tile2, TileSegment.E).map((tile, segment) => (tile.imagePath, segment))
+    val featureRoadEnd = map.getConnectedFeature(tile2, TileSegment.E).map((pos, segment) => (map.getTile(pos).get.imagePath, segment))
     val expectedFeatureRoadEnd = Set(
       (tile1, TileSegment.S),
       (tile1, TileSegment.C),

@@ -19,16 +19,12 @@ class ScoreCalculator {
    */
   def calculateCityPoints(followerSegment: TileSegment,
                           position: Position,
-                          map: CarcassonneBoard): Int =
+                          map: CarcassonneBoard,
+                          endGame: Boolean): Int =
     if endGame then
-      cityPointsCalculation(meepleSegment, position, map)
+      cityPointsCalculation(followerSegment, position, map)
     else
-      cityPointsCalculation(meepleSegment, position, map) * 2
-  //    val cityPoints = recursiveCityPointsCalculation(meepleSegment, position, map)
-  //    if cityPoints != 0 then
-  //      (cityPoints + 1) * 2
-  //    else
-  //      0
+      cityPointsCalculation(followerSegment, position, map) * 2
 
   /**
    * Calculates the points for a field based on the given meeple segment and position.
@@ -43,64 +39,38 @@ class ScoreCalculator {
                            map: CarcassonneBoard): Int =
     recursiveFieldPointsCalculation(followerSegment, position, map)
 
-  /**
-   * Calculates the points for a road based on the given meeple segment and position.
-   *
-   * @param followerSegment The segment of the tile where the meeple is placed.
-   * @param position The position of the tile on the board.
-   * @param map The current state of the Carcassonne board.
-   * @return The total points for the road.
-   */
-  def calculateRoadPoints(followerSegment: TileSegment,
-                          position: Position,
-                          map: CarcassonneBoard): Int =
-    val roadPoints =  recursiveRoadPointsCalculation(followerSegment, position, map)
-    if roadPoints != 0 then
-      roadPoints + 1
-    else
-      0
-
   private def cityPointsCalculation(meepleSegment: TileSegment,
                                     position: Position,
                                     map: CarcassonneBoard): Int =
     val connectedFeatures = map.getConnectedFeature(map.getTile(position).get, meepleSegment)
     if isCityFinished(connectedFeatures, map) then
-      val uniqueTiles: Set[(GameTile, TileSegment)] = connectedFeatures
-        .groupBy(_._1)                // Group by GameTile
-        .map { case (gameTile, tuples) => tuples.head } // Take the first tuple from each group
+      val uniqueTiles: Set[(Position, TileSegment)] = connectedFeatures
+        .groupBy(_._1)
+        .map { case (gameTile, tuples) => tuples.head }
         .toSet
       uniqueTiles.size
     else
       0
 
-  private def isCityFinished(connectedFeatures: Set[(GameTile, TileSegment)], map: CarcassonneBoard): Boolean = {
-    // Iterate over all the tiles in the connected city
-    for ((tile, segment) <- connectedFeatures) {
-      // For each city segment, check its neighbors
-      val neighbors = getAdjacentTilesAndSegments(tile, segment, map, map.getPosition(tile).get)
-//      Logger.log("SCORECALCULATOR CITY", "Tile: " + tile.toString + " Segment: " + segment.toString)
-//      Logger.log(s"SCORECALCULATOR CITY", neighbors.toString())
-
-      for ((adjTile, adjSegment) <- neighbors) {
-        adjTile match {
-          case Some(connectedTile) =>
-            // If the adjacent tile exists, check if the adjacent segment is also part of a city
-            val isConnectedCity = connectedTile.segments.getOrElse(adjSegment, SegmentType.Field) match {
+  private def isCityFinished(connectedFeatures: Set[(Position, TileSegment)],
+                             map: CarcassonneBoard): Boolean = {
+    for ((pos, segment) <- connectedFeatures) {
+      val neighbors = getAdjacentTilesAndSegments(pos, segment)
+      for ((adjPos, adjSegment) <- neighbors) {
+        adjPos match {
+          case Some(connectedPos) =>
+            val isConnectedCity = map.getTile(connectedPos).get.segments.getOrElse(adjSegment, SegmentType.Field) match {
               case SegmentType.City => true
               case _ => false
             }
-            // If it's not a city, we have an open edge, return false (incomplete city)
             if (!isConnectedCity) {
               return false
             }
           case None =>
-            // If there is no adjacent tile, the edge is open, city is incomplete
             return false
         }
       }
     }
-
-    // If no open edges were found, the city is complete
     true
   }
 
@@ -108,35 +78,96 @@ class ScoreCalculator {
    * This helper method checks all the adjacent tiles and segments for a given tile and segment.
    * It returns a list of adjacent tiles and segments.
    */
-  private def getAdjacentTilesAndSegments(tile: GameTile, segment: TileSegment, map: CarcassonneBoard, position: Position): List[(Option[GameTile], TileSegment)] = {
+  private def getAdjacentTilesAndSegments(position: Position,
+                                          segment: TileSegment): List[(Option[Position], TileSegment)] = {
     segment match {
-      case TileSegment.N => List((map.getTile(Position(position.x, position.y - 1)), TileSegment.S))
-      case TileSegment.S => List((map.getTile(Position(position.x, position.y + 1)), TileSegment.N))
-      case TileSegment.E => List((map.getTile(Position(position.x + 1, position.y)), TileSegment.W))
-      case TileSegment.W => List((map.getTile(Position(position.x - 1, position.y)), TileSegment.E))
+      case TileSegment.N => List((Some(Position(position.x, position.y - 1)), TileSegment.S))
+      case TileSegment.S => List((Some(Position(position.x, position.y + 1)), TileSegment.N))
+      case TileSegment.E => List((Some(Position(position.x + 1, position.y)), TileSegment.W))
+      case TileSegment.W => List((Some(Position(position.x - 1, position.y)), TileSegment.E))
       case TileSegment.NE => List(
-        (map.getTile(Position(position.x, position.y - 1)), TileSegment.SE),
-        (map.getTile(Position(position.x + 1, position.y)), TileSegment.NW),
-        (map.getTile(Position(position.x + 1, position.y - 1)), TileSegment.SW)
+        (Some(Position(position.x, position.y - 1)), TileSegment.SE),
+        (Some(Position(position.x + 1, position.y)), TileSegment.NW),
+        (Some(Position(position.x + 1, position.y - 1)), TileSegment.SW)
       )
       case TileSegment.NW => List(
-        (map.getTile(Position(position.x, position.y - 1)), TileSegment.SW),
-        (map.getTile(Position(position.x - 1, position.y)), TileSegment.NE),
-        (map.getTile(Position(position.x - 1, position.y - 1)), TileSegment.SE)
+        (Some(Position(position.x, position.y - 1)), TileSegment.SW),
+        (Some(Position(position.x - 1, position.y)), TileSegment.NE),
+        (Some(Position(position.x - 1, position.y - 1)), TileSegment.SE)
       )
       case TileSegment.SE => List(
-        (map.getTile(Position(position.x, position.y + 1)), TileSegment.NE),
-        (map.getTile(Position(position.x + 1, position.y)), TileSegment.SW),
-        (map.getTile(Position(position.x + 1, position.y + 1)), TileSegment.NW)
+        (Some(Position(position.x, position.y + 1)), TileSegment.NE),
+        (Some(Position(position.x + 1, position.y)), TileSegment.SW),
+        (Some(Position(position.x + 1, position.y + 1)), TileSegment.NW)
       )
       case TileSegment.SW => List(
-        (map.getTile(Position(position.x, position.y + 1)), TileSegment.NW),
-        (map.getTile(Position(position.x - 1, position.y)), TileSegment.SE),
-        (map.getTile(Position(position.x - 1, position.y + 1)), TileSegment.NE)
+        (Some(Position(position.x, position.y + 1)), TileSegment.NW),
+        (Some(Position(position.x - 1, position.y)), TileSegment.SE),
+        (Some(Position(position.x - 1, position.y + 1)), TileSegment.NE)
       )
       case _ => List()
     }
   }
+
+  def calculateRoadPoints(followerSegment: TileSegment,
+                          position: Position,
+                          map: CarcassonneBoard): Int =
+    roadPointsCalculation(followerSegment, position, map)
+
+  private def roadPointsCalculation(meepleSegment: TileSegment,
+                                    position: Position,
+                                    map: CarcassonneBoard): Int =
+    val connectedFeatures = map.getConnectedFeature(map.getTile(position).get, meepleSegment)
+    Logger.log(s"SCORECALCULATOR ROAD", connectedFeatures.toString)
+    if isRoadFinished(connectedFeatures, map) then
+      val uniqueTiles: Set[(Position, TileSegment)] = connectedFeatures
+        .groupBy(_._1)
+        .map { case (gameTile, tuples) => tuples.head }
+        .toSet
+      uniqueTiles.size
+    else
+      0
+
+  private def isRoadFinished(connectedFeatures: Set[(Position, TileSegment)], map: CarcassonneBoard): Boolean = {
+    for ((tile, segment) <- connectedFeatures) {
+      val neighbors = getAdjacentRoadTilesAndSegments(tile, segment)
+      for ((adjPos, adjSegment) <- neighbors) {
+        adjPos match {
+          case Some(connectedPos) if map.getTile(connectedPos).nonEmpty =>
+            val isRoadConnected = map.getTile(connectedPos).get.segments(adjSegment) match {
+              case SegmentType.Road => true
+              case _ => false
+            }
+            if (!isRoadConnected) {
+              return false
+            }
+          case _ =>
+            return false
+        }
+      }
+    }
+    true
+  }
+
+  private def getAdjacentRoadTilesAndSegments(position: Position,
+                                          segment: TileSegment): List[(Option[Position], TileSegment)] = {
+    segment match {
+      case TileSegment.N => List((Some(Position(position.x, position.y - 1)), TileSegment.S))
+      case TileSegment.S => List((Some(Position(position.x, position.y + 1)), TileSegment.N))
+      case TileSegment.E => List((Some(Position(position.x + 1, position.y)), TileSegment.W))
+      case TileSegment.W => List((Some(Position(position.x - 1, position.y)), TileSegment.E))
+      case _ => List()
+    }
+  }
+
+
+
+
+
+
+
+
+
 
 
 
