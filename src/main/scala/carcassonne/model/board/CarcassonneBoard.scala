@@ -44,7 +44,7 @@ class CarcassonneBoard:
     else Some(board.toMap)
 
   def placeFollower(position: Position, segment: TileSegment, player: Player): Boolean =
-    if (getTile(position).get.followerMap.contains(segment)) return false
+    if (getTile(position).isDefined && getTile(position).get.followerMap.contains(segment)) return false
 
     val connectedFeature = getConnectedFeature(position, segment)
 

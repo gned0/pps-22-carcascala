@@ -33,7 +33,7 @@ object GameController:
       nextTurn()
 
     def nextTurn(): Unit =
-      model.calculateScore()
+      model.calculateScore(false)
       model.nextPlayer()
       model.drawTile()
 

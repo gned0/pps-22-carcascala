@@ -219,7 +219,7 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
         filledFollower.onMouseEntered = null
         filledFollower.onMouseExited = null
         filledFollower.effect = getCurrentPlayer.getPlayerColor
-        notifyFollowerPlacement(Position(x, y), segment, getCurrentPlayer)
+        notifyFollowerPlacement(position, segment, getCurrentPlayer)
         followerGrid.getChildren.removeIf(node =>
           GridPane.getColumnIndex(node) != x || GridPane.getRowIndex(node) != y
         )

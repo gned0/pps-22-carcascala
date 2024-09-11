@@ -26,6 +26,7 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
       case Some(tile) =>
         notifyTileDrawn(tile)
       case None =>
+        calculateScore(true)
         notifyGameEnded(players)
 
 
@@ -54,7 +55,7 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
     }.toList
     notifyAvailableFollowerPositions(segmentMap, position)
 
-  def calculateScore(): Unit =
+  def calculateScore(endGame: Boolean): Unit =
     val followerTiles = board.getTileMap.get
         .filter((_, tile) => tile.followerMap.nonEmpty )
     followerTiles.foreach((position, tile) =>
@@ -71,7 +72,7 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
                 board.removeFollower(board.getTile(position).get)
                 notifyScoreCalculated(position, tile)
             case City => 
-              val score = ScoreCalculator().calculateCityPoints(segment, position, board, false)
+              val score = ScoreCalculator().calculateCityPoints(segment, position, board, endGame)
               if score != 0 then
                 println("City: " + score)
                 p.addScore(score)
@@ -87,14 +88,14 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
                 board.removeFollower(board.getTile(position).get)
                 notifyScoreCalculated(position, tile)
             case Field =>
-              val score = ScoreCalculator().calculateFieldPoints(segment, position, board)
-              if score != 0 then
-                println("Monastery: " + score)
-//                p.addScore(score)
-//                p.returnFollower()
-//                board.removeFollower(board.getTile(position).get)
-//                notifyScoreCalculated(position, tile)
-            
+              if endGame then 
+                val score = ScoreCalculator().calculateFieldPoints(segment, position, board)
+                if score != 0 then
+                  println("Field: " + score)
+                  p.addScore(score)
+                  p.returnFollower()
+                  board.removeFollower(board.getTile(position).get)
+                  notifyScoreCalculated(position, tile)
         )
       )
     )
