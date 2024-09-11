@@ -105,6 +105,9 @@ class ScoreCalculator {
     }
   }
 
+
+
+
   def calculateRoadPoints(followerSegment: TileSegment,
                           position: Position,
                           map: CarcassonneBoard): Int =
@@ -114,7 +117,6 @@ class ScoreCalculator {
                                     position: Position,
                                     map: CarcassonneBoard): Int =
     val connectedFeatures = map.getConnectedFeature(map.getTile(position).get, meepleSegment)
-    Logger.log(s"SCORECALCULATOR ROAD", connectedFeatures.toString)
     if isRoadFinished(connectedFeatures, map) then
       val uniqueTiles: Set[(Position, TileSegment)] = connectedFeatures
         .groupBy(_._1)
@@ -159,6 +161,35 @@ class ScoreCalculator {
 
 
 
+
+  def calculateMonasteryPoints(followerSegment: TileSegment,
+                          position: Position,
+                          map: CarcassonneBoard): Int =
+    monasteryPointsCalculation(followerSegment, position, map) * 9
+
+  private def monasteryPointsCalculation(meepleSegment: TileSegment,
+                                    position: Position,
+                                    map: CarcassonneBoard): Int =
+    val connectedFeatures = map.getConnectedFeature(map.getTile(position).get, meepleSegment)
+    if isMonasteryFinished(connectedFeatures, map) then
+      val uniqueTiles: Set[(Position, TileSegment)] = connectedFeatures
+        .groupBy(_._1)
+        .map { case (gameTile, tuples) => tuples.head }
+        .toSet
+      uniqueTiles.size
+    else
+      0
+
+  private def isMonasteryFinished(connectedFeatures: Set[(Position, TileSegment)],
+                                  map: CarcassonneBoard): Boolean =
+    val monasteryPosition = connectedFeatures.head._1
+    for i <- -1 to 1 do
+      for j <- -1 to 1 do
+        if i != 0 || j != 0 then
+          val pos = Position(monasteryPosition.x + i, monasteryPosition.y + j)
+          if map.getTile(pos).isEmpty then
+            return false
+    true
 
 
 

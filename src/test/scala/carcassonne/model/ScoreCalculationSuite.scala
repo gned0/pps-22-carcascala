@@ -146,5 +146,55 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
     ScoreCalculator().calculateFieldPoints(TileSegment.NE, Position(10, 10), map) shouldBe 6
   }
 
+  test("Test calculate Monastery points") {
+    val deck = TileDeck()
+    val map = CarcassonneBoard()
+    val player1 = Player(0, "test", Color.Red)
+    val player2 = Player(1, "test2", Color.Blue)
+    val game = GameState(List(player1, player2), map, TileDeck())
+
+    val jsonString =
+      """
+                {
+                  "segments": {
+                    "NW": "Field", "N": "Field", "NE": "Field",
+                    "W": "Field", "C": "Field", "E": "Field",
+                    "SW": "Field", "S": "Field", "SE": "Field"
+                  },
+                  "imagePath": "Field.png"
+                }
+              """
+    val json = Json.parse(jsonString)
+    val tile = json.as[GameTile]
+
+    val jsonString2 =
+      """
+            {
+              "segments": {
+                "NW": "Field", "N": "Field", "NE": "Field",
+                "W": "Field", "C": "Monastery", "E": "Field",
+                "SW": "Field", "S": "Field", "SE": "Field"
+              },
+              "imagePath": "Monastery.png"
+            }
+          """
+    val json2 = Json.parse(jsonString2)
+    val tile2 = json2.as[GameTile]
+
+    game.placeTile(tile2, Position(10, 10))
+
+    game.placeTile(tile, Position(11, 10))
+    game.placeTile(tile, Position(11, 9))
+    game.placeTile(tile, Position(10, 9))
+    game.placeTile(tile, Position(9, 9))
+    game.placeTile(tile, Position(9, 10))
+    game.placeTile(tile, Position(9, 11))
+    game.placeTile(tile, Position(10, 11))
+    game.placeTile(tile, Position(11, 11))
+
+    game.placeFollower(tile2, TileSegment.C, player1)
+    ScoreCalculator().calculateMonasteryPoints(TileSegment.C, Position(10, 10), map) shouldBe 9
+  }
+
 
 }

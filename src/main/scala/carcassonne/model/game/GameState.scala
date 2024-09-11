@@ -3,7 +3,7 @@ package carcassonne.model.game
 import carcassonne.model.tile.TileSegment.{C, E, N, S, W}
 import carcassonne.model.*
 import carcassonne.model.board.CarcassonneBoard
-import carcassonne.model.tile.SegmentType.{City, Road}
+import carcassonne.model.tile.SegmentType.{City, Monastery, Road}
 import carcassonne.model.tile.{GameTile, TileDeck, TileSegment}
 import carcassonne.observers.subjects.model.SubjectGameMatch
 import carcassonne.util.{Logger, Position}
@@ -61,24 +61,32 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
       tile.followerMap.foreach((segment, playerID) =>
         players.filter(p => p.playerId == playerID)
         .map(p =>
-          if tile.segments(segment) == Road then
-            val score = ScoreCalculator().calculateRoadPoints(segment, position, board)
-            if score != 0 then
-              println("Road: " + score)
-              p.addScore(score)
-              p.returnFollower()
-              board.removeFollower(board.getTile(position).get)
-              notifyScoreCalculated(position, tile)
-
-          else if tile.segments(segment) == City then
-            val score = ScoreCalculator().calculateCityPoints(segment, position, board, false)
-            if score != 0 then
-              println("City: " + score)
-              p.addScore(score)
-              p.returnFollower()
-              board.removeFollower(board.getTile(position).get)
-              notifyScoreCalculated(position, tile)
-              
+          tile.segments(segment) match
+            case Road =>
+              val score = ScoreCalculator().calculateRoadPoints(segment, position, board)
+              if score != 0 then
+                println("Road: " + score)
+                p.addScore(score)
+                p.returnFollower()
+                board.removeFollower(board.getTile(position).get)
+                notifyScoreCalculated(position, tile)
+            case City => 
+              val score = ScoreCalculator().calculateCityPoints(segment, position, board, false)
+              if score != 0 then
+                println("City: " + score)
+                p.addScore(score)
+                p.returnFollower()
+                board.removeFollower(board.getTile(position).get)
+                notifyScoreCalculated(position, tile)
+            case Monastery =>
+              val score = ScoreCalculator().calculateMonasteryPoints(segment, position, board)
+              if score != 0 then
+                println("Monastery: " + score)
+                p.addScore(score)
+                p.returnFollower()
+                board.removeFollower(board.getTile(position).get)
+                notifyScoreCalculated(position, tile)
+            
         )
       )
     )
