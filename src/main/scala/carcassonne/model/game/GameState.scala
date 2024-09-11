@@ -64,7 +64,7 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
         .map(p =>
           tile.segments(segment) match
             case Road =>
-              val score = ScoreCalculator().calculateRoadPoints(segment, position, board)
+              val score = ScoreCalculator().calculateRoadPoints(segment, position, board, endGame)
               if score != 0 then
                 println("Road: " + score)
                 p.addScore(score)
@@ -80,7 +80,7 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
                 board.removeFollower(board.getTile(position).get)
                 notifyScoreCalculated(position, tile)
             case Monastery =>
-              val score = ScoreCalculator().calculateMonasteryPoints(segment, position, board)
+              val score = ScoreCalculator().calculateMonasteryPoints(segment, position, board, endGame)
               if score != 0 then
                 println("Monastery: " + score)
                 p.addScore(score)

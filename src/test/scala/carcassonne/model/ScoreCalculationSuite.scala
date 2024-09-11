@@ -73,7 +73,7 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
     game.placeTile(tile2.rotateCounterClockwise, Position(9, 10))
 
     game.placeFollower(Position(10, 10), TileSegment.C, player1)
-    ScoreCalculator().calculateRoadPoints(TileSegment.C, Position(10, 10), map) shouldBe 3
+    ScoreCalculator().calculateRoadPoints(TileSegment.C, Position(10, 10), map, false) shouldBe 3
   }
 
   test("Test calculate circular Road points") {
@@ -109,7 +109,7 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
     game.placeTile(tile2.rotateCounterClockwise, Position(9, 8))
 
     game.placeFollower(Position(10, 10), TileSegment.C, player1)
-    ScoreCalculator().calculateRoadPoints(TileSegment.C, Position(10, 10), map) shouldBe 8
+    ScoreCalculator().calculateRoadPoints(TileSegment.C, Position(10, 10), map, false) shouldBe 8
   }
 
   test("Test calculate Monastery points") {
@@ -159,7 +159,7 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
     game.placeTile(tile, Position(11, 11))
 
     game.placeFollower(Position(10, 10), TileSegment.C, player1)
-    ScoreCalculator().calculateMonasteryPoints(TileSegment.C, Position(10, 10), map) shouldBe 9
+    ScoreCalculator().calculateMonasteryPoints(TileSegment.C, Position(10, 10), map, false) shouldBe 9
   }
 
   test("Test calculate Field points") {
