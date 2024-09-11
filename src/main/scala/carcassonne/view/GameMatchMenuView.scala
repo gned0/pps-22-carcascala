@@ -11,6 +11,24 @@ import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.layout.{GridPane, HBox, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.text.{Font, FontWeight, Text}
+import GameMatchMenuView.*
+
+object GameMatchMenuView {
+  val DefaultFontName = "Arial"
+  val TitleFontSize = 20
+  val FollowerFontSize = 15
+  val PaneSpacing = 10
+  val TileImageSize = 100
+  val BackgroundColor = "darkgray"
+  val TileRotationAngle = 90
+  val TileBorderCoordinates = Map(
+    "North" -> (10, 10),
+    "East" -> (11, 11),
+    "South" -> (10, 12),
+    "West" -> (9, 11),
+    "Center" -> (10, 11)
+  )
+}
 
 class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
   with SubjectGameMenuView
@@ -19,19 +37,22 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
   private val playerText: Text = new Text("Current Player: "):
     fill = Color.White
     alignment = Pos.Center
-    font = Font.font("Arial", FontWeight.Bold, 20)
+    font = Font.font(DefaultFontName, FontWeight.Bold, TitleFontSize)
+
   private val followerNumber: Text = new Text("Follower Number: "):
     fill = Color.White
     alignment = Pos.Center
-    font = Font.font("Arial", 15)
+    font = Font.font(DefaultFontName, FollowerFontSize)
+
   val rotateClockwise: Button = new Button("Clockwise"):
     alignment = Pos.TopCenter
+
   val rotateCounterClockwise: Button = new Button("Counter Clockwise"):
     alignment = Pos.TopCenter
+
   val skipFollowerPlacement: Button = new Button("Skip Follower Placement"):
     alignment = Pos.TopCenter
     disable = true
-
 
   this.children = Seq(
     playerText,
@@ -47,12 +68,12 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
   )
   this.alignment = Pos.TopCenter
   this.prefWidth = 250
-  this.style = "-fx-background-color: darkgray;"
-  this.spacing = 10
+  this.style = s"-fx-background-color: $BackgroundColor;"
+  this.spacing = PaneSpacing
 
   private def rotateDrawnTileClockwise(tileDrawn: GameTile, tileDrawnImage: ImageView): Unit =
     val newTileDrawn = tileDrawn.rotateClockwise
-    tileDrawnImage.rotate = tileDrawnImage.getRotate + 90
+    tileDrawnImage.rotate = tileDrawnImage.getRotate + TileRotationAngle
     setDrawnTile(newTileDrawn, tileDrawnImage)
     redrawTileDrawn(newTileDrawn, tileDrawnImage)
 
@@ -62,14 +83,13 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
 
   private def rotateDrawnTileCounterClockwise(tileDrawn: GameTile, tileDrawnImage: ImageView): Unit =
     val newTileDrawn = tileDrawn.rotateCounterClockwise
-    tileDrawnImage.rotate = tileDrawnImage.getRotate - 90
+    tileDrawnImage.rotate = tileDrawnImage.getRotate - TileRotationAngle
     setDrawnTile(newTileDrawn, tileDrawnImage)
     redrawTileDrawn(newTileDrawn, tileDrawnImage)
 
     rotateClockwise.onMouseClicked = _ => rotateDrawnTileClockwise(newTileDrawn, tileDrawnImage)
     rotateCounterClockwise.onMouseClicked = _ => rotateDrawnTileCounterClockwise(newTileDrawn, tileDrawnImage)
-    Logger.log(s"MENU VIEW", "Drawn tile rotated ch3 clockwise")
-
+    Logger.log(s"MENU VIEW", "Drawn tile rotated counter-clockwise")
 
   private def redrawTileDrawn(tileDrawn: GameTile, tileDrawnImage: ImageView): Unit =
     drawnTilePane.getChildren.clear()
@@ -83,23 +103,22 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     drawnTilePane.getChildren.clear()
     val tileDrawnImage = new ImageView(new Image(getClass.getResource("../../tiles/" + tileDrawn.imagePath).toExternalForm))
 
-    tileDrawnImage.fitWidth = 100
-    tileDrawnImage.fitHeight = 100
+    tileDrawnImage.fitWidth = TileImageSize
+    tileDrawnImage.fitHeight = TileImageSize
     tileDrawnImage.preserveRatio = true
     setDrawnTile(tileDrawn, tileDrawnImage)
 
     addDrawnTilePaneElements(tileDrawn, tileDrawnImage)
-    
+
     rotateClockwise.onMouseClicked = _ => rotateDrawnTileClockwise(tileDrawn, tileDrawnImage)
     rotateCounterClockwise.onMouseClicked = _ => rotateDrawnTileCounterClockwise(tileDrawn, tileDrawnImage)
 
-
   private def addDrawnTilePaneElements(tileDrawn: GameTile, tileDrawnImage: ImageView): Unit =
-    drawnTilePane.add(new Text(s"North Border: \n${tileDrawn.segments(TileSegment.N)}"), 10, 10)
-    drawnTilePane.add(new Text(s"East Border: \n${tileDrawn.segments(TileSegment.E)}"), 11, 11)
-    drawnTilePane.add(new Text(s"South Border: \n${tileDrawn.segments(TileSegment.S)}"), 10, 12)
-    drawnTilePane.add(new Text(s"West Border: \n${tileDrawn.segments(TileSegment.W)}"), 9, 11)
-    drawnTilePane.add(tileDrawnImage, 10, 11)
+    drawnTilePane.add(new Text(s"North Border: \n${tileDrawn.segments(TileSegment.N)}"), TileBorderCoordinates("North")._1, TileBorderCoordinates("North")._2)
+    drawnTilePane.add(new Text(s"East Border: \n${tileDrawn.segments(TileSegment.E)}"), TileBorderCoordinates("East")._1, TileBorderCoordinates("East")._2)
+    drawnTilePane.add(new Text(s"South Border: \n${tileDrawn.segments(TileSegment.S)}"), TileBorderCoordinates("South")._1, TileBorderCoordinates("South")._2)
+    drawnTilePane.add(new Text(s"West Border: \n${tileDrawn.segments(TileSegment.W)}"), TileBorderCoordinates("West")._1, TileBorderCoordinates("West")._2)
+    drawnTilePane.add(tileDrawnImage, TileBorderCoordinates("Center")._1, TileBorderCoordinates("Center")._2)
 
   override def playerChanged(player: Player): Unit =
     setCurrentPlayer(player)
