@@ -171,7 +171,7 @@ class ScoreCalculator {
     for i <- -1 to 1 do
       for j <- -1 to 1 do
         val pos = Position(monasteryPosition.x + i, monasteryPosition.y + j)
-        if map.getTile(pos).isEmpty then
+        if map.getTile(pos).isDefined then
           tilesPresent = tilesPresent + 1
     tilesPresent
 
