@@ -37,8 +37,8 @@ trait SubjectGameMatch:
   def notifyGameEnded(players: List[Player]): Unit =
     observersBoardView.foreach(_.gameEnded(players))  
     
-  def notifyIsFollowerPlaced(gameTile: GameTile, segment: TileSegment, player: Player): Unit =
-    observersBoardView.foreach(_.isFollowerPlaced(gameTile, segment, player))
+  def notifyIsFollowerPlaced(position: Position, segment: TileSegment, player: Player): Unit =
+    observersBoardView.foreach(_.isFollowerPlaced(position, segment, player))
 
   def notifyPlayerChanged(player: Player): Unit =
     observersBoardView.foreach(_.playerChanged(player))

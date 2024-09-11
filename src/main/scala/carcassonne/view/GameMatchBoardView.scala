@@ -123,7 +123,7 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
     GameEndView(players).popupStage.show()
     gameEndedSwitchView()
 
-  override def isFollowerPlaced(gameTile: GameTile, segment: TileSegment, player: Player): Unit = ()
+  override def isFollowerPlaced(position: Position, segment: TileSegment, player: Player): Unit = ()
 
   override def playerChanged(player: Player): Unit =
     setCurrentPlayer(player)
@@ -219,7 +219,7 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
         filledFollower.onMouseEntered = null
         filledFollower.onMouseExited = null
         filledFollower.effect = getCurrentPlayer.getPlayerColor
-        notifyFollowerPlacement(getDrawnTile._1, segment, getCurrentPlayer)
+        notifyFollowerPlacement(Position(x, y), segment, getCurrentPlayer)
         followerGrid.getChildren.removeIf(node =>
           GridPane.getColumnIndex(node) != x || GridPane.getRowIndex(node) != y
         )

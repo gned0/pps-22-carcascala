@@ -3,7 +3,7 @@ package carcassonne.model.game
 import carcassonne.model.tile.TileSegment.{C, E, N, S, W}
 import carcassonne.model.*
 import carcassonne.model.board.CarcassonneBoard
-import carcassonne.model.tile.SegmentType.{City, Monastery, Road}
+import carcassonne.model.tile.SegmentType.{City, Field, Monastery, Road}
 import carcassonne.model.tile.{GameTile, TileDeck, TileSegment}
 import carcassonne.observers.subjects.model.SubjectGameMatch
 import carcassonne.util.{Logger, Position}
@@ -34,11 +34,11 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
     notifyIsTilePlaced(isTilePlaced, board.getTileMap, position)
     isTilePlaced
 
-  def placeFollower(gameTile: GameTile, segment: TileSegment, player: Player): Boolean =
-    if board.placeFollower(gameTile, segment, player) then
+  def placeFollower(position: Position, segment: TileSegment, player: Player): Boolean =
+    if board.placeFollower(position, segment, player) then
       player.placeFollower()
-      notifyIsFollowerPlaced(gameTile, segment, player)
-      Logger.log(s"GAMESTATE", s"Player: " + player.name + " placed a follower on tile: " + gameTile +
+      notifyIsFollowerPlaced(position, segment, player)
+      Logger.log(s"GAMESTATE", s"Player: " + player.name + " placed a follower on tile: " + board.getTile(position) +
         " on segment: " + segment)
       true
     else
@@ -47,7 +47,7 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
   def sendAvailableFollowerPositions(gameTile: GameTile, position: Position): Unit =
     val segmentMap = gameTile.segments.collect {
       case (segment, _) if {
-        val connectedFeature = board.getConnectedFeature(gameTile, segment)
+        val connectedFeature = board.getConnectedFeature(position, segment)
         connectedFeature.nonEmpty && 
           !connectedFeature.exists { case (pos, seg) => board.getTile(pos).get.followerMap.contains(seg) }
       } => segment
@@ -86,6 +86,14 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
                 p.returnFollower()
                 board.removeFollower(board.getTile(position).get)
                 notifyScoreCalculated(position, tile)
+            case Field =>
+              val score = ScoreCalculator().calculateFieldPoints(segment, position, board)
+              if score != 0 then
+                println("Monastery: " + score)
+//                p.addScore(score)
+//                p.returnFollower()
+//                board.removeFollower(board.getTile(position).get)
+//                notifyScoreCalculated(position, tile)
             
         )
       )

@@ -9,7 +9,7 @@ import carcassonne.view.GameMatchBoardView
 trait GameController:
   def initialize(): Unit
   def placeTile(gameTile: GameTile, position: Position): Unit
-  def placeFollower(gameTile: GameTile, segment: TileSegment, player: Player): Unit
+  def placeFollower(position: Position, segment: TileSegment, player: Player): Unit
   def nextTurn(): Unit
 
 object GameController:
@@ -25,8 +25,8 @@ object GameController:
       model.placeTile(gameTile, position)
       sendAvailableFollowerPositions(gameTile, position)
 
-    def placeFollower(gameTile: GameTile, segment: TileSegment, player: Player): Unit =
-      if model.placeFollower(gameTile, segment, player) then
+    def placeFollower(position: Position, segment: TileSegment, player: Player): Unit =
+      if model.placeFollower(position, segment, player) then
         nextTurn()
 
     def skipFollowerPlacement(): Unit =

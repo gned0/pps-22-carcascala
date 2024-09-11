@@ -42,7 +42,7 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
     game.placeTile(tile, Position(11, 10))
 
 
-    game.placeFollower(tile, TileSegment.N, player1)
+    game.placeFollower(Position(10, 10), TileSegment.N, player1)
     ScoreCalculator().calculateCityPoints(TileSegment.N, Position(10, 10), map, false) shouldBe 12
   }
 
@@ -72,7 +72,7 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
     game.placeTile(tile2.rotateClockwise, Position(11, 10))
     game.placeTile(tile2.rotateCounterClockwise, Position(9, 10))
 
-    game.placeFollower(tile, TileSegment.C, player1)
+    game.placeFollower(Position(10, 10), TileSegment.C, player1)
     ScoreCalculator().calculateRoadPoints(TileSegment.C, Position(10, 10), map) shouldBe 3
   }
 
@@ -108,42 +108,8 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
     game.placeTile(tile2.rotateClockwise.rotateClockwise, Position(9, 10))
     game.placeTile(tile2.rotateCounterClockwise, Position(9, 8))
 
-    game.placeFollower(tile, TileSegment.C, player1)
+    game.placeFollower(Position(10, 10), TileSegment.C, player1)
     ScoreCalculator().calculateRoadPoints(TileSegment.C, Position(10, 10), map) shouldBe 8
-  }
-
-  test("Test calculate Field points") {
-    val deck = TileDeck()
-    val map = CarcassonneBoard()
-    val player1 = Player(0, "test", Color.Red)
-    val player2 = Player(1, "test2", Color.Blue)
-    val game = GameState(List(player1, player2), map, TileDeck())
-
-    val tile = GameTile.createStartTile()
-    val jsonString =
-      """
-          {
-            "segments": {
-              "NW": "Field", "N": "Field", "NE": "Field",
-              "W": "Road", "C": "Road", "E": "Road",
-              "SW": "Field", "S": "Field", "SE": "Field"
-            },
-            "imagePath": "HorizontalRoad.png"
-          }
-        """
-    val json = Json.parse(jsonString)
-    val tile2 = json.as[GameTile]
-
-    game.placeTile(tile, Position(10, 10))
-    game.placeTile(tile.rotateClockwise.rotateClockwise, Position(10, 9))
-
-    game.placeTile(tile.rotateClockwise.rotateClockwise, Position(11, 10))
-
-    game.placeTile(tile, Position(12, 10))
-    game.placeTile(tile.rotateClockwise.rotateClockwise, Position(12, 9))
-
-    game.placeFollower(tile, TileSegment.NE, player1)
-    ScoreCalculator().calculateFieldPoints(TileSegment.NE, Position(10, 10), map) shouldBe 6
   }
 
   test("Test calculate Monastery points") {
@@ -192,8 +158,55 @@ class ScoreCalculationSuite extends AnyFunSuite with Matchers {
     game.placeTile(tile, Position(10, 11))
     game.placeTile(tile, Position(11, 11))
 
-    game.placeFollower(tile2, TileSegment.C, player1)
+    game.placeFollower(Position(10, 10), TileSegment.C, player1)
     ScoreCalculator().calculateMonasteryPoints(TileSegment.C, Position(10, 10), map) shouldBe 9
+  }
+
+  test("Test calculate Field points") {
+    val deck = TileDeck()
+    val map = CarcassonneBoard()
+    val player1 = Player(0, "test", Color.Red)
+    val player2 = Player(1, "test2", Color.Blue)
+    val game = GameState(List(player1, player2), map, TileDeck())
+
+    val jsonString =
+      """
+                 {
+                   "segments": {
+                     "NW": "Field", "N": "City", "NE": "Field",
+                     "W": "Field", "C": "Field", "E": "Field",
+                     "SW": "Field", "S": "Field", "SE": "Field"
+                   },
+                   "imagePath": "TopCityField.png"
+                 }
+               """
+    val json = Json.parse(jsonString)
+    val tile = json.as[GameTile]
+
+    val jsonString2 =
+      """
+             {
+               "segments": {
+                 "NW": "Field", "N": "Field", "NE": "Field",
+                 "W": "Field", "C": "Field", "E": "Field",
+                 "SW": "Field", "S": "Field", "SE": "Field"
+               },
+               "imagePath": "Field.png"
+             }
+           """
+    val json2 = Json.parse(jsonString2)
+    val tile2 = json2.as[GameTile]
+
+    game.placeTile(tile, Position(10, 10))
+    game.placeTile(tile.rotateClockwise.rotateClockwise, Position(10, 9))
+
+    game.placeTile(tile2, Position(11, 10))
+
+    game.placeTile(tile, Position(12, 10))
+    game.placeTile(tile.rotateClockwise.rotateClockwise, Position(12, 9))
+
+    game.placeFollower(Position(11, 10), TileSegment.C, player1)
+    ScoreCalculator().calculateFieldPoints(TileSegment.C, Position(11, 10), map) shouldBe 6
   }
 
 

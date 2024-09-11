@@ -153,7 +153,7 @@ class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
       "test.png"
     )
 
-    map.getConnectedFeature(tile, TileSegment.N) shouldBe Set()
+    map.getConnectedFeature(Position(0, 0), TileSegment.N) shouldBe Set()
   }
 
   test("getConnectedFeature should return the feature for a single tile") {
@@ -175,9 +175,9 @@ class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
     val position = Position(0, 0)
 
     map.placeTile(tile, position) shouldBe true
-    map.getConnectedFeature(tile, TileSegment.N) shouldBe Set((Position(0, 0), TileSegment.N))
-    map.getConnectedFeature(tile, TileSegment.C) shouldBe Set((Position(0, 0), TileSegment.C), (Position(0, 0), TileSegment.E))
-    map.getConnectedFeature(tile, TileSegment.S).map((pos, segment) => (map.getTile(pos).get.imagePath, segment)) shouldBe
+    map.getConnectedFeature(position, TileSegment.N) shouldBe Set((Position(0, 0), TileSegment.N))
+    map.getConnectedFeature(position, TileSegment.C) shouldBe Set((Position(0, 0), TileSegment.C), (Position(0, 0), TileSegment.E))
+    map.getConnectedFeature(position, TileSegment.S).map((pos, segment) => (map.getTile(pos).get.imagePath, segment)) shouldBe
       Set(
         (tile, TileSegment.S),
         (tile, TileSegment.SW),
@@ -222,15 +222,18 @@ class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
     map.placeTile(tile1, Position(0, 0)) shouldBe true
     map.placeTile(tile2, Position(1, 0)) shouldBe true
 
-    val feature = map.getConnectedFeature(tile1, TileSegment.E)
+    val feature = map.getConnectedFeature(Position(1, 0), TileSegment.E)
     val expectedFeature = Set(
-      (Position(0, 0), TileSegment.E),
-      (Position(0, 0), TileSegment.NE),
-      (Position(0, 0), TileSegment.N),
-      (Position(1, 0), TileSegment.W),
-      (Position(1, 0), TileSegment.NW),
-      (Position(1, 0), TileSegment.N),
-
+      (Position(1, 0), TileSegment.E),
+      (Position(0, 0), TileSegment.S),
+      (Position(1, 0), TileSegment.NE),
+      (Position(0, 0), TileSegment.SW),
+      (Position(0, 0), TileSegment.NW),
+      (Position(1, 0), TileSegment.SE),
+      (Position(0, 0), TileSegment.W),
+      (Position(1, 0), TileSegment.SW),
+      (Position(1, 0), TileSegment.S),
+      (Position(0, 0), TileSegment.SE)
     )
 
     feature shouldBe expectedFeature
@@ -300,7 +303,7 @@ class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
     map.placeTile(tile3, Position(0, 1)) shouldBe true
     map.placeTile(tile4, Position(2, 0))
 
-    val featureRoad = map.getConnectedFeature(tile1, TileSegment.E).map((pos, segment) => (map.getTile(pos).get.imagePath, segment))
+    val featureRoad = map.getConnectedFeature(Position(0, 0), TileSegment.E).map((pos, segment) => (map.getTile(pos).get.imagePath, segment))
     val expectedFeatureRoad = Set(
       (tile1, TileSegment.E),
       (tile1, TileSegment.C),
@@ -316,7 +319,7 @@ class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
     featureRoad shouldBe expectedFeatureRoad
 
 
-    val featureField = map.getConnectedFeature(tile1, TileSegment.SE).map((pos, segment) => (map.getTile(pos).get.imagePath, segment))
+    val featureField = map.getConnectedFeature(Position(0, 0), TileSegment.SE).map((pos, segment) => (map.getTile(pos).get.imagePath, segment))
     val expectedFeatureField = Set(
       (tile1, TileSegment.SE),
       (tile3, TileSegment.NE)
@@ -325,7 +328,7 @@ class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
     featureField shouldBe expectedFeatureField
 
 
-    val featureRoadEnd = map.getConnectedFeature(tile2, TileSegment.E).map((pos, segment) => (map.getTile(pos).get.imagePath, segment))
+    val featureRoadEnd = map.getConnectedFeature(Position(1, 0), TileSegment.E).map((pos, segment) => (map.getTile(pos).get.imagePath, segment))
     val expectedFeatureRoadEnd = Set(
       (tile1, TileSegment.S),
       (tile1, TileSegment.C),
