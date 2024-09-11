@@ -77,6 +77,8 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     tileImage.rotate = tileImage.getRotate + angle
     setDrawnTile(newTile, tileImage)
     redrawTile(newTile, tileImage)
+    rotateClockwise.onMouseClicked = _ => rotateDrawnTile(newTile, tileImage, clockwise = true)
+    rotateCounterClockwise.onMouseClicked = _ => rotateDrawnTile(newTile, tileImage, clockwise = false)
     Logger.log("MENU VIEW", s"Drawn tile rotated ${if (clockwise) "clockwise" else "counterclockwise"}")
 
 
