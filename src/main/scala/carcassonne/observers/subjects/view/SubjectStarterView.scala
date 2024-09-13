@@ -2,7 +2,7 @@ package carcassonne.observers.subjects.view
 
 import carcassonne.model.game.Player
 import carcassonne.model.tile.GameTile
-import carcassonne.observers.observers.ObserverStarterView
+import carcassonne.observers.observers.view.ObserverStarterView
 import carcassonne.util.Position
 
 /**

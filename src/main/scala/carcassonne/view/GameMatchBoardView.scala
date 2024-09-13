@@ -3,7 +3,8 @@ package carcassonne.view
 import carcassonne.model.game.{GameState, Player}
 import carcassonne.model.tile.TileSegment.N
 import carcassonne.model.tile.{GameTile, TileSegment}
-import carcassonne.observers.observers.{ObserverGameMatchBoard, ObserverGameMenuView}
+import carcassonne.observers.observers.model.ObserverGameMatchBoard
+import carcassonne.observers.observers.view.ObserverGameMenuView
 import carcassonne.observers.subjects.view.{SubjectGameMatchView, SubjectGameMenuView, SubjectStarterView}
 import carcassonne.util.{Logger, Position}
 import javafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}

@@ -2,7 +2,7 @@ package carcassonne.observers.subjects.view
 
 import carcassonne.model.game.Player
 import carcassonne.model.tile.{GameTile, TileSegment}
-import carcassonne.observers.observers.ObserverGameMatchView
+import carcassonne.observers.observers.view.ObserverGameMatchView
 import carcassonne.util.Position
 import scalafx.scene.layout.Region
 

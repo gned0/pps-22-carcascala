@@ -1,4 +1,4 @@
-package carcassonne.observers.observers
+package carcassonne.observers.observers.model
 
 import carcassonne.model.game.Player
 import carcassonne.model.tile.{GameTile, TileSegment}

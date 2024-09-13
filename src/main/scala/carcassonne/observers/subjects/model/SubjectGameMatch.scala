@@ -2,7 +2,7 @@ package carcassonne.observers.subjects.model
 
 import carcassonne.model.game.Player
 import carcassonne.model.tile.{GameTile, TileSegment}
-import carcassonne.observers.observers.{ObserverGameMatchBoard, ObserverGameMatchMenu}
+import carcassonne.observers.observers.model.{ObserverGameMatchBoard, ObserverGameMatchMenu}
 import carcassonne.util.Position
 
 /**
