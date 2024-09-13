@@ -32,11 +32,6 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
   with SubjectGameMatchView
   with ObserverGameMatchBoard:
 
-
-  private val drawnTilePane = GridPane()
-  drawnTilePane.alignment = Pos.CenterRight
-  drawnTilePane.mouseTransparent = true
-
   this.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
   this.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
   this.setMaxSize(Double.MaxValue, Double.MaxValue)
@@ -49,8 +44,6 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
 
   this.alignment = Pos.Center
 
-  def initialize: Unit =
-    notifyTilePlacementAttempt(GameTile.createStartTile(), Position(500, 500))
   /**
    * Places a tile at the specified position in the view.
  *
@@ -101,10 +94,6 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
    */
   def checkClickedTile(position: Position): Unit =
     notifyTilePlacementAttempt(getDrawnTile._1, position)
-  
-
-  def getDrawnTilePane: Option[GridPane] = Some(drawnTilePane)
-
 
   /**
    * Called when a tile is placed on the game map.
