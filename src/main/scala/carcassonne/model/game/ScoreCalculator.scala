@@ -2,73 +2,31 @@ package carcassonne.model.game
 
 import carcassonne.model.board.CarcassonneBoard
 import carcassonne.model.tile.{GameTile, SegmentType, TileSegment}
-import carcassonne.util.{Logger, Position}
+import carcassonne.util.Position
 
-import scala.annotation.tailrec
-import scala.collection.mutable
+class ScoreCalculator:
 
-class ScoreCalculator {
+  def calculateCityPoints(followerSegment: TileSegment, position: Position, map: CarcassonneBoard, endGame: Boolean): Int =
+    val points = cityPointsCalculation(followerSegment, position, map, endGame)
+    if endGame then points else points * 2
 
-  /**
-   * Calculates the points for a city based on the given meeple segment and position.
-   *
-   * @param followerSegment The segment of the tile where the meeple is placed.
-   * @param position        The position of the tile on the board.
-   * @param map             The current state of the Carcassonne board.
-   * @return The total points for the city.
-   */
-  def calculateCityPoints(followerSegment: TileSegment,
-                          position: Position,
-                          map: CarcassonneBoard,
-                          endGame: Boolean): Int =
-    if endGame then
-      cityPointsCalculation(followerSegment, position, map, endGame)
-    else
-      cityPointsCalculation(followerSegment, position, map, endGame) * 2
-
-  private def cityPointsCalculation(meepleSegment: TileSegment,
-                                    position: Position,
-                                    map: CarcassonneBoard,
-                                    endGame: Boolean): Int =
-    val connectedFeatures = map.getConnectedFeature(position, meepleSegment)
+  private def cityPointsCalculation(followerSegment: TileSegment, position: Position, map: CarcassonneBoard, endGame: Boolean): Int =
+    val connectedFeatures = map.getConnectedFeature(position, followerSegment)
     if isCityFinished(connectedFeatures, map) || endGame then
-      val uniqueTiles: Set[(Position, TileSegment)] = connectedFeatures
-        .groupBy(_._1)
-        .map { case (gameTile, tuples) => tuples.head }
-        .toSet
-      uniqueTiles.size
-    else
-      0
+      connectedFeatures.groupBy(_._1).map(_._2.head).toSet.size
+    else 0
 
-  private def isCityFinished(connectedFeatures: Set[(Position, TileSegment)],
-                             map: CarcassonneBoard): Boolean = {
-    for ((pos, segment) <- connectedFeatures) {
-      val neighbors = getAdjacentTilesAndSegments(pos, segment)
-      for ((adjPos, adjSegment) <- neighbors) {
-        adjPos match {
-          case Some(connectedPos) if map.getTile(connectedPos).nonEmpty =>
-            val isConnectedCity = map.getTile(connectedPos).get.segments(adjSegment) match {
-              case SegmentType.City => true
-              case _ => false
-            }
-            if (!isConnectedCity) {
-              return false
-            }
-          case _ =>
-            return false
-        }
+  private def isCityFinished(connectedFeatures: Set[(Position, TileSegment)], map: CarcassonneBoard): Boolean =
+    connectedFeatures.forall { (pos, segment) =>
+      getAdjacentTilesAndSegments(pos, segment).forall {
+        case (Some(connectedPos), adjSegment) =>
+          map.getTile(connectedPos).exists(_.segments(adjSegment) == SegmentType.City)
+        case _ => false
       }
     }
-    true
-  }
 
-  /**
-   * This helper method checks all the adjacent tiles and segments for a given tile and segment.
-   * It returns a list of adjacent tiles and segments.
-   */
-  private def getAdjacentTilesAndSegments(position: Position,
-                                          segment: TileSegment): List[(Option[Position], TileSegment)] = {
-    segment match {
+  private def getAdjacentTilesAndSegments(position: Position, segment: TileSegment): List[(Option[Position], TileSegment)] =
+    segment match
       case TileSegment.N => List((Some(Position(position.x, position.y - 1)), TileSegment.S))
       case TileSegment.S => List((Some(Position(position.x, position.y + 1)), TileSegment.N))
       case TileSegment.E => List((Some(Position(position.x + 1, position.y)), TileSegment.W))
@@ -90,132 +48,75 @@ class ScoreCalculator {
         (Some(Position(position.x - 1, position.y)), TileSegment.E)
       )
       case _ => List()
-    }
-  }
 
-
-  def calculateRoadPoints(followerSegment: TileSegment,
-                          position: Position,
-                          map: CarcassonneBoard,
-                          endGame: Boolean): Int =
+  def calculateRoadPoints(followerSegment: TileSegment, position: Position, map: CarcassonneBoard, endGame: Boolean): Int =
     roadPointsCalculation(followerSegment, position, map, endGame)
 
-  private def roadPointsCalculation(meepleSegment: TileSegment,
-                                    position: Position,
-                                    map: CarcassonneBoard,
-                                    endGame: Boolean): Int =
-    val connectedFeatures = map.getConnectedFeature(position, meepleSegment)
+  private def roadPointsCalculation(followerSegment: TileSegment, position: Position, map: CarcassonneBoard, endGame: Boolean): Int =
+    val connectedFeatures = map.getConnectedFeature(position, followerSegment)
     if isRoadFinished(connectedFeatures, map) || endGame then
-      val uniqueTiles: Set[(Position, TileSegment)] = connectedFeatures
-        .groupBy(_._1)
-        .map { case (gameTile, tuples) => tuples.head }
-        .toSet
-      uniqueTiles.size
-    else
-      0
+      connectedFeatures.groupBy(_._1).map(_._2.head).toSet.size
+    else 0
 
-  private def isRoadFinished(connectedFeatures: Set[(Position, TileSegment)], map: CarcassonneBoard): Boolean = {
-    for ((tile, segment) <- connectedFeatures) {
-      val neighbors = getAdjacentRoadTilesAndSegments(tile, segment)
-      for ((adjPos, adjSegment) <- neighbors) {
-        adjPos match {
-          case Some(connectedPos) if map.getTile(connectedPos).nonEmpty =>
-            val isRoadConnected = map.getTile(connectedPos).get.segments(adjSegment) match {
-              case SegmentType.Road => true
-              case _ => false
-            }
-            if (!isRoadConnected) {
-              return false
-            }
-          case _ =>
-            return false
-        }
+  private def isRoadFinished(connectedFeatures: Set[(Position, TileSegment)], map: CarcassonneBoard): Boolean =
+    connectedFeatures.forall { (tile, segment) =>
+      getAdjacentRoadTilesAndSegments(tile, segment).forall {
+        case (Some(connectedPos), adjSegment) =>
+          map.getTile(connectedPos).exists(_.segments(adjSegment) == SegmentType.Road)
+        case _ => false
       }
     }
-    true
-  }
 
-  private def getAdjacentRoadTilesAndSegments(position: Position,
-                                              segment: TileSegment): List[(Option[Position], TileSegment)] = {
-    segment match {
+  private def getAdjacentRoadTilesAndSegments(position: Position, segment: TileSegment): List[(Option[Position], TileSegment)] =
+    segment match
       case TileSegment.N => List((Some(Position(position.x, position.y - 1)), TileSegment.S))
       case TileSegment.S => List((Some(Position(position.x, position.y + 1)), TileSegment.N))
       case TileSegment.E => List((Some(Position(position.x + 1, position.y)), TileSegment.W))
       case TileSegment.W => List((Some(Position(position.x - 1, position.y)), TileSegment.E))
       case _ => List()
-    }
-  }
 
-
-  def calculateMonasteryPoints(followerSegment: TileSegment,
-                               position: Position,
-                               map: CarcassonneBoard,
-                               endGame: Boolean): Int =
+  def calculateMonasteryPoints(followerSegment: TileSegment, position: Position, map: CarcassonneBoard, endGame: Boolean): Int =
     monasteryPointsCalculation(followerSegment, position, map, endGame)
 
-  private def monasteryPointsCalculation(meepleSegment: TileSegment,
-                                         position: Position,
-                                         map: CarcassonneBoard,
-                                         endGame: Boolean): Int =
-    val connectedFeatures = map.getConnectedFeature(position, meepleSegment)
+  private def monasteryPointsCalculation(followerSegment: TileSegment, position: Position, map: CarcassonneBoard, endGame: Boolean): Int =
+    val connectedFeatures = map.getConnectedFeature(position, followerSegment)
     val monasterySurroundings = calculateMonasterySurroundings(connectedFeatures, map)
-    if monasterySurroundings == 9 || endGame then
-      monasterySurroundings
-    else
-      0
+    if monasterySurroundings == 9 || endGame then monasterySurroundings else 0
 
-  private def calculateMonasterySurroundings(connectedFeatures: Set[(Position, TileSegment)],
-                                             map: CarcassonneBoard): Int =
+  private def calculateMonasterySurroundings(connectedFeatures: Set[(Position, TileSegment)], map: CarcassonneBoard): Int =
     val monasteryPosition = connectedFeatures.head._1
-    var tilesPresent = 0
-    for i <- -1 to 1 do
-      for j <- -1 to 1 do
-        val pos = Position(monasteryPosition.x + i, monasteryPosition.y + j)
-        if map.getTile(pos).isDefined then
-          tilesPresent = tilesPresent + 1
-    tilesPresent
+    (for
+      i <- -1 to 1
+      j <- -1 to 1
+      pos = Position(monasteryPosition.x + i, monasteryPosition.y + j)
+      if map.getTile(pos).isDefined
+    yield pos).size
 
-
-  def calculateFieldPoints(followerSegment: TileSegment,
-                           position: Position,
-                           map: CarcassonneBoard): Int =
+  def calculateFieldPoints(followerSegment: TileSegment, position: Position, map: CarcassonneBoard): Int =
     fieldPointsCalculation(followerSegment, position, map)
 
-  private def fieldPointsCalculation(meepleSegment: TileSegment,
-                                     position: Position,
-                                     map: CarcassonneBoard): Int =
-    val connectedFeatures = map.getConnectedFeature(position, meepleSegment)
+  private def fieldPointsCalculation(followerSegment: TileSegment, position: Position, map: CarcassonneBoard): Int =
+    val connectedFeatures = map.getConnectedFeature(position, followerSegment)
     getCitiesNextToFields(connectedFeatures, map) * 3
 
-  private def getCitiesNextToFields(connectedFeatures: Set[(Position, TileSegment)],
-                                    map: CarcassonneBoard): Int =
+  private def getCitiesNextToFields(connectedFeatures: Set[(Position, TileSegment)], map: CarcassonneBoard): Int =
     var result = 0
     var visited: Set[(Position, TileSegment)] = Set.empty
-    for ((tile, segment) <- connectedFeatures) {
-      val neighbors = getAdjacentFieldSegments(tile, segment)
-      for ((adjPos, adjSegment) <- neighbors) {
-        adjPos match {
+    for (tile, segment) <- connectedFeatures do
+      for (adjPos, adjSegment) <- getAdjacentFieldSegments(tile, segment) do
+        adjPos match
           case Some(connectedPos) if map.getTile(connectedPos).nonEmpty =>
-            map.getTile(connectedPos).get.segments(adjSegment) match {
+            map.getTile(connectedPos).get.segments(adjSegment) match
               case SegmentType.City =>
-                val connectedCityFeatures = map.getConnectedFeature(
-                  connectedPos,
-                  adjSegment
-                )
+                val connectedCityFeatures = map.getConnectedFeature(connectedPos, adjSegment)
                 if connectedCityFeatures.intersect(visited).isEmpty then
-                  visited = visited ++ connectedCityFeatures
-                  if isCityFinished(connectedCityFeatures, map) then
-                    result = result + 1
+                  visited ++= connectedCityFeatures
+                  if isCityFinished(connectedCityFeatures, map) then result += 1
               case _ =>
-            }
-        }
-      }
-    }
     result
 
-  private def getAdjacentFieldSegments(position: Position,
-                                       segment: TileSegment): List[(Option[Position], TileSegment)] = {
-    segment match {
+  private def getAdjacentFieldSegments(position: Position, segment: TileSegment): List[(Option[Position], TileSegment)] =
+    segment match
       case TileSegment.N => List(
         (Some(position), TileSegment.NW),
         (Some(position), TileSegment.NE),
@@ -258,6 +159,3 @@ class ScoreCalculator {
         (Some(position), TileSegment.S),
         (Some(position), TileSegment.W)
       )
-    }
-  }
-}
