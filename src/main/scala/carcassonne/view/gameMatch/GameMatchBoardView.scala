@@ -9,6 +9,7 @@ import carcassonne.observers.subjects.view.{SubjectGameMatchView, SubjectGameMen
 import carcassonne.util.{Logger, Position}
 import carcassonne.view.gameEnd.GameEndView
 import javafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}
+import javafx.scene.layout.Region.positionInArea
 import scalafx.Includes.*
 import scalafx.event.EventIncludes.eventClosureWrapperWithParam
 import scalafx.geometry.{Insets, Pos}
@@ -125,114 +126,15 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
     setCurrentPlayer(player)
 
   override def availableFollowerPositions(availSegments: List[TileSegment], position: Position): Unit =
-    val drawnTileImage = getDrawnTile._2
-
-    // Replace the tile that has been just removed with new attributes
-    val followerGrid = new GridPane():
-      hgap = 0
-      vgap = 0
-      padding = Insets(0)
-      alignment = Pos.Center
-
-      // Creating 3x3 grid structure with equal cell sizes
-      columnConstraints ++= Seq(
-        new ColumnConstraints {
-          percentWidth = 100 / 3.0
-        },
-        new ColumnConstraints {
-          percentWidth = 100 / 3.0
-        },
-        new ColumnConstraints {
-          percentWidth = 100 / 3.0
-        }
+    placeTile(position, 
+      GameMatchFollowerGridView(
+        availSegments, 
+        getDrawnTile._2,
+        getCurrentPlayer,
+        position,
+        notifyFollowerPlacement
       )
-
-      rowConstraints ++= Seq(
-        new RowConstraints {
-          percentHeight = 100 / 3.0
-        },
-        new RowConstraints {
-          percentHeight = 100 / 3.0
-        },
-        new RowConstraints {
-          percentHeight = 100 / 3.0
-        }
-      )
-
-    followerGrid.prefHeight <== drawnTileImage.fitHeight.toDouble
-    followerGrid.prefWidth <== drawnTileImage.fitWidth.toDouble
-
-    availSegments.foreach( segment =>
-      val followerImageView = new ImageView(new Image(getClass.getResource("../../follower.png").toExternalForm)):
-        fitWidth = (drawnTileImage.fitWidth.toDouble - 5) / 3.3
-        fitHeight = (drawnTileImage.fitHeight.toDouble - 5) / 3.3
-        preserveRatio = true
-
-      // Create the overlay meeple with the desired fill color
-      val filledFollower = new ImageView(new Image(getClass.getResource("../../follower_filled.png").toExternalForm)):
-        fitWidth = (drawnTileImage.fitWidth.toDouble - 5) / 3.3
-        fitHeight = (drawnTileImage.fitHeight.toDouble - 5) / 3.3
-        opacity = 0.5 // Set the opacity to make it semi-transparent
-        visible = true // Initially not visible
-        preserveRatio = true
-
-
-      // Create a StackPane to hold the ImageView and Rectangle
-      val stackPane = new StackPane {
-        children = Seq(followerImageView, filledFollower)
-      }
-
-      // Add hover effect to show/hide the rectangle
-      filledFollower.onMouseEntered = _ =>
-        filledFollower.effect = getCurrentPlayer.getPlayerColor
-
-      filledFollower.onMouseExited = _ =>
-        filledFollower.effect = null
-
-      var x = 1
-      var y = 1
-
-      segment match
-        case TileSegment.N => y -= 1
-        case TileSegment.E => x += 1
-        case TileSegment.S => y += 1
-        case TileSegment.W => x -= 1
-        case TileSegment.NE =>
-          x += 1
-          y -= 1
-        case TileSegment.NW =>
-          x -= 1
-          y -= 1
-        case TileSegment.SE =>
-          x += 1
-          y += 1
-        case TileSegment.SW =>
-          x -= 1
-          y += 1
-        case _ =>
-
-      filledFollower.onMouseClicked = (event: MouseEvent) => if event.button == MouseButton.Primary then
-        filledFollower.onMouseEntered = null
-        filledFollower.onMouseExited = null
-        filledFollower.effect = getCurrentPlayer.getPlayerColor
-        notifyFollowerPlacement(position, segment, getCurrentPlayer)
-        followerGrid.getChildren.removeIf(node =>
-          GridPane.getColumnIndex(node) != x || GridPane.getRowIndex(node) != y
-        )
-        filledFollower.onMouseClicked = null
-
-      followerGrid.add(stackPane, x, y)
     )
-
-    val placeTileStackPane = new StackPane():
-      maxHeight = 10
-      maxWidth = 10
-      children = Seq(
-        drawnTileImage,
-        followerGrid
-      )
-
-    placeTile(position, placeTileStackPane)
 
   override def scoreCalculated(position: Position, gameTile: GameTile): Unit =
     removeFollowerGridPane(position)
