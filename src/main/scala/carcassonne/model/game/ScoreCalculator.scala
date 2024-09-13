@@ -1,22 +1,54 @@
 package carcassonne.model.game
 
 import carcassonne.model.board.CarcassonneBoard
-import carcassonne.model.tile.{GameTile, SegmentType, TileSegment}
+import carcassonne.model.tile.{SegmentType, TileSegment}
 import carcassonne.util.Position
 
+
+/**
+ * Class responsible for calculating scores in the Carcassonne game.
+ */
 class ScoreCalculator:
 
-  def calculateCityPoints(followerSegment: TileSegment, position: Position, map: CarcassonneBoard, endGame: Boolean): Int =
+  /**
+   * Calculates the points for a city feature.
+   *
+   * @param followerSegment the segment where the follower is placed
+   * @param position the position of the tile
+   * @param map the current state of the game board
+   * @param endGame whether the calculation is for the end of the game
+   * @return the calculated points for the city
+   */
+  def calculateCityPoints(followerSegment: TileSegment, position: Position, 
+                          map: CarcassonneBoard, endGame: Boolean): Int =
     val points = cityPointsCalculation(followerSegment, position, map, endGame)
     if endGame then points else points * 2
 
-  private def cityPointsCalculation(followerSegment: TileSegment, position: Position, map: CarcassonneBoard, endGame: Boolean): Int =
+  /**
+   * Helper method to calculate the points for a city feature.
+   *
+   * @param followerSegment the segment where the follower is placed
+   * @param position the position of the tile
+   * @param map the current state of the game board
+   * @param endGame whether the calculation is for the end of the game
+   * @return the calculated points for the city
+   */
+  private def cityPointsCalculation(followerSegment: TileSegment, position: Position, 
+                                    map: CarcassonneBoard, endGame: Boolean): Int =
     val connectedFeatures = map.getConnectedFeature(position, followerSegment)
     if isCityFinished(connectedFeatures, map) || endGame then
       connectedFeatures.groupBy(_._1).map(_._2.head).toSet.size
     else 0
 
-  private def isCityFinished(connectedFeatures: Set[(Position, TileSegment)], map: CarcassonneBoard): Boolean =
+  /**
+   * Checks if a city feature is finished.
+   *
+   * @param connectedFeatures the set of connected features
+   * @param map the current state of the game board
+   * @return true if the city is finished, false otherwise
+   */
+  private def isCityFinished(connectedFeatures: Set[(Position, TileSegment)], 
+                             map: CarcassonneBoard): Boolean =
     connectedFeatures.forall { (pos, segment) =>
       getAdjacentTilesAndSegments(pos, segment).forall {
         case (Some(connectedPos), adjSegment) =>
@@ -25,7 +57,15 @@ class ScoreCalculator:
       }
     }
 
-  private def getAdjacentTilesAndSegments(position: Position, segment: TileSegment): List[(Option[Position], TileSegment)] =
+  /**
+   * Gets the adjacent tiles and segments for a given position and segment.
+   *
+   * @param position the position of the tile
+   * @param segment the segment of the tile
+   * @return a list of adjacent positions and segments
+   */
+  private def getAdjacentTilesAndSegments(position: Position, 
+                                          segment: TileSegment): List[(Option[Position], TileSegment)] =
     segment match
       case TileSegment.N => List((Some(Position(position.x, position.y - 1)), TileSegment.S))
       case TileSegment.S => List((Some(Position(position.x, position.y + 1)), TileSegment.N))
@@ -49,16 +89,44 @@ class ScoreCalculator:
       )
       case _ => List()
 
-  def calculateRoadPoints(followerSegment: TileSegment, position: Position, map: CarcassonneBoard, endGame: Boolean): Int =
+  /**
+   * Calculates the points for a road feature.
+   *
+   * @param followerSegment the segment where the follower is placed
+   * @param position the position of the tile
+   * @param map the current state of the game board
+   * @param endGame whether the calculation is for the end of the game
+   * @return the calculated points for the road
+   */
+  def calculateRoadPoints(followerSegment: TileSegment, position: Position, 
+                          map: CarcassonneBoard, endGame: Boolean): Int =
     roadPointsCalculation(followerSegment, position, map, endGame)
 
-  private def roadPointsCalculation(followerSegment: TileSegment, position: Position, map: CarcassonneBoard, endGame: Boolean): Int =
+  /**
+   * Helper method to calculate the points for a road feature.
+   *
+   * @param followerSegment the segment where the follower is placed
+   * @param position the position of the tile
+   * @param map the current state of the game board
+   * @param endGame whether the calculation is for the end of the game
+   * @return the calculated points for the road
+   */
+  private def roadPointsCalculation(followerSegment: TileSegment, position: Position, 
+                                    map: CarcassonneBoard, endGame: Boolean): Int =
     val connectedFeatures = map.getConnectedFeature(position, followerSegment)
     if isRoadFinished(connectedFeatures, map) || endGame then
       connectedFeatures.groupBy(_._1).map(_._2.head).toSet.size
     else 0
 
-  private def isRoadFinished(connectedFeatures: Set[(Position, TileSegment)], map: CarcassonneBoard): Boolean =
+  /**
+   * Checks if a road feature is finished.
+   *
+   * @param connectedFeatures the set of connected features
+   * @param map the current state of the game board
+   * @return true if the road is finished, false otherwise
+   */
+  private def isRoadFinished(connectedFeatures: Set[(Position, TileSegment)], 
+                             map: CarcassonneBoard): Boolean =
     connectedFeatures.forall { (tile, segment) =>
       getAdjacentRoadTilesAndSegments(tile, segment).forall {
         case (Some(connectedPos), adjSegment) =>
@@ -67,7 +135,15 @@ class ScoreCalculator:
       }
     }
 
-  private def getAdjacentRoadTilesAndSegments(position: Position, segment: TileSegment): List[(Option[Position], TileSegment)] =
+  /**
+   * Gets the adjacent road tiles and segments for a given position and segment.
+   *
+   * @param position the position of the tile
+   * @param segment the segment of the tile
+   * @return a list of adjacent positions and segments
+   */
+  private def getAdjacentRoadTilesAndSegments(position: Position, 
+                                              segment: TileSegment): List[(Option[Position], TileSegment)] =
     segment match
       case TileSegment.N => List((Some(Position(position.x, position.y - 1)), TileSegment.S))
       case TileSegment.S => List((Some(Position(position.x, position.y + 1)), TileSegment.N))
@@ -75,15 +151,43 @@ class ScoreCalculator:
       case TileSegment.W => List((Some(Position(position.x - 1, position.y)), TileSegment.E))
       case _ => List()
 
-  def calculateMonasteryPoints(followerSegment: TileSegment, position: Position, map: CarcassonneBoard, endGame: Boolean): Int =
+  /**
+   * Calculates the points for a monastery feature.
+   *
+   * @param followerSegment the segment where the follower is placed
+   * @param position the position of the tile
+   * @param map the current state of the game board
+   * @param endGame whether the calculation is for the end of the game
+   * @return the calculated points for the monastery
+   */
+  def calculateMonasteryPoints(followerSegment: TileSegment, position: Position, 
+                               map: CarcassonneBoard, endGame: Boolean): Int =
     monasteryPointsCalculation(followerSegment, position, map, endGame)
 
-  private def monasteryPointsCalculation(followerSegment: TileSegment, position: Position, map: CarcassonneBoard, endGame: Boolean): Int =
+  /**
+   * Helper method to calculate the points for a monastery feature.
+   *
+   * @param followerSegment the segment where the follower is placed
+   * @param position the position of the tile
+   * @param map the current state of the game board
+   * @param endGame whether the calculation is for the end of the game
+   * @return the calculated points for the monastery
+   */
+  private def monasteryPointsCalculation(followerSegment: TileSegment, position: Position, 
+                                         map: CarcassonneBoard, endGame: Boolean): Int =
     val connectedFeatures = map.getConnectedFeature(position, followerSegment)
     val monasterySurroundings = calculateMonasterySurroundings(connectedFeatures, map)
     if monasterySurroundings == 9 || endGame then monasterySurroundings else 0
 
-  private def calculateMonasterySurroundings(connectedFeatures: Set[(Position, TileSegment)], map: CarcassonneBoard): Int =
+  /**
+   * Calculates the number of surrounding tiles for a monastery.
+   *
+   * @param connectedFeatures the set of connected features
+   * @param map the current state of the game board
+   * @return the number of surrounding tiles
+   */
+  private def calculateMonasterySurroundings(connectedFeatures: Set[(Position, TileSegment)], 
+                                             map: CarcassonneBoard): Int =
     val monasteryPosition = connectedFeatures.head._1
     (for
       i <- -1 to 1
@@ -92,14 +196,40 @@ class ScoreCalculator:
       if map.getTile(pos).isDefined
     yield pos).size
 
-  def calculateFieldPoints(followerSegment: TileSegment, position: Position, map: CarcassonneBoard): Int =
+  /**
+   * Calculates the points for a field feature.
+   *
+   * @param followerSegment the segment where the follower is placed
+   * @param position the position of the tile
+   * @param map the current state of the game board
+   * @return the calculated points for the field
+   */
+  def calculateFieldPoints(followerSegment: TileSegment, position: Position, 
+                           map: CarcassonneBoard): Int =
     fieldPointsCalculation(followerSegment, position, map)
 
-  private def fieldPointsCalculation(followerSegment: TileSegment, position: Position, map: CarcassonneBoard): Int =
+  /**
+   * Helper method to calculate the points for a field feature.
+   *
+   * @param followerSegment the segment where the follower is placed
+   * @param position the position of the tile
+   * @param map the current state of the game board
+   * @return the calculated points for the field
+   */
+  private def fieldPointsCalculation(followerSegment: TileSegment, position: Position, 
+                                     map: CarcassonneBoard): Int =
     val connectedFeatures = map.getConnectedFeature(position, followerSegment)
     getCitiesNextToFields(connectedFeatures, map) * 3
 
-  private def getCitiesNextToFields(connectedFeatures: Set[(Position, TileSegment)], map: CarcassonneBoard): Int =
+  /**
+   * Gets the number of cities adjacent to field features.
+   *
+   * @param connectedFeatures the set of connected features
+   * @param map the current state of the game board
+   * @return the number of adjacent cities
+   */
+  private def getCitiesNextToFields(connectedFeatures: Set[(Position, TileSegment)], 
+                                    map: CarcassonneBoard): Int =
     var result = 0
     var visited: Set[(Position, TileSegment)] = Set.empty
     for (tile, segment) <- connectedFeatures do
@@ -115,7 +245,15 @@ class ScoreCalculator:
               case _ =>
     result
 
-  private def getAdjacentFieldSegments(position: Position, segment: TileSegment): List[(Option[Position], TileSegment)] =
+  /**
+   * Gets the adjacent field segments for a given position and segment.
+   *
+   * @param position the position of the tile
+   * @param segment the segment of the tile
+   * @return a list of adjacent positions and segments
+   */
+  private def getAdjacentFieldSegments(position: Position, 
+                                       segment: TileSegment): List[(Option[Position], TileSegment)] =
     segment match
       case TileSegment.N => List(
         (Some(position), TileSegment.NW),
