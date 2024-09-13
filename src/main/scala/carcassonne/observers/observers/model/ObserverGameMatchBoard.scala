@@ -23,8 +23,6 @@ trait ObserverGameMatchBoard:
 
   def gameEnded(players: List[Player]): Unit
   
-  def isFollowerPlaced(position: Position, segment: TileSegment, player: Player): Unit
-  
   def playerChanged(player: Player): Unit
   
   def availableFollowerPositions(availSegments: List[TileSegment], position: Position): Unit

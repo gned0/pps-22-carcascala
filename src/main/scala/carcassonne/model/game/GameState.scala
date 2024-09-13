@@ -38,7 +38,6 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
   def placeFollower(position: Position, segment: TileSegment, player: Player): Boolean =
     if board.placeFollower(position, segment, player) then
       player.placeFollower()
-      notifyIsFollowerPlaced(position, segment, player)
       Logger.log(s"GAMESTATE", s"Player: " + player.name + " placed a follower on tile: " + board.getTile(position) +
         " on segment: " + segment)
       true

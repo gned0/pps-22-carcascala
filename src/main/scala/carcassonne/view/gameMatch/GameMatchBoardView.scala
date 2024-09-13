@@ -14,11 +14,17 @@ import scalafx.scene.input.{MouseButton, MouseEvent}
 import scalafx.scene.layout.{GridPane, Priority, Region}
 import scalafx.Includes.*
 
+/**
+ * Represents the view for the game match board in the Carcassonne game.
+ *
+ * @param gameEndedSwitchView A function to switch the view when the game ends.
+ */
 class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
   with ObserverGameMenuView
   with SubjectGameMatchView
   with ObserverGameMatchBoard:
 
+  // Set the minimum, preferred, and maximum sizes for the grid pane
   this.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
   this.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
   this.setMaxSize(Double.MaxValue, Double.MaxValue)
@@ -29,12 +35,24 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
   this.prefHeight = 400
   this.alignment = Pos.Center
 
+  /**
+   * Places a tile at the specified position on the board.
+   *
+   * @param position The position where the tile should be placed.
+   * @param tileGraphicElement The graphical representation of the tile.
+   */
   private def placeTile(position: Position, tileGraphicElement: Node): Unit =
     this.getChildren.removeIf(node =>
       getColumnIndex(node) == position.x && getRowIndex(node) == position.y
     )
     this.add(tileGraphicElement, position.x, position.y)
 
+  /**
+   * Creates new placeholder tiles around the specified position.
+   *
+   * @param tiles The current map of tiles on the board.
+   * @param position The position around which new placeholders should be created.
+   */
   private def createNewPlaceholders(tiles: Map[Position, GameTile], position: Position): Unit =
     Seq(position.x - 1, position.x + 1).foreach { posX =>
       if !tiles.contains(Position(posX, position.y)) then
@@ -45,6 +63,12 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
         createPlaceholderTile(Position(position.x, posY))
     }
 
+  /**
+   * Creates a placeholder tile at the specified position.
+   *
+   * @param position The position where the placeholder tile should be created.
+   * @return The created placeholder tile.
+   */
   private def createPlaceholderTile(position: Position): Region =
     new Region:
       prefWidth = 100
@@ -54,32 +78,61 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
         notifyTilePlacementAttempt(getDrawnTile._1, position)
       add(this, position.x, position.y)
 
+  /**
+   * Removes the follower grid pane at the specified position.
+   *
+   * @param position The position from which the follower grid pane should be removed.
+   */
   private def removeFollowerGridPane(position: Position): Unit =
     this.getChildrenUnmodifiable.toArray
       .collectFirst {
-        case child: javafx.scene.Node if getColumnIndex(child) == position.x && getRowIndex(child) == position.y => child
+        case child: javafx.scene.Node if getColumnIndex(child) == position.x && 
+          getRowIndex(child) == position.y => child
       }
       .collect {
         case stackPane: javafx.scene.layout.StackPane => stackPane.getChildren.remove(1)
       }
       .getOrElse(println("No element or other type of element"))
 
-  override def isTilePlaced(isTilePlaced: Boolean, tilesOption: Option[Map[Position, GameTile]], position: Position): Unit =
+  /**
+   * Updates the board when a tile is placed.
+   *
+   * @param isTilePlaced Indicates whether the tile was successfully placed.
+   * @param tilesOption An optional map of the current tiles on the board.
+   * @param position The position where the tile was placed.
+   */
+  override def isTilePlaced(isTilePlaced: Boolean, 
+                            tilesOption: Option[Map[Position, GameTile]], 
+                            position: Position): Unit =
     tilesOption.foreach { tiles =>
       if isTilePlaced then
         placeTile(position, getDrawnTile._2)
         createNewPlaceholders(tiles, position)
     }
 
+  /**
+   * Handles the end of the game.
+   *
+   * @param players The list of players in the game.
+   */
   override def gameEnded(players: List[Player]): Unit =
     GameEndView(players).popupStage.show()
     gameEndedSwitchView()
-
-  override def isFollowerPlaced(position: Position, segment: TileSegment, player: Player): Unit = ()
-
+  
+  /**
+   * Updates the current player.
+   *
+   * @param player The new current player.
+   */
   override def playerChanged(player: Player): Unit =
     setCurrentPlayer(player)
 
+  /**
+   * Displays the available follower positions on the board.
+   *
+   * @param availSegments The list of available tile segments for placing followers.
+   * @param position The position of the tile on the board.
+   */
   override def availableFollowerPositions(availSegments: List[TileSegment], position: Position): Unit =
     placeTile(position,
       GameMatchFollowerGridView(
@@ -91,9 +144,20 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
       )
     )
 
+  /**
+   * Updates the board when the score is calculated.
+   *
+   * @param position The position of the tile on the board.
+   * @param gameTile The game tile for which the score was calculated.
+   */
   override def scoreCalculated(position: Position, gameTile: GameTile): Unit =
     removeFollowerGridPane(position)
 
+  /**
+   * Skips the follower placement.
+   *
+   * @param position The position of the tile on the board.
+   */
   override def skipFollowerPlacement(position: Position): Unit =
     removeFollowerGridPane(position)
     notifySkipFollowerPlacement()
