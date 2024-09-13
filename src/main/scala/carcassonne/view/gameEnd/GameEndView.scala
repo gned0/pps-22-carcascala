@@ -1,14 +1,14 @@
-package carcassonne.view
+package carcassonne.view.gameEnd
 
 import carcassonne.model.game.Player
+import scalafx.Includes.*
 import scalafx.application.JFXApp3
+import scalafx.beans.property.*
+import scalafx.geometry.Pos
 import scalafx.scene.Scene
 import scalafx.scene.control.{Button, Label}
 import scalafx.scene.layout.VBox
 import scalafx.stage.{Modality, Stage}
-import scalafx.Includes.*
-import scalafx.beans.property.*
-import scalafx.geometry.Pos
 
 class GameEndView(players: List[Player]) {
   val popupStage: Stage = new Stage:

@@ -5,7 +5,9 @@ import carcassonne.model.board.CarcassonneBoard
 import carcassonne.model.game.{GameState, Player}
 import carcassonne.model.tile.TileDeck
 import carcassonne.util.{Color, PlayerColor}
-import carcassonne.view.{GameBoardView, GameMatchBoardView, GameMatchMenuView, GameStarterView, GameViewContainer}
+import carcassonne.view.gameMatch.{GameBoardView, GameMatchBoardView, GameMatchMenuView}
+import carcassonne.view.GameViewContainer
+import carcassonne.view.applicationStart.GameStarterView
 import scalafx.Includes.*
 import scalafx.application.JFXApp3
 import scalafx.geometry.Pos.TopCenter

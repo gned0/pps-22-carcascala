@@ -1,12 +1,12 @@
-package carcassonne.view
+package carcassonne.view.applicationStart
 
 import carcassonne.observers.subjects.view.SubjectStarterView
 import scalafx.application.Platform
 import scalafx.geometry.{Insets, Pos}
-import scalafx.scene.control.{Button, Label, TextField, Alert, ComboBox}
-import scalafx.scene.layout.{GridPane, VBox, HBox}
 import scalafx.scene.Scene
 import scalafx.scene.control.Alert.AlertType
+import scalafx.scene.control.*
+import scalafx.scene.layout.{GridPane, HBox, VBox}
 import scalafx.stage.Stage
 
 class GameStarterView(switchMainGameView: List[String] => Unit) extends VBox

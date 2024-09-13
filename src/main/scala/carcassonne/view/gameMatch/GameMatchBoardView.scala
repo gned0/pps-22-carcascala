@@ -1,4 +1,4 @@
-package carcassonne.view
+package carcassonne.view.gameMatch
 
 import carcassonne.model.game.{GameState, Player}
 import carcassonne.model.tile.TileSegment.N
@@ -7,19 +7,20 @@ import carcassonne.observers.observers.model.ObserverGameMatchBoard
 import carcassonne.observers.observers.view.ObserverGameMenuView
 import carcassonne.observers.subjects.view.{SubjectGameMatchView, SubjectGameMenuView, SubjectStarterView}
 import carcassonne.util.{Logger, Position}
+import carcassonne.view.gameEnd.GameEndView
 import javafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}
-import scalafx.geometry.{Insets, Pos}
-import scalafx.scene.input.{MouseButton, MouseEvent}
-import scalafx.scene.layout.{ColumnConstraints, GridPane, HBox, Priority, Region, RowConstraints, StackPane, VBox}
-import scalafx.scene.text.Text
 import scalafx.Includes.*
 import scalafx.event.EventIncludes.eventClosureWrapperWithParam
+import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Node
 import scalafx.scene.control.Button
 import scalafx.scene.effect.ColorAdjust
 import scalafx.scene.image.{Image, ImageView}
+import scalafx.scene.input.{MouseButton, MouseEvent}
+import scalafx.scene.layout.*
 import scalafx.scene.paint.Color
 import scalafx.scene.shape.Rectangle
+import scalafx.scene.text.Text
 
 
 /**

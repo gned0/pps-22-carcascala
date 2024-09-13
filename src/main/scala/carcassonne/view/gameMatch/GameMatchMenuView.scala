@@ -1,17 +1,17 @@
-package carcassonne.view
+package carcassonne.view.gameMatch
 
 import carcassonne.model.game.{GameState, Player}
 import carcassonne.model.tile.{GameTile, TileSegment}
+import carcassonne.observers.observers.model.ObserverGameMatchMenu
 import carcassonne.observers.subjects.view.SubjectGameMenuView
 import carcassonne.util.{Logger, Position}
+import carcassonne.view.gameMatch.GameMatchMenuView.*
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.control.Button
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.layout.{GridPane, HBox, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.text.{Font, FontWeight, Text}
-import GameMatchMenuView.*
-import carcassonne.observers.observers.model.ObserverGameMatchMenu
 
 object GameMatchMenuView {
   val DefaultFontName = "Arial"

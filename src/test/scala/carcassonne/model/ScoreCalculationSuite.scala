@@ -4,7 +4,7 @@ import carcassonne.model.board.CarcassonneBoard
 import carcassonne.model.game.{GameState, Player, ScoreCalculator}
 import carcassonne.model.tile.{GameTile, TileDeck, TileSegment}
 import carcassonne.util.{Color, Position}
-import carcassonne.view.GameMatchBoardView
+import carcassonne.view.gameMatch.GameMatchBoardView
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
 import play.api.libs.json.Json

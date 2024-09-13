@@ -1,10 +1,10 @@
-package carcassonne.view
+package carcassonne.view.gameMatch
 
-import scalafx.scene.input.{MouseEvent, ScrollEvent}
-import scalafx.scene.layout.{Background, BackgroundFill, CornerRadii, HBox, Region, StackPane}
 import scalafx.Includes.*
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.effect.ColorAdjust
+import scalafx.scene.input.{MouseEvent, ScrollEvent}
+import scalafx.scene.layout.*
 import scalafx.scene.paint.Color
 
 class GameBoardView extends StackPane {
