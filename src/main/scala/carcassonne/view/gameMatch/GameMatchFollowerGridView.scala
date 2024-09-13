@@ -9,6 +9,15 @@ import scalafx.scene.layout.{ColumnConstraints, GridPane, RowConstraints, StackP
 import carcassonne.util.{Logger, Position}
 import scalafx.Includes.*
 
+/**
+ * Represents the grid view for placing followers on a tile in the game match.
+ *
+ * @param availSegments List of available tile segments where followers can be placed.
+ * @param drawnTileImage The image view of the drawn tile.
+ * @param currentPlayer The current player placing the follower.
+ * @param position The position of the tile on the board.
+ * @param notifyFollowerPlacement Callback function to notify when a follower is placed.
+ */
 class GameMatchFollowerGridView(
                                  availSegments: List[TileSegment],
                                  drawnTileImage: ImageView,
@@ -17,6 +26,9 @@ class GameMatchFollowerGridView(
                                  notifyFollowerPlacement: (Position, TileSegment, Player) => Unit
                                ) extends StackPane:
 
+  /**
+   * The grid pane that holds the follower placement options.
+   */
   private val followerGrid = new GridPane:
     hgap = 0
     vgap = 0
@@ -28,12 +40,21 @@ class GameMatchFollowerGridView(
     columnConstraints ++= Seq.fill(3)(new ColumnConstraints { percentWidth = 100 / 3.0 })
     rowConstraints ++= Seq.fill(3)(new RowConstraints { percentHeight = 100 / 3.0 })
 
+  /**
+   * Initializes the follower placement options on the grid.
+   */
   availSegments.foreach { segment =>
+    /**
+     * The outline image view of the follower.
+     */
     val followerOutline = new ImageView(new Image(getClass.getResource("../../../follower.png").toExternalForm)):
       fitWidth = (drawnTileImage.fitWidth.toDouble - 5) / 3.3
       fitHeight = (drawnTileImage.fitHeight.toDouble - 5) / 3.3
       preserveRatio = true
 
+    /**
+     * The filled image view of the follower.
+     */
     val filledFollower = new ImageView(new Image(getClass.getResource("../../../follower_filled.png").toExternalForm)):
       fitWidth = (drawnTileImage.fitWidth.toDouble - 5) / 3.3
       fitHeight = (drawnTileImage.fitHeight.toDouble - 5) / 3.3
@@ -43,6 +64,9 @@ class GameMatchFollowerGridView(
       onMouseEntered = _ => this.effect = currentPlayer.getPlayerColor
       onMouseExited =  _ => this.effect = null
 
+    /**
+     * Determines the grid position (x, y) based on the tile segment.
+     */
     val (x, y) = segment match
       case TileSegment.N  => (1, 0)
       case TileSegment.E  => (2, 1)
@@ -54,6 +78,11 @@ class GameMatchFollowerGridView(
       case TileSegment.SW => (0, 2)
       case _              => (1, 1)
 
+    /**
+     * Handles the mouse click event for placing a follower.
+     *
+     * @param event The mouse event.
+     */
     filledFollower.onMouseClicked = (event: MouseEvent) => if event.button == MouseButton.Primary then
       filledFollower.onMouseEntered = null
       filledFollower.onMouseExited = null
@@ -64,6 +93,9 @@ class GameMatchFollowerGridView(
       )
       filledFollower.onMouseClicked = null
 
+    /**
+     * Adds the follower outline and filled follower to the grid.
+     */
     followerGrid.add(
       new StackPane:
         children = Seq(followerOutline, filledFollower)
