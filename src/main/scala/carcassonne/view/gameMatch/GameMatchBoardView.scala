@@ -38,7 +38,6 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
   GridPane.setHgrow(this, Priority.Always)
   GridPane.setVgrow(this, Priority.Always)
 
-
   this.prefWidth = 600
   this.prefHeight = 400
 
@@ -50,7 +49,7 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
    * @param position the position where the tile should be placed
    * @param tiles the current state of the game map tiles
    */
-  def placeTile(position: Position, tileGraphicElement: Node): Unit =
+  private def placeTile(position: Position, tileGraphicElement: Node): Unit =
     // Remove the old placeholder
     this.getChildren.removeIf(node =>
       getColumnIndex(node) == position.x && getRowIndex(node) == position.y
@@ -61,7 +60,7 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
    * Creates new placeholder tiles around the last placed tile.
    * @param tiles the current state of the game map tiles
    */
-  def createNewPlaceholders(tiles: Map[Position, GameTile], position: Position): Unit =
+  private def createNewPlaceholders(tiles: Map[Position, GameTile], position: Position): Unit =
     for
       posX <- Seq(position.x - 1, position.x + 1)
       if !tiles.contains(Position(posX, position.y))
@@ -79,21 +78,27 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
    * @param position the position where the placeholder tile should be created
    * @return the created placeholder tile
    */
-  def createPlaceholderTile(position: Position): Region =
+  private def createPlaceholderTile(position: Position): Region =
     new Region:
       prefWidth = 100
       prefHeight = 100
       styleClass += "placeholderTile"
       onMouseClicked = (event: MouseEvent) => if event.button == MouseButton.Primary then
-        checkClickedTile(position)
+        notifyTilePlacementAttempt(getDrawnTile._1, position)
       add(this, position.x, position.y)
 
-  /**
-   * Checks the clicked tile and notifies observers of a tile placement attempt.
-   * @param position the position of the clicked tile
-   */
-  def checkClickedTile(position: Position): Unit =
-    notifyTilePlacementAttempt(getDrawnTile._1, position)
+
+  private def removeFollowerGridPane(position: Position): Unit =
+    val graphicalTile: Option[javafx.scene.Node] = this.getChildrenUnmodifiable.toArray.find {
+      case child: javafx.scene.Node => GridPane.getColumnIndex(child) == position.x && GridPane.getRowIndex(child) == position.y
+    }.map(_.asInstanceOf[javafx.scene.Node])
+
+    graphicalTile match
+      case Some(s) if s.isInstanceOf[javafx.scene.layout.StackPane] =>
+        val stackPane = s.asInstanceOf[javafx.scene.layout.StackPane]
+        stackPane.getChildren.remove(1)
+      case Some(_) => println("Other type of element")
+      case None => println("No element")
 
   /**
    * Called when a tile is placed on the game map.
@@ -230,26 +235,8 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
     placeTile(position, placeTileStackPane)
 
   override def scoreCalculated(position: Position, gameTile: GameTile): Unit =
-    val graphicalTile: Option[javafx.scene.Node] = this.getChildrenUnmodifiable.toArray.find {
-      case child: javafx.scene.Node => GridPane.getColumnIndex(child) == position.x && GridPane.getRowIndex(child) == position.y
-    }.map(_.asInstanceOf[javafx.scene.Node])
-
-    graphicalTile match
-      case Some(s) if s.isInstanceOf[javafx.scene.layout.StackPane] =>
-        val stackPane = s.asInstanceOf[javafx.scene.layout.StackPane]
-        stackPane.getChildren.remove(1)
-      case Some(_) => println("Other type of element")
-      case None => println("No element")
+    removeFollowerGridPane(position)
 
   override def skipFollowerPlacement(position: Position): Unit =
-    val graphicalTile: Option[javafx.scene.Node] = this.getChildrenUnmodifiable.toArray.find {
-      case child: javafx.scene.Node => GridPane.getColumnIndex(child) == position.x && GridPane.getRowIndex(child) == position.y
-    }.map(_.asInstanceOf[javafx.scene.Node])
-
-    graphicalTile match
-      case Some(s) if s.isInstanceOf[javafx.scene.layout.StackPane] =>
-        val stackPane = s.asInstanceOf[javafx.scene.layout.StackPane]
-        stackPane.getChildren.remove(1)
-      case Some(_) => println("Other type of element")
-      case None => println("No element")
+    removeFollowerGridPane(position)
     notifySkipFollowerPlacement()
