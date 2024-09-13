@@ -92,7 +92,7 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     rotateCounterClockwise.disable = false
     Logger.log("MENU VIEW", "Tile drawn")
     drawnTilePane.getChildren.clear()
-    val tileImage = new ImageView(new Image(getClass.getResource(s"../../tiles/${tile.imagePath}").toExternalForm)) {
+    val tileImage = new ImageView(new Image(getClass.getResource(s"../../../tiles/${tile.imagePath}").toExternalForm)) {
       fitWidth = TileImageSize
       fitHeight = TileImageSize
       preserveRatio = true
