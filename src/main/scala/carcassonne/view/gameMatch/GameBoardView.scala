@@ -6,22 +6,45 @@ import scalafx.scene.input.{MouseEvent, ScrollEvent}
 import scalafx.scene.layout.*
 import scalafx.scene.paint.Color
 
+/**
+ * Represents the game board view in the Carcassonne game.
+ * This class extends `StackPane` and provides functionality for handling mouse events
+ * such as dragging and zooming.
+ */
 class GameBoardView extends StackPane:
 
-  // Initial mouse position
+  /** Initial X position of the mouse when pressed. */
   private var initialX: Double = 0.0
+
+  /** Initial Y position of the mouse when pressed. */
   private var initialY: Double = 0.0
 
-  // Zoom level
+  /** Current zoom factor of the game board. */
   private var zoomFactor: Double = 1.0
-  private val zoomIncrement: Double = 0.1 // Zoom step size
-  private val minZoom: Double = 0.5 // Minimum zoom level
-  private val maxZoom: Double = 4.0 // Maximum zoom level
 
+  /** Increment value for zooming in and out. */
+  private val zoomIncrement: Double = 0.1
+
+  /** Minimum zoom level allowed. */
+  private val minZoom: Double = 0.5
+
+  /** Maximum zoom level allowed. */
+  private val maxZoom: Double = 4.0
+
+  /**
+   * Handles the mouse pressed event to record the initial mouse position.
+   *
+   * @param event The mouse event.
+   */
   this.onMousePressed = (event: MouseEvent) =>
     initialX = event.sceneX
     initialY = event.sceneY
 
+  /**
+   * Handles the mouse dragged event to translate the game board based on mouse movement.
+   *
+   * @param event The mouse event.
+   */
   this.onMouseDragged = (event: MouseEvent) =>
     val offsetX = event.sceneX - initialX
     val offsetY = event.sceneY - initialY
@@ -32,6 +55,11 @@ class GameBoardView extends StackPane:
     initialX = event.sceneX
     initialY = event.sceneY
 
+  /**
+   * Handles the scroll event to zoom in and out of the game board.
+   *
+   * @param event The scroll event.
+   */
   this.onScroll = (event: ScrollEvent) =>
     zoomFactor = if event.deltaY > 0 then
       Math.min(zoomFactor + zoomIncrement, maxZoom) // Zoom in
@@ -43,7 +71,14 @@ class GameBoardView extends StackPane:
 
     event.consume()
 
+  // Set the minimum size of the game board to its preferred size.
   this.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
+
+  // Set the preferred size of the game board.
   this.setPrefSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
+
+  // Set the maximum size of the game board to the maximum possible value.
   this.setMaxSize(Double.MaxValue, Double.MaxValue)
+
+  // Align the game board to the center of the stack pane.
   StackPane.setAlignment(this, Pos.Center)
