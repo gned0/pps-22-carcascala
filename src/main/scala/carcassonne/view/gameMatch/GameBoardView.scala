@@ -2,22 +2,21 @@ package carcassonne.view.gameMatch
 
 import scalafx.Includes.*
 import scalafx.geometry.{Insets, Pos}
-import scalafx.scene.effect.ColorAdjust
 import scalafx.scene.input.{MouseEvent, ScrollEvent}
 import scalafx.scene.layout.*
 import scalafx.scene.paint.Color
 
-class GameBoardView extends StackPane {
+class GameBoardView extends StackPane:
 
   // Initial mouse position
-  private var initialX = 0.0
-  private var initialY = 0.0
+  private var initialX: Double = 0.0
+  private var initialY: Double = 0.0
 
   // Zoom level
-  private var zoomFactor = 1.0
-  private val zoomIncrement = 0.1 // Zoom step size
-  private val minZoom = 0.5 // Minimum zoom level
-  private val maxZoom = 4.0 // Maximum zoom level
+  private var zoomFactor: Double = 1.0
+  private val zoomIncrement: Double = 0.1 // Zoom step size
+  private val minZoom: Double = 0.5 // Minimum zoom level
+  private val maxZoom: Double = 4.0 // Maximum zoom level
 
   this.onMousePressed = (event: MouseEvent) =>
     initialX = event.sceneX
@@ -48,4 +47,3 @@ class GameBoardView extends StackPane {
   this.setPrefSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
   this.setMaxSize(Double.MaxValue, Double.MaxValue)
   StackPane.setAlignment(this, Pos.Center)
-}
