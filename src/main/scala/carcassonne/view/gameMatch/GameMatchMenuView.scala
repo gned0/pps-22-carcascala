@@ -15,13 +15,28 @@ import scalafx.scene.paint.Color
 import scalafx.scene.text.{Font, FontWeight, Text}
 
 object GameMatchMenuView:
+  /** Default font name used in the view */
   val DefaultFontName = "Arial"
+
+  /** Font size for the title text */
   val TitleFontSize = 20
+
+  /** Font size for the follower number text */
   val FollowerFontSize = 15
+
+  /** Spacing between panes in the view */
   val PaneSpacing = 10
+
+  /** Size of the tile images */
   val TileImageSize = 100
+
+  /** Background color of the view */
   val BackgroundColor: Color = Color.DarkGray
+
+  /** Rotation angle for the tiles */
   val TileRotationAngle = 90
+
+  /** Coordinates for the tile borders */
   val TileBorderCoordinates: Map[String, (Int, Int)] = Map(
     "North" -> (10, 10),
     "East" -> (11, 11),
@@ -30,26 +45,36 @@ object GameMatchMenuView:
     "Center" -> (10, 11)
   )
 
+/**
+ * Represents the game match menu view in the Carcassonne game.
+ *
+ * @param drawnTilePane The pane where the drawn tile is displayed.
+ */
 class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
   with SubjectGameMenuView
   with ObserverGameMatchMenu:
 
+  /** Text element displaying the current player */
   private val playerText: Text = new Text("Current Player: "):
     fill = Color.White
     alignment = Pos.TopCenter
     font = Font.font(DefaultFontName, FontWeight.Bold, TitleFontSize)
 
+  /** Text element displaying the follower number */
   private val followerNumber: Text = new Text("Follower Number: "):
     fill = Color.White
     alignment = Pos.TopCenter
     font = Font.font(DefaultFontName, FontWeight.Bold, FollowerFontSize)
 
+  /** Button to rotate the tile clockwise */
   val rotateClockwise: Button = new Button("Clockwise"):
     alignment = Pos.TopCenter
 
+  /** Button to rotate the tile counterclockwise */
   val rotateCounterClockwise: Button = new Button("Counter Clockwise"):
     alignment = Pos.TopCenter
 
+  /** Button to skip follower placement */
   val skipFollowerPlacement: Button = new Button("Skip Follower Placement"):
     alignment = Pos.TopCenter
 
@@ -80,6 +105,13 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
   this.vgrow = Always
   this.padding = Insets(10)
 
+  /**
+   * Rotates the drawn tile.
+   *
+   * @param tile The tile to be rotated.
+   * @param tileImage The image view of the tile.
+   * @param clockwise Whether to rotate clockwise.
+   */
   private def rotateDrawnTile(tile: GameTile, tileImage: ImageView, clockwise: Boolean): Unit =
     tileImage.rotate = tileImage.getRotate + (if clockwise then TileRotationAngle else -TileRotationAngle)
     setUpTile(
@@ -88,10 +120,22 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     )
     Logger.log("MENU VIEW", s"Drawn tile rotated ${if clockwise then "clockwise" else "counterclockwise"}")
 
+  /**
+   * Redraws the tile on the pane.
+   *
+   * @param tile The tile to be redrawn.
+   * @param tileImage The image view of the tile.
+   */
   private def redrawTile(tile: GameTile, tileImage: ImageView): Unit =
     drawnTilePane.getChildren.clear()
     addDrawnTilePaneElements(tile, tileImage)
 
+  /**
+   * Sets up the tile and its image view.
+   *
+   * @param tile The tile to be set up.
+   * @param tileImage The image view of the tile.
+   */
   private def setUpTile(tile: GameTile, tileImage: ImageView): Unit =
     setDrawnTile(tile, tileImage)
     redrawTile(tile, tileImage)
@@ -99,6 +143,12 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     rotateClockwise.onMouseClicked = _ => rotateDrawnTile(tile, tileImage, clockwise = true)
     rotateCounterClockwise.onMouseClicked = _ => rotateDrawnTile(tile, tileImage, clockwise = false)
 
+  /**
+   * Adds elements to the drawn tile pane.
+   *
+   * @param tile The tile to be added.
+   * @param tileImage The image view of the tile.
+   */
   private def addDrawnTilePaneElements(tile: GameTile, tileImage: ImageView): Unit =
     drawnTilePane.add(
       new Text(s"North: \n${tile.segments(TileSegment.N)}"), TileBorderCoordinates("North")._1, TileBorderCoordinates("North")._2)
@@ -107,12 +157,23 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     drawnTilePane.add(new Text(s"West: \n${tile.segments(TileSegment.W)}"), TileBorderCoordinates("West")._1, TileBorderCoordinates("West")._2)
     drawnTilePane.add(tileImage, TileBorderCoordinates("Center")._1, TileBorderCoordinates("Center")._2)
 
+  /**
+   * Sets up the buttons for rotation and skipping follower placement.
+   *
+   * @param activateRotation Whether to activate rotation buttons.
+   * @param position The position of the tile.
+   */
   private def setUpButtons(activateRotation: Boolean,
                            position: Option[Position]): Unit =
     skipFollowerPlacement.onMouseClicked = _ => notifySkipTurn(position)
     rotateClockwise.disable = activateRotation
     rotateCounterClockwise.disable = activateRotation
 
+  /**
+   * Handles the event when a tile is drawn.
+   *
+   * @param tile The drawn tile.
+   */
   override def tileDrawn(tile: GameTile): Unit =
     setUpButtons(false, None)
     Logger.log("MENU VIEW", "Tile drawn")
@@ -122,6 +183,11 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
       preserveRatio = true
     setUpTile(tile, tileImage)
 
+  /**
+   * Handles the event when the player changes.
+   *
+   * @param player The new current player.
+   */
   override def playerChanged(player: Player): Unit =
     setCurrentPlayer(player)
     playerText.text = s"Current Player: ${player.name}"
@@ -129,5 +195,11 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     followerNumber.text = s"Follower Number: ${player.getFollowers}"
     followerNumber.fill = player.getSFXColor
 
+  /**
+   * Handles the event when available follower positions are updated.
+   *
+   * @param availSegments The available segments for follower placement.
+   * @param position The position of the tile.
+   */
   override def availableFollowerPositions(availSegments: List[TileSegment], position: Position): Unit =
     setUpButtons(true, Some(position))
