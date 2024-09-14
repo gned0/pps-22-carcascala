@@ -30,7 +30,7 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
     val gameMenu = GameMatchMenuView(
       new GridPane():
         alignment = TopCenter
-        vgrow = Always
+//        vgrow = Always
     )
 
     val gameBoard = GameBoardView()
