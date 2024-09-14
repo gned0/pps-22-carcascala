@@ -25,5 +25,5 @@ trait SubjectGameMenuView:
   def setDrawnTile(tile: GameTile, tileImage: ImageView): Unit =
     observers.foreach(_.setDrawnTile((tile, tileImage)))
     
-  def notifySkipFollowerPlacement(position: Position): Unit =
+  def notifySkipTurn(position: Option[Position]): Unit =
     observers.foreach(_.skipFollowerPlacement(position))

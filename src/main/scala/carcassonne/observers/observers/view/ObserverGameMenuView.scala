@@ -28,4 +28,4 @@ trait ObserverGameMenuView:
   def setDrawnTile(drawnTile: (GameTile, ImageView)): Unit =
     _drawnTile = drawnTile
   
-  def skipFollowerPlacement(position: Position): Unit
+  def skipFollowerPlacement(position: Option[Position]): Unit

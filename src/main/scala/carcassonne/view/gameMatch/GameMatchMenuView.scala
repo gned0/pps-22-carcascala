@@ -52,7 +52,6 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
 
   val skipFollowerPlacement: Button = new Button("Skip Follower Placement"):
     alignment = Pos.TopCenter
-    disable = true
 
   this.children = Seq(
     playerText,
@@ -69,7 +68,6 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
   this.alignment = Pos.TopCenter
   this.prefWidth = 250
   this.background = new Background(Array(new BackgroundFill(BackgroundColor, null, null)))
-//  this.style = s"-fx-background-color: $BackgroundColor;"
   this.spacing = PaneSpacing
 
   private def rotateDrawnTile(tile: GameTile, tileImage: ImageView, clockwise: Boolean): Unit =
@@ -88,7 +86,7 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     addDrawnTilePaneElements(tile, tileImage)
 
   override def tileDrawn(tile: GameTile): Unit =
-    skipFollowerPlacement.disable = true
+    skipFollowerPlacement.onMouseClicked = _ => notifySkipTurn(None)
     rotateClockwise.disable = false
     rotateCounterClockwise.disable = false
     Logger.log("MENU VIEW", "Tile drawn")
@@ -119,9 +117,9 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     followerNumber.fill = player.getSFXColor
 
   override def availableFollowerPositions(availSegments: List[TileSegment], position: Position): Unit =
-    skipFollowerPlacement.disable = false
+    skipFollowerPlacement.onMouseClicked = _ => notifySkipTurn(Some(position))
     rotateClockwise.disable = true
     rotateCounterClockwise.disable = true
-    skipFollowerPlacement.onMouseClicked = _ => notifySkipFollowerPlacement(position: Position)
+    
 
 }
