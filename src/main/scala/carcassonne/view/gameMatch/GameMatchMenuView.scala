@@ -9,7 +9,7 @@ import carcassonne.view.gameMatch.GameMatchMenuView.*
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.control.Button
 import scalafx.scene.image.{Image, ImageView}
-import scalafx.scene.layout.{GridPane, HBox, VBox}
+import scalafx.scene.layout.{Background, BackgroundFill, GridPane, HBox, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.text.{Font, FontWeight, Text}
 
@@ -19,7 +19,7 @@ object GameMatchMenuView {
   val FollowerFontSize = 15
   val PaneSpacing = 10
   val TileImageSize = 100
-  val BackgroundColor = "darkgray"
+  val BackgroundColor = Color.DarkGray
   val TileRotationAngle = 90
   val TileBorderCoordinates = Map(
     "North" -> (10, 10),
@@ -68,7 +68,8 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
   )
   this.alignment = Pos.TopCenter
   this.prefWidth = 250
-  this.style = s"-fx-background-color: $BackgroundColor;"
+  this.background = new Background(Array(new BackgroundFill(BackgroundColor, null, null)))
+//  this.style = s"-fx-background-color: $BackgroundColor;"
   this.spacing = PaneSpacing
 
   private def rotateDrawnTile(tile: GameTile, tileImage: ImageView, clockwise: Boolean): Unit =
