@@ -10,7 +10,7 @@ import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.control.Button
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.layout.Priority.Always
-import scalafx.scene.layout.{Background, BackgroundFill, GridPane, HBox, VBox}
+import scalafx.scene.layout.{Background, BackgroundFill, Border, BorderStroke, BorderStrokeStyle, BorderWidths, CornerRadii, GridPane, HBox, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.text.{Font, FontWeight, Text}
 
@@ -54,22 +54,31 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     alignment = Pos.TopCenter
 
   this.children = Seq(
-    playerText,
-    followerNumber,
-    drawnTilePane,
-    skipFollowerPlacement,
+    new VBox():
+      alignment = Pos.TopCenter
+      this.padding = Insets(15, 5, 15, 5)
+      border = new Border(
+        new BorderStroke(
+          Color.Black, BorderStrokeStyle.Solid, CornerRadii.Empty, BorderWidths.Default
+        )
+      )
+      children =
+        Seq(playerText, followerNumber)
+    , drawnTilePane,
     new HBox:
       alignment = Pos.TopCenter
       children = Seq(
         rotateClockwise,
         rotateCounterClockwise
       )
+    , skipFollowerPlacement,
   )
   this.alignment = Pos.TopCenter
   this.prefWidth = 250
-  this.background = new Background(Array(new BackgroundFill(BackgroundColor, null, null)))
+  this.background = new Background(Array(new BackgroundFill(BackgroundColor, CornerRadii.Empty, Insets.Empty)))
   this.spacing = PaneSpacing
   this.vgrow = Always
+  this.padding = Insets(10)
 
   private def rotateDrawnTile(tile: GameTile, tileImage: ImageView, clockwise: Boolean): Unit =
     tileImage.rotate = tileImage.getRotate + (if clockwise then TileRotationAngle else -TileRotationAngle)

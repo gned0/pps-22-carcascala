@@ -10,6 +10,7 @@ import carcassonne.view.GameViewContainer
 import carcassonne.view.applicationStart.GameStarterView
 import scalafx.Includes.*
 import scalafx.application.JFXApp3
+import scalafx.geometry.Insets
 import scalafx.geometry.Pos.TopCenter
 import scalafx.scene.{Node, Scene}
 import scalafx.scene.input.{MouseEvent, ScrollEvent}
@@ -30,7 +31,7 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
     val gameMenu = GameMatchMenuView(
       new GridPane():
         alignment = TopCenter
-//        vgrow = Always
+        padding = Insets(5, 0, 15, 0)
     )
 
     val gameBoard = GameBoardView()
