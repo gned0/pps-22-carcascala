@@ -8,11 +8,12 @@ import carcassonne.observers.subjects.view.SubjectGameMatchView
 import carcassonne.util.Position
 import carcassonne.view.gameEnd.GameEndView
 import javafx.scene.layout.GridPane.{getColumnIndex, getRowIndex}
-import scalafx.geometry.Pos
-import scalafx.scene.Node
+import scalafx.geometry.{Insets, Pos}
+import scalafx.scene.{Cursor, Node}
 import scalafx.scene.input.{MouseButton, MouseEvent}
-import scalafx.scene.layout.{GridPane, Priority, Region}
+import scalafx.scene.layout.{Background, BackgroundFill, Border, BorderStroke, BorderStrokeStyle, BorderWidths, CornerRadii, GridPane, Priority, Region}
 import scalafx.Includes.*
+import scalafx.scene.paint.Color
 
 /**
  * Represents the view for the game match board in the Carcassonne game.
@@ -74,6 +75,24 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
       prefWidth = 100
       prefHeight = 100
       styleClass += "placeholderTile"
+      border = new Border(new BorderStroke(
+        Color.Black,
+        BorderStrokeStyle.Solid,
+        CornerRadii.Empty,
+        new BorderWidths(1)
+      ))
+      onMouseEntered = _ =>
+        this.background = new Background(Array(
+          new BackgroundFill(
+            Color.DarkGray,
+            CornerRadii.Empty,
+            Insets.Empty
+        ))
+      )
+        this.cursor = Cursor.Hand
+      onMouseExited = _ =>
+        this.background = Background.Empty
+        this.cursor = Cursor.Default
       onMouseClicked = (event: MouseEvent) => if event.button == MouseButton.Primary then
         notifyTilePlacementAttempt(getDrawnTile._1, position)
       add(this, position.x, position.y)

@@ -20,7 +20,6 @@ import scalafx.scene.layout.{GridPane, HBox, Priority, Region, StackPane, VBox}
 class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimaryStage {
   title = "CarcaScala"
   scene = new Scene(850, 600):
-    stylesheets.add(getClass.getResource("../placeholderTile.css").toExternalForm)
     root = gameViewContainer
 
   // Pass a function that accepts a List[String]
