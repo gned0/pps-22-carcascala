@@ -9,7 +9,7 @@ import org.scalatest.matchers.should.Matchers
 class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
 
   test("A tile can be placed on an empty map") {
-    val map = new CarcassonneBoard()
+    val map = CarcassonneBoard()
     val tile = GameTile(
       Map(
         TileSegment.N -> SegmentType.City,
@@ -31,7 +31,7 @@ class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
   }
 
   test("A tile cannot be placed on an occupied position") {
-    val map = new CarcassonneBoard()
+    val map = CarcassonneBoard()
     val tile1 = GameTile(
       Map(
         TileSegment.N -> SegmentType.City,
@@ -67,7 +67,7 @@ class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
   }
 
   test("A tile can be placed next to an existing tile with matching edges") {
-    val map = new CarcassonneBoard()
+    val map = CarcassonneBoard()
     val tile1 = GameTile(
       Map(
         TileSegment.N -> SegmentType.City,
@@ -102,7 +102,7 @@ class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
   }
 
   test("A tile cannot be placed next to an existing tile with mismatching edges") {
-    val map = new CarcassonneBoard()
+    val map = CarcassonneBoard()
     val tile1 = GameTile(
       Map(
         TileSegment.N -> SegmentType.City,
@@ -137,7 +137,7 @@ class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
   }
 
   test("getConnectedFeature should return an empty set on an empty board") {
-    val map = new CarcassonneBoard()
+    val map = CarcassonneBoard()
     val tile = GameTile(
       Map(
         TileSegment.N -> SegmentType.City,
@@ -157,7 +157,7 @@ class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
   }
 
   test("getConnectedFeature should return the feature for a single tile") {
-    val map = new CarcassonneBoard()
+    val map = CarcassonneBoard()
     val tile = GameTile(
       Map(
         TileSegment.N -> SegmentType.City,
@@ -189,7 +189,7 @@ class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
   }
 
   test("getConnectedFeature should return connected features for adjacent tiles with matching edges") {
-    val map = new CarcassonneBoard()
+    val map = CarcassonneBoard()
     val tile1 = GameTile(
       Map(
         TileSegment.N -> SegmentType.City,
@@ -240,7 +240,7 @@ class CarcassonneBoardSuite extends AnyFunSuite with Matchers {
   }
 
   test("getConnectedFeature should handle complex connections across multiple tiles") {
-    val map = new CarcassonneBoard()
+    val map = CarcassonneBoard()
     val tile1 = GameTile(
       Map(
         TileSegment.N -> SegmentType.City,
