@@ -104,7 +104,7 @@ case class GameTile(
 
 object GameTile:
 
-  def createRandomTile(): GameTile = 
+  def createRandomTile(): GameTile =
     val segments = TileSegment.values.map { segment =>
       val segmentType = Random.nextInt(3) match {
         case 0 => City
@@ -117,7 +117,7 @@ object GameTile:
     val imagePath = s"RandomTile${Random.nextInt(10)}.png"
     new GameTile(segments, imagePath)
 
-  def createStartTile(): GameTile = 
+  def createStartTile(): GameTile =
     GameTile(
       Map(
         NW -> Field,
