@@ -74,7 +74,6 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
     new Region:
       prefWidth = 100
       prefHeight = 100
-      styleClass += "placeholderTile"
       border = new Border(new BorderStroke(
         Color.Black,
         BorderStrokeStyle.Solid,
@@ -82,7 +81,7 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
         new BorderWidths(1)
       ))
       onMouseEntered = _ =>
-        this.background = new Background(Array(
+        this.background = new Background(Array( 
           new BackgroundFill(
             Color.DarkGray,
             CornerRadii.Empty,
