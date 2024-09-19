@@ -8,6 +8,7 @@ import scalafx.scene.input.{MouseButton, MouseEvent}
 import scalafx.scene.layout.{ColumnConstraints, GridPane, RowConstraints, StackPane}
 import carcassonne.util.{Logger, Position}
 import scalafx.Includes.*
+import scalafx.scene.Cursor
 
 /**
  * Represents the grid view for placing followers on a tile in the game match.
@@ -61,8 +62,12 @@ class GameMatchFollowerGridView(
       opacity = 0.5
       visible = true
       preserveRatio = true
-      onMouseEntered = _ => this.effect = currentPlayer.getPlayerColor
-      onMouseExited =  _ => this.effect = null
+      onMouseEntered = _ =>
+        this.effect = currentPlayer.getPlayerColor
+        this.cursor = Cursor.Hand
+      onMouseExited =  _ =>
+        this.effect = null
+        this.cursor = Cursor.Default
 
     /**
      * Determines the grid position (x, y) based on the tile segment.
