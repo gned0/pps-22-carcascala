@@ -10,7 +10,7 @@ import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.control.Button
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.layout.Priority.Always
-import scalafx.scene.layout.{Background, BackgroundFill, Border, BorderStroke, BorderStrokeStyle, BorderWidths, CornerRadii, GridPane, HBox, VBox}
+import scalafx.scene.layout.{Background, BackgroundFill, Border, BorderStroke, BorderStrokeStyle, BorderWidths, CornerRadii, GridPane, HBox, Region, StackPane, VBox}
 import scalafx.scene.paint.Color
 import scalafx.scene.text.{Font, FontWeight, Text}
 
@@ -67,15 +67,45 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     font = Font.font(DefaultFontName, FontWeight.Bold, FollowerFontSize)
 
   /** Button to rotate the tile clockwise */
-  val rotateClockwise: ImageView = new ImageView(new Image(getClass.getResource(s"../../../rotateClockwise.png").toExternalForm)):
-    alignment = Pos.TopCenter
-    fitWidth = TileImageSize * 0.45
-    fitHeight = TileImageSize * 0.45
-    preserveRatio = true
+  val rotateClockwise: StackPane = new StackPane():
+    prefWidth = TileImageSize * 0.50
+    prefHeight = TileImageSize * 0.50
+    children =
+      Seq(
+        new Region():
+          prefWidth = TileImageSize * 0.50
+          prefHeight = TileImageSize * 0.50
+        ,
+        new ImageView(new Image(getClass.getResource(s"../../../rotateClockwise.png").toExternalForm)):
+          alignment = Pos.Center
+          fitWidth = TileImageSize * 0.40
+          fitHeight = TileImageSize * 0.40
+          preserveRatio = true
+      )
+    onMouseEntered = _ =>
+      this.background = new Background(Array(new BackgroundFill(Color.White, new CornerRadii(10), Insets.Empty)))
+    onMouseExited = _ => this.background = Background.Empty
+
 
   /** Button to rotate the tile counterclockwise */
-  val rotateCounterClockwise: Button = new Button("Counter Clockwise"):
-    alignment = Pos.TopCenter
+  val rotateCounterClockwise: StackPane = new StackPane():
+    prefWidth = TileImageSize * 0.50
+    prefHeight = TileImageSize * 0.50
+    children =
+      Seq(
+        new Region():
+          prefWidth = TileImageSize * 0.50
+          prefHeight = TileImageSize * 0.50
+        ,
+        new ImageView(new Image(getClass.getResource(s"../../../rotateCounterClockwise.png").toExternalForm)):
+          alignment = Pos.Center
+          fitWidth = TileImageSize * 0.40
+          fitHeight = TileImageSize * 0.40
+          preserveRatio = true
+      )
+    onMouseEntered = _ =>
+      this.background = new Background(Array(new BackgroundFill(Color.White, new CornerRadii(10), Insets.Empty)))
+    onMouseExited = _ => this.background = Background.Empty
 
   /** Button to skip follower placement */
   val skipFollowerPlacement: Button = new Button("Skip Follower Placement"):
@@ -105,6 +135,8 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
         Seq(drawnTilePane,
           new HBox:
             alignment = Pos.TopCenter
+            padding = Insets(10, 0, 10, 0)
+            spacing = 30
             children = Seq(
             rotateCounterClockwise,
             rotateClockwise
