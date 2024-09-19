@@ -5,7 +5,7 @@ import carcassonne.model.tile.{GameTile, TileSegment}
 import carcassonne.observers.observers.model.ObserverGameMatchMenu
 import carcassonne.observers.subjects.view.SubjectGameMenuView
 import carcassonne.util.{Logger, Position}
-import carcassonne.view.gameMatch.GameMatchMenuView.{BackgroundColor, DefaultFontName, FollowerFontSize, PaneSpacing, TileBorderCoordinates, TileImageSize, TileRotationAngle, TitleFontSize}
+import carcassonne.view.gameMatch.GameMatchMenuView.{BackgroundColor, DefaultFontName, FollowerFontSize, PaneSpacing, TileBorderCoordinates, TileImageSize, TileRotationAngle, TitleFontSize, defaultRotateButtonsBackground, disabledRotateButtonsBackground}
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Cursor
 import scalafx.scene.control.Button
@@ -13,6 +13,7 @@ import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.layout.Priority.Always
 import scalafx.scene.layout.{Background, BackgroundFill, Border, BorderStroke, BorderStrokeStyle, BorderWidths, CornerRadii, GridPane, HBox, Region, StackPane, VBox}
 import scalafx.scene.paint.Color
+import carcassonne.util.Color as CarcaColor
 import scalafx.scene.text.{Font, FontWeight, Text}
 
 object GameMatchMenuView:
@@ -36,6 +37,16 @@ object GameMatchMenuView:
 
   /** Rotation angle for the tiles */
   val TileRotationAngle = 90
+
+  /** Default background color for tile rotation buttons */
+  val defaultRotateButtonsBackground = new Background(
+    Array(new BackgroundFill(CarcaColor.getCustomSFXColor(220, 220, 220, 1), new CornerRadii(10), Insets.Empty))
+  )
+
+  /** Background color for disabled tile rotation buttons */
+  val disabledRotateButtonsBackground = new Background(
+    Array(new BackgroundFill(CarcaColor.getCustomSFXColor(100, 100, 100, 1), new CornerRadii(10), Insets.Empty))
+  )
 
   /** Coordinates for the tile borders */
   val TileBorderCoordinates: Map[String, (Int, Int)] = Map(
@@ -74,7 +85,7 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
   val rotateCounterClockwise: StackPane = createRotateButtons(s"../../../rotateCounterClockwise.png")
 
   /** Button to skip follower placement */
-  val skipFollowerPlacement: Button = new Button("Skip Follower Placement"):
+  val skipFollowerPlacement: Button = new Button("Skip Placement"):
     alignment = Pos.TopCenter
 
   this.children = Seq(
@@ -139,13 +150,13 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
             fitHeight = TileImageSize * 0.40
             preserveRatio = true
         )
-      val defaultBackground = new Background(Array(new BackgroundFill(Color.Gray, new CornerRadii(10), Insets.Empty)))
-      background = defaultBackground
+
+      background = defaultRotateButtonsBackground
       onMouseEntered = _ =>
         this.background = new Background(Array(new BackgroundFill(Color.White, new CornerRadii(10), Insets.Empty)))
         this.cursor = Cursor.Hand
       onMouseExited = _ =>
-        this.background = defaultBackground
+        this.background = defaultRotateButtonsBackground
         this.cursor = Cursor.Default
 
   /**
@@ -208,8 +219,15 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
   private def setUpButtons(activateRotation: Boolean,
                            position: Option[Position]): Unit =
     skipFollowerPlacement.onMouseClicked = _ => notifySkipTurn(position)
+    if activateRotation then
+      rotateClockwise.background = disabledRotateButtonsBackground
+      rotateCounterClockwise.background = disabledRotateButtonsBackground
+    else
+      rotateClockwise.background = defaultRotateButtonsBackground
+      rotateCounterClockwise.background = defaultRotateButtonsBackground
     rotateClockwise.disable = activateRotation
     rotateCounterClockwise.disable = activateRotation
+
 
   /**
    * Handles the event when a tile is drawn.

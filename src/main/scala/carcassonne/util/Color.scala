@@ -25,6 +25,14 @@ object Color:
   private def rangeCalculator(value: Double, start: Double, stop: Double, targetStart: Double, targetStop: Double): Double =
     targetStart + (targetStop - targetStart) * ((value - start) / (stop - start))
 
+  def getCustomSFXColor(r: Double, g: Double, b: Double, alpha: Double): FXColor =
+    FXColor(
+        rangeCalculator(r, 0, 255, 0, 1),
+        rangeCalculator(g, 0, 255, 0, 1),
+        rangeCalculator(b, 0, 255, 0, 1),
+        alpha
+    )
+
 object PlayerColor:
   private val availableColors = List(Color.Red, Color.Blue, Color.Green, Color.Yellow, Color.Purple)
 
