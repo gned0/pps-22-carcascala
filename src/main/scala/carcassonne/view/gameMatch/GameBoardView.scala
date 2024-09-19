@@ -2,6 +2,7 @@ package carcassonne.view.gameMatch
 
 import scalafx.Includes.*
 import scalafx.geometry.{Insets, Pos}
+import scalafx.scene.image.Image
 import scalafx.scene.input.{MouseEvent, ScrollEvent}
 import scalafx.scene.layout.*
 import scalafx.scene.paint.Color

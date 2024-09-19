@@ -32,8 +32,8 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
   GridPane.setHgrow(this, Priority.Always)
   GridPane.setVgrow(this, Priority.Always)
 
-  this.prefWidth = 600
-  this.prefHeight = 400
+//  this.prefWidth = 600
+//  this.prefHeight = 400
   this.alignment = Pos.Center
 
   /**
