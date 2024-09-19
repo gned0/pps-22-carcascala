@@ -68,50 +68,10 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     font = Font.font(DefaultFontName, FontWeight.Bold, FollowerFontSize)
 
   /** Button to rotate the tile clockwise */
-  val rotateClockwise: StackPane = new StackPane():
-    prefWidth = TileImageSize * 0.50
-    prefHeight = TileImageSize * 0.50
-    children =
-      Seq(
-        new Region():
-          prefWidth = TileImageSize * 0.50
-          prefHeight = TileImageSize * 0.50
-        ,
-        new ImageView(new Image(getClass.getResource(s"../../../rotateClockwise.png").toExternalForm)):
-          alignment = Pos.Center
-          fitWidth = TileImageSize * 0.40
-          fitHeight = TileImageSize * 0.40
-          preserveRatio = true
-      )
-    onMouseEntered = _ =>
-      this.background = new Background(Array(new BackgroundFill(Color.White, new CornerRadii(10), Insets.Empty)))
-      this.cursor = Cursor.Hand
-    onMouseExited = _ =>
-      this.background = Background.Empty
-      this.cursor = Cursor.Default
+  val rotateClockwise: StackPane = createRotateButtons(s"../../../rotateClockwise.png")
 
   /** Button to rotate the tile counterclockwise */
-  val rotateCounterClockwise: StackPane = new StackPane():
-    prefWidth = TileImageSize * 0.50
-    prefHeight = TileImageSize * 0.50
-    children =
-      Seq(
-        new Region():
-          prefWidth = TileImageSize * 0.50
-          prefHeight = TileImageSize * 0.50
-        ,
-        new ImageView(new Image(getClass.getResource(s"../../../rotateCounterClockwise.png").toExternalForm)):
-          alignment = Pos.Center
-          fitWidth = TileImageSize * 0.40
-          fitHeight = TileImageSize * 0.40
-          preserveRatio = true
-      )
-    onMouseEntered = _ =>
-      this.background = new Background(Array(new BackgroundFill(Color.White, new CornerRadii(10), Insets.Empty)))
-      this.cursor = Cursor.Hand
-    onMouseExited = _ =>
-      this.background = Background.Empty
-      this.cursor = Cursor.Default
+  val rotateCounterClockwise: StackPane = createRotateButtons(s"../../../rotateCounterClockwise.png")
 
   /** Button to skip follower placement */
   val skipFollowerPlacement: Button = new Button("Skip Follower Placement"):
@@ -157,6 +117,31 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
   this.spacing = PaneSpacing
   this.vgrow = Always
   this.padding = Insets(10)
+
+  private def createRotateButtons(imagePath: String): StackPane =
+    new StackPane():
+      prefWidth = TileImageSize * 0.50
+      prefHeight = TileImageSize * 0.50
+      children =
+        Seq(
+          new Region():
+            prefWidth = TileImageSize * 0.50
+            prefHeight = TileImageSize * 0.50
+          ,
+          new ImageView(new Image(getClass.getResource(imagePath).toExternalForm)):
+            alignment = Pos.Center
+            fitWidth = TileImageSize * 0.40
+            fitHeight = TileImageSize * 0.40
+            preserveRatio = true
+        )
+      val defaultBackground = new Background(Array(new BackgroundFill(Color.Gray, new CornerRadii(10), Insets.Empty)))
+      background = defaultBackground
+      onMouseEntered = _ =>
+        this.background = new Background(Array(new BackgroundFill(Color.White, new CornerRadii(10), Insets.Empty)))
+        this.cursor = Cursor.Hand
+      onMouseExited = _ =>
+        this.background = defaultBackground
+        this.cursor = Cursor.Default
 
   /**
    * Rotates the drawn tile.
