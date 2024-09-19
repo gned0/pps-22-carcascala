@@ -89,14 +89,26 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
       )
       children =
         Seq(playerText, followerNumber)
-    , drawnTilePane,
-    new HBox:
+    ,
+    new VBox():
       alignment = Pos.TopCenter
-      children = Seq(
-        rotateClockwise,
-        rotateCounterClockwise
+      this.padding = Insets(15, 5, 15, 5)
+      border = new Border(
+        new BorderStroke(
+          Color.Black, BorderStrokeStyle.Solid, CornerRadii.Empty, BorderWidths.Default
+        )
       )
-    , skipFollowerPlacement,
+      children =
+        Seq(drawnTilePane,
+          new HBox:
+            alignment = Pos.TopCenter
+            children = Seq(
+            rotateClockwise,
+            rotateCounterClockwise
+          )
+          ,
+          skipFollowerPlacement
+        )
   )
   this.alignment = Pos.TopCenter
   this.prefWidth = 250
