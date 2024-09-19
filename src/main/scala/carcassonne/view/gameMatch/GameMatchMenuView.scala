@@ -67,8 +67,11 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     font = Font.font(DefaultFontName, FontWeight.Bold, FollowerFontSize)
 
   /** Button to rotate the tile clockwise */
-  val rotateClockwise: Button = new Button("Clockwise"):
+  val rotateClockwise: ImageView = new ImageView(new Image(getClass.getResource(s"../../../rotateClockwise.png").toExternalForm)):
     alignment = Pos.TopCenter
+    fitWidth = TileImageSize * 0.45
+    fitHeight = TileImageSize * 0.45
+    preserveRatio = true
 
   /** Button to rotate the tile counterclockwise */
   val rotateCounterClockwise: Button = new Button("Counter Clockwise"):
@@ -103,8 +106,8 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
           new HBox:
             alignment = Pos.TopCenter
             children = Seq(
-            rotateClockwise,
-            rotateCounterClockwise
+            rotateCounterClockwise,
+            rotateClockwise
           )
           ,
           skipFollowerPlacement
@@ -162,8 +165,7 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
    * @param tileImage The image view of the tile.
    */
   private def addDrawnTilePaneElements(tile: GameTile, tileImage: ImageView): Unit =
-    drawnTilePane.add(
-      new Text(s"North: \n${tile.segments(TileSegment.N)}"), TileBorderCoordinates("North")._1, TileBorderCoordinates("North")._2)
+    drawnTilePane.add(new Text(s"North: \n${tile.segments(TileSegment.N)}"), TileBorderCoordinates("North")._1, TileBorderCoordinates("North")._2)
     drawnTilePane.add(new Text(s"East: \n${tile.segments(TileSegment.E)}"), TileBorderCoordinates("East")._1, TileBorderCoordinates("East")._2)
     drawnTilePane.add(new Text(s"South: \n${tile.segments(TileSegment.S)}"), TileBorderCoordinates("South")._1, TileBorderCoordinates("South")._2)
     drawnTilePane.add(new Text(s"West: \n${tile.segments(TileSegment.W)}"), TileBorderCoordinates("West")._1, TileBorderCoordinates("West")._2)
