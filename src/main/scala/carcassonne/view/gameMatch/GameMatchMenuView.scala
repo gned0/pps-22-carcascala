@@ -118,6 +118,11 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
   this.vgrow = Always
   this.padding = Insets(10)
 
+  /**
+   * Creates the Stackpane for the rotate tiles buttons
+   *
+   * @param imagePath      The image to show on screen
+   */
   private def createRotateButtons(imagePath: String): StackPane =
     new StackPane():
       prefWidth = TileImageSize * 0.50
