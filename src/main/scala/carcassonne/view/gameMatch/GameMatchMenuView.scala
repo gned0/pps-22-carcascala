@@ -7,6 +7,7 @@ import carcassonne.observers.subjects.view.SubjectGameMenuView
 import carcassonne.util.{Logger, Position}
 import carcassonne.view.gameMatch.GameMatchMenuView.{BackgroundColor, DefaultFontName, FollowerFontSize, PaneSpacing, TileBorderCoordinates, TileImageSize, TileRotationAngle, TitleFontSize}
 import scalafx.geometry.{Insets, Pos}
+import scalafx.scene.Cursor
 import scalafx.scene.control.Button
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.layout.Priority.Always
@@ -84,8 +85,10 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
       )
     onMouseEntered = _ =>
       this.background = new Background(Array(new BackgroundFill(Color.White, new CornerRadii(10), Insets.Empty)))
-    onMouseExited = _ => this.background = Background.Empty
-
+      this.cursor = Cursor.Hand
+    onMouseExited = _ =>
+      this.background = Background.Empty
+      this.cursor = Cursor.Default
 
   /** Button to rotate the tile counterclockwise */
   val rotateCounterClockwise: StackPane = new StackPane():
@@ -105,7 +108,10 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
       )
     onMouseEntered = _ =>
       this.background = new Background(Array(new BackgroundFill(Color.White, new CornerRadii(10), Insets.Empty)))
-    onMouseExited = _ => this.background = Background.Empty
+      this.cursor = Cursor.Hand
+    onMouseExited = _ =>
+      this.background = Background.Empty
+      this.cursor = Cursor.Default
 
   /** Button to skip follower placement */
   val skipFollowerPlacement: Button = new Button("Skip Follower Placement"):
