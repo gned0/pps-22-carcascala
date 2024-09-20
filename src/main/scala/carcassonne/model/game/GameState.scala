@@ -98,6 +98,8 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
         )
       )
     )
+    notifyScoreboardUpdated(createScoreboard())
+    
   def nextPlayer(): Unit =
     currentPlayerIndex = (currentPlayerIndex + 1) % players.length
     notifyPlayerChanged(currentPlayer)
@@ -109,6 +111,9 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
   def getPlayers: List[Player] = players
 
   def getBoard: CarcassonneBoard = board
+  
+  def createScoreboard(): Map[Player, Int] =
+  players.map(player => player -> player.getScore).toMap
 
 
 

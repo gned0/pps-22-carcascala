@@ -47,3 +47,6 @@ trait SubjectGameMatch:
     
   def notifyScoreCalculated(position: Position, gameTile: GameTile): Unit =
     observersBoardView.foreach(_.scoreCalculated(position, gameTile))
+
+  def notifyScoreboardUpdated(scores: Map[Player, Int]): Unit =
+    observersMenuView.foreach(_.updateScoreboard(scores))

@@ -4,7 +4,7 @@ import carcassonne.model.game.Player
 import carcassonne.model.tile.{GameTile, TileSegment}
 import carcassonne.util.Position
 
-trait ObserverGameMatchMenu {
+trait ObserverGameMatchMenu:
   
   private var currentPlayer: Player = _
 
@@ -18,4 +18,6 @@ trait ObserverGameMatchMenu {
   def playerChanged(player: Player): Unit
   
   def availableFollowerPositions(availSegments: List[TileSegment], position: Position): Unit
-}
+
+  def updateScoreboard(scores: Map[Player, Int]): Unit
+

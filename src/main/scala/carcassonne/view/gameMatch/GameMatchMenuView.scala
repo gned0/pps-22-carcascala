@@ -66,25 +66,26 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
   with SubjectGameMenuView
   with ObserverGameMatchMenu:
 
-  /** Text element displaying the current player */
   private val playerText: Text = new Text("Current Player: "):
     fill = Color.White
     alignment = Pos.TopCenter
     font = Font.font(DefaultFontName, FontWeight.Bold, TitleFontSize)
 
-  /** Text element displaying the follower number */
   private val followerNumber: Text = new Text("Follower Number: "):
     fill = Color.White
     alignment = Pos.TopCenter
     font = Font.font(DefaultFontName, FontWeight.Bold, FollowerFontSize)
 
-  /** Button to rotate the tile clockwise */
+  private val scoreboard: VBox = new VBox():
+    alignment = Pos.TopCenter
+    spacing = 5
+    children = Seq(new Text("Scoreboard:") {
+      fill = Color.White
+      font = Font.font(DefaultFontName, FontWeight.Bold, TitleFontSize)
+    })
+
   val rotateClockwise: StackPane = createRotateButtons(s"../../../rotateClockwise.png")
-
-  /** Button to rotate the tile counterclockwise */
   val rotateCounterClockwise: StackPane = createRotateButtons(s"../../../rotateCounterClockwise.png")
-
-  /** Button to skip follower placement */
   val skipFollowerPlacement: Button = new Button("Skip Placement"):
     alignment = Pos.TopCenter
 
@@ -97,8 +98,7 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
           Color.Black, BorderStrokeStyle.Solid, CornerRadii.Empty, BorderWidths.Default
         )
       )
-      children =
-        Seq(playerText, followerNumber)
+      children = Seq(playerText, followerNumber)
     ,
     new VBox():
       alignment = Pos.TopCenter
@@ -108,19 +108,20 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
           Color.Black, BorderStrokeStyle.Solid, CornerRadii.Empty, BorderWidths.Default
         )
       )
-      children =
-        Seq(drawnTilePane,
-          new HBox:
-            alignment = Pos.TopCenter
-            padding = Insets(10, 0, 10, 0)
-            spacing = 30
-            children = Seq(
+      children = Seq(drawnTilePane,
+        new HBox:
+          alignment = Pos.TopCenter
+          padding = Insets(10, 0, 10, 0)
+          spacing = 30
+          children = Seq(
             rotateCounterClockwise,
             rotateClockwise
           )
-          ,
-          skipFollowerPlacement
-        )
+        ,
+        skipFollowerPlacement
+      )
+    ,
+    scoreboard
   )
   this.alignment = Pos.TopCenter
   this.prefWidth = 250
@@ -263,3 +264,16 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
    */
   override def availableFollowerPositions(availSegments: List[TileSegment], position: Position): Unit =
     setUpButtons(true, Some(position))
+
+  override def updateScoreboard(scores: Map[Player, Int]): Unit =
+    scoreboard.children.clear()
+    scoreboard.children.add(new Text("Scoreboard:") {
+      fill = Color.White
+      font = Font.font(DefaultFontName, FontWeight.Bold, TitleFontSize)
+    })
+    scores.foreach { case (player, score) =>
+      scoreboard.children.add(new Text(s"${player.name}: $score") {
+        fill = player.getSFXColor
+        font = Font.font(DefaultFontName, FontWeight.Normal, FollowerFontSize)
+      })
+    }
