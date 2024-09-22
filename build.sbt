@@ -10,6 +10,7 @@ lazy val root = (project in file("."))
 
       // ScalaFX related dependencies
     libraryDependencies += "org.scalafx" %% "scalafx" % "20.0.0-R31",
+    libraryDependencies += "it.unibo.alice.tuprolog" % "tuprolog" % "3.3.0",
     libraryDependencies ++= {
       // Determine OS version of JavaFX binaries
       lazy val osName = System.getProperty("os.name") match {
