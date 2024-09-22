@@ -3,6 +3,7 @@ package carcassonne.model.game
 import carcassonne.model.tile.TileSegment.{C, E, N, S, W}
 import carcassonne.model.*
 import carcassonne.model.board.CarcassonneBoard
+import carcassonne.model.scalaprolog.PrologProcessing
 import carcassonne.model.tile.SegmentType.{City, Field, Monastery, Road}
 import carcassonne.model.tile.{GameTile, TileDeck, TileSegment}
 import carcassonne.observers.subjects.model.SubjectGameMatch
@@ -65,6 +66,7 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
             case Road =>
               val score = ScoreCalculator().calculateRoadPoints(segment, position, board, endGame)
               if score != 0 then
+//              if PrologProcessing().checkRoadCompleted(board, board.getConnectedFeature(position, segment)) then
                 println("Road: " + score)
                 p.addScore(score)
                 p.returnFollower()
@@ -73,6 +75,7 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
             case City => 
               val score = ScoreCalculator().calculateCityPoints(segment, position, board, endGame)
               if score != 0 then
+//              if PrologProcessing().checkCityCompleted(board, board.getConnectedFeature(position, segment)) then
                 println("City: " + score)
                 p.addScore(score)
                 p.returnFollower()
@@ -81,6 +84,7 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
             case Monastery =>
               val score = ScoreCalculator().calculateMonasteryPoints(segment, position, board, endGame)
               if score != 0 then
+//              if PrologProcessing().checkMonasteryCompleted(board, board.getConnectedFeature(position, segment)) then
                 println("Monastery: " + score)
                 p.addScore(score)
                 p.returnFollower()
