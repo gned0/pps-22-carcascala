@@ -5,7 +5,7 @@ import carcassonne.model.tile.{GameTile, SegmentType, TileSegment}
 import carcassonne.model.tile.TileSegment.*
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
-import play.api.libs.json.Json
+import play.api.libs.json.*
 
 class GameTileSuite extends AnyFunSuite with Matchers:
 
@@ -34,9 +34,15 @@ class GameTileSuite extends AnyFunSuite with Matchers:
   test("A Tile should rotate clockwise correctly") {
     val tile = GameTile(
       Map(
-        TileSegment.NW -> SegmentType.Field, TileSegment.N -> SegmentType.Field, TileSegment.NE -> SegmentType.Field,
-        TileSegment.W -> SegmentType.Road, TileSegment.C -> SegmentType.Road, TileSegment.E -> SegmentType.Road,
-        TileSegment.SW -> SegmentType.Field, TileSegment.S -> SegmentType.Field, TileSegment.SE -> SegmentType.Field
+        TileSegment.NW -> SegmentType.Field,
+        TileSegment.N -> SegmentType.Field,
+        TileSegment.NE -> SegmentType.Field,
+        TileSegment.W -> SegmentType.Road,
+        TileSegment.C -> SegmentType.Road,
+        TileSegment.E -> SegmentType.Road,
+        TileSegment.SW -> SegmentType.Field,
+        TileSegment.S -> SegmentType.Field,
+        TileSegment.SE -> SegmentType.Field
       ),
       "test.png"
     )
@@ -51,9 +57,15 @@ class GameTileSuite extends AnyFunSuite with Matchers:
   test("A Tile should rotate counter-clockwise correctly") {
     val tile = GameTile(
       Map(
-        TileSegment.NW -> SegmentType.Field, TileSegment.N -> SegmentType.Field, TileSegment.NE -> SegmentType.Field,
-        TileSegment.W -> SegmentType.Road, TileSegment.C -> SegmentType.Road, TileSegment.E -> SegmentType.Road,
-        TileSegment.SW -> SegmentType.Field, TileSegment.S -> SegmentType.Field, TileSegment.SE -> SegmentType.Field
+        TileSegment.NW -> SegmentType.Field,
+        TileSegment.N -> SegmentType.Field,
+        TileSegment.NE -> SegmentType.Field,
+        TileSegment.W -> SegmentType.Road,
+        TileSegment.C -> SegmentType.Road,
+        TileSegment.E -> SegmentType.Road,
+        TileSegment.SW -> SegmentType.Field,
+        TileSegment.S -> SegmentType.Field,
+        TileSegment.SE -> SegmentType.Field
       ),
       "test.png"
     )
@@ -97,9 +109,15 @@ class GameTileSuite extends AnyFunSuite with Matchers:
   test("Center segment (C) should remain unchanged after rotation") {
     val tile = GameTile(
       Map(
-        NW -> Field, N -> City, NE -> Field,
-        W -> Road, C -> Road, E -> Road,
-        SW -> Field, S -> Field, SE -> Field
+        NW -> Field,
+        N -> City,
+        NE -> Field,
+        W -> Road,
+        C -> Road,
+        E -> Road,
+        SW -> Field,
+        S -> Field,
+        SE -> Field
       ),
       "test.png"
     )
@@ -119,6 +137,46 @@ class GameTileSuite extends AnyFunSuite with Matchers:
     W.adjacentSegments shouldBe Set(SW, NW, C)
     NW.adjacentSegments shouldBe Set(W, N)
     C.adjacentSegments shouldBe Set(N, E, S, W)
+  }
+
+  test("TileSegment reads method should return JsError for unknown segment") {
+    val unknownJson = JsString("UnknownSegment")
+    val result = Json.fromJson[TileSegment](unknownJson)
+
+    result shouldBe a[JsError]
+    result.asEither.left.get.head._2.head.message should be("Unknown tile segment: UnknownSegment")
+  }
+
+  test("TileSegment reads method should parse valid segments correctly") {
+    val validJson = JsString("N")
+    val result = Json.fromJson[TileSegment](validJson)
+
+    result shouldBe JsSuccess(TileSegment.N)
+  }
+
+  test("TileSegment writes method should serialize TileSegment to JSON string") {
+    val tileSegment: TileSegment = TileSegment.N
+    val json = Json.toJson(tileSegment)
+
+    json shouldBe JsString("N")
+  }
+
+  test("TileSegment writes method should serialize all segments correctly") {
+    val segments = Seq(
+      TileSegment.N,
+      TileSegment.NE,
+      TileSegment.E,
+      TileSegment.SE,
+      TileSegment.S,
+      TileSegment.SW,
+      TileSegment.W,
+      TileSegment.NW,
+      TileSegment.C
+    )
+    segments.foreach { segment =>
+      val json = Json.toJson(segment)
+      json shouldBe JsString(segment.toString)
+    }
   }
 
 //  test("Random tile creation should generate valid segments and imagePath") {
