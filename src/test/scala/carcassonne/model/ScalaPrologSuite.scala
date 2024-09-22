@@ -157,4 +157,41 @@ class ScalaPrologSuite extends AnyFunSuite with Matchers:
     completed should be(true)
   }
 
+  test("Test check Monastery feature complete") {
+    val deck = TileDeck()
+    val map = CarcassonneBoard()
+    val player1 = Player(0, "test", Color.Red)
+    val player2 = Player(1, "test2", Color.Blue)
+    val game = GameState(List(player1, player2), map, TileDeck())
+
+    val tile = GameTile(
+      Map(
+        TileSegment.N -> SegmentType.Field,
+        TileSegment.E -> SegmentType.Field,
+        TileSegment.S -> SegmentType.Field,
+        TileSegment.W -> SegmentType.Field,
+        TileSegment.NW -> SegmentType.Field,
+        TileSegment.NE -> SegmentType.Field,
+        TileSegment.SW -> SegmentType.Field,
+        TileSegment.SE -> SegmentType.Field,
+        TileSegment.C -> SegmentType.Monastery
+      ),
+      "test.png"
+    )
+    for {
+      x <- 9 to 11
+      y <- 9 to 11
+    } map.placeTile(tile, Position(x, y))
+
+    game.placeFollower(Position(10, 10), TileSegment.C, player1)
+    val connectedFeatures = map.getConnectedFeature(Position(10, 10), TileSegment.C)
+    val completed = PrologProcessing().checkMonasteryCompleted(map, connectedFeatures)
+    completed should be(true)
+
+    game.placeFollower(Position(11, 11), TileSegment.C, player1)
+    val connectedFeatures2 = map.getConnectedFeature(Position(11, 11), TileSegment.C)
+    val completed2 = PrologProcessing().checkMonasteryCompleted(map, connectedFeatures2)
+    completed2 should be(false)
+  }
+
 

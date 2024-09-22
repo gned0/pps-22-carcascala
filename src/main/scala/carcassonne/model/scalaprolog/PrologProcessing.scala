@@ -64,4 +64,25 @@ class PrologProcessing:
     else
       true
 
+  def checkMonasteryCompleted(map: CarcassonneBoard, connectedFeatures: Set[(Position, TileSegment)]): Boolean =
+    val tiles = map.getTileMap.get.map((position, gametile) => stringifyTile(position, gametile)).mkString("\n")
+    val engine: Term => LazyList[Term] = mkPrologEngine(
+      tiles +
+        """
+          neighbor(c, [(-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1)]).
+          get_value_tile(Segment, [(Segment, Value) | _], Value).
+          get_value_tile(Segment, [_ | Tail], Value) :- get_value_tile(Segment, Tail, Value).
+          is_tile_present(X, Y) :- tile(X, Y, TerrainMap).
+          monastery_completed([(X, Y, Segment)]) :- check_current_tile(X, Y, Segment), !.
+          check_current_tile(X, Y, Segment) :- neighbor(Segment, ReturnedNeighbor), check_neighbor(X, Y, ReturnedNeighbor).
+          check_neighbor(X, Y, [(DX, DY) | []]) :- check_current_neighbor(X, Y, [(DX, DY)]), !.
+          check_neighbor(X, Y, [(DX, DY) | Tail]) :- Tail = [_|_], check_current_neighbor(X, Y, [(DX, DY)]), check_neighbor(X, Y, Tail), !.
+          check_current_neighbor(X, Y, [(DX, DY)]) :- NX is X + DX, NY is Y + DY, is_tile_present(NX, NY).
+        """)
+    val solution = engine(stringifyConnectedFeatures(s"monastery", connectedFeatures))
+    if solution.isEmpty then
+      false
+    else
+      true
+
 
