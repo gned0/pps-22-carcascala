@@ -96,6 +96,65 @@ class ScalaPrologSuite extends AnyFunSuite with Matchers:
     completed2 should be(true)
   }
 
+  test("Test check Road feature complete") {
+    val deck = TileDeck()
+    val map = CarcassonneBoard()
+    val player1 = Player(0, "test", Color.Red)
+    val player2 = Player(1, "test2", Color.Blue)
+    val game = GameState(List(player1, player2), map, TileDeck())
 
+    val tile = GameTile(
+      Map(
+        TileSegment.N -> SegmentType.Field,
+        TileSegment.E -> SegmentType.Road,
+        TileSegment.S -> SegmentType.Field,
+        TileSegment.W -> SegmentType.Field,
+        TileSegment.NW -> SegmentType.Field,
+        TileSegment.NE -> SegmentType.Field,
+        TileSegment.SW -> SegmentType.Field,
+        TileSegment.SE -> SegmentType.Field,
+        TileSegment.C -> SegmentType.RoadEnd
+      ),
+      "test.png"
+    )
+    map.placeTile(tile, Position(10, 10))
+
+    val tile2 = GameTile(
+      Map(
+        TileSegment.N -> SegmentType.Road,
+        TileSegment.E -> SegmentType.Field,
+        TileSegment.S -> SegmentType.Field,
+        TileSegment.W -> SegmentType.Road,
+        TileSegment.NW -> SegmentType.Field,
+        TileSegment.NE -> SegmentType.Field,
+        TileSegment.SW -> SegmentType.Field,
+        TileSegment.SE -> SegmentType.Field,
+        TileSegment.C -> SegmentType.Road
+      ),
+      "test.png"
+    )
+    map.placeTile(tile2, Position(11, 10))
+
+    val tile3 = GameTile(
+      Map(
+        TileSegment.N -> SegmentType.Field,
+        TileSegment.E -> SegmentType.Field,
+        TileSegment.S -> SegmentType.Road,
+        TileSegment.W -> SegmentType.Field,
+        TileSegment.NW -> SegmentType.Field,
+        TileSegment.NE -> SegmentType.Field,
+        TileSegment.SW -> SegmentType.Field,
+        TileSegment.SE -> SegmentType.Field,
+        TileSegment.C -> SegmentType.RoadEnd
+      ),
+      "test.png"
+    )
+    map.placeTile(tile3, Position(11, 9))
+
+    game.placeFollower(Position(10, 10), TileSegment.E, player1)
+    val connectedFeatures = map.getConnectedFeature(Position(10, 10), TileSegment.E)
+    val completed = PrologProcessing().checkRoadCompleted(map, connectedFeatures)
+    completed should be(true)
+  }
 
 
