@@ -11,9 +11,97 @@
     "segments": {
       "NW": "Field", "N": "Field", "NE": "Field",
       "W": "Field", "C": "Monastery", "E": "Field",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "Monastery.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Field", "C": "Monastery", "E": "Field",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "Monastery.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Field", "C": "Monastery", "E": "Field",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "Monastery.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Field", "C": "Monastery", "E": "Field",
       "SW": "Field", "S": "Road", "SE": "Field"
     },
     "imagePath": "MonasteryRoad.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Field", "C": "Monastery", "E": "Field",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "MonasteryRoad.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Road", "C": "Road", "E": "Road",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "HorizontalRoad.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Road", "C": "Road", "E": "Road",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "HorizontalRoad.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Road", "C": "Road", "E": "Road",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "HorizontalRoad.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Road", "C": "Road", "E": "Road",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "HorizontalRoad.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Road", "C": "Road", "E": "Road",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "HorizontalRoad.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Road", "C": "Road", "E": "Road",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "HorizontalRoad.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Road", "C": "Road", "E": "Road",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "HorizontalRoad.png"
   },
   {
     "segments": {
@@ -30,6 +118,94 @@
       "SW": "Field", "S": "Road", "SE": "Field"
     },
     "imagePath": "RoadCurve.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Road", "C": "Road", "E": "Field",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "RoadCurve.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Road", "C": "Road", "E": "Field",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "RoadCurve.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Road", "C": "Road", "E": "Field",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "RoadCurve.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Road", "C": "Road", "E": "Field",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "RoadCurve.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Road", "C": "Road", "E": "Field",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "RoadCurve.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Road", "C": "Road", "E": "Field",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "RoadCurve.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Road", "C": "Road", "E": "Field",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "RoadCurve.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Road", "C": "Road", "E": "Field",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "RoadCurve.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Road", "C": "RoadEnd", "E": "Road",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "RoadJunctionSmall.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Road", "C": "RoadEnd", "E": "Road",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "RoadJunctionSmall.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Road", "C": "RoadEnd", "E": "Road",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "RoadJunctionSmall.png"
   },
   {
     "segments": {
@@ -58,10 +234,74 @@
   {
     "segments": {
       "NW": "Field", "N": "City", "NE": "Field",
+      "W": "Field", "C": "Field", "E": "Field",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "CastleWall.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "City", "NE": "Field",
+      "W": "Field", "C": "Field", "E": "Field",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "CastleWall.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "City", "NE": "Field",
+      "W": "Field", "C": "Field", "E": "Field",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "CastleWall.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "City", "NE": "Field",
+      "W": "Field", "C": "Field", "E": "Field",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "CastleWall.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "City", "NE": "Field",
       "W": "Road", "C": "Road", "E": "Road",
       "SW": "Field", "S": "Field", "SE": "Field"
     },
     "imagePath": "CastleSideRoad.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "City", "NE": "Field",
+      "W": "Road", "C": "Road", "E": "Road",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "CastleSideRoad.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "City", "NE": "Field",
+      "W": "Road", "C": "Road", "E": "Road",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "CastleSideRoad.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "City", "NE": "Field",
+      "W": "Road", "C": "Road", "E": "Field",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "CastleWallCurveLeft.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "City", "NE": "Field",
+      "W": "Road", "C": "Road", "E": "Field",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "CastleWallCurveLeft.png"
   },
   {
     "segments": {
@@ -82,10 +322,50 @@
   {
     "segments": {
       "NW": "Field", "N": "City", "NE": "Field",
+      "W": "Field", "C": "Road", "E": "Road",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "CastleWallCurveRight.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "City", "NE": "Field",
+      "W": "Field", "C": "Road", "E": "Road",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "CastleWallCurveRight.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "City", "NE": "Field",
       "W": "Field", "C": "Field", "E": "Field",
       "SW": "Field", "S": "City", "SE": "Field"
     },
     "imagePath": "CastleSides.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "City", "NE": "Field",
+      "W": "Field", "C": "Field", "E": "Field",
+      "SW": "Field", "S": "City", "SE": "Field"
+    },
+    "imagePath": "CastleSides.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "City", "NE": "Field",
+      "W": "Field", "C": "Field", "E": "Field",
+      "SW": "Field", "S": "City", "SE": "Field"
+    },
+    "imagePath": "CastleSides.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "City", "NE": "Field",
+      "W": "Field", "C": "Field", "E": "City",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "CastleSidesEdge.png"
   },
   {
     "segments": {
@@ -105,11 +385,91 @@
   },
   {
     "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "City", "C": "City", "E": "City",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "CastleTube.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "City", "C": "City", "E": "City",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "CastleTube.png"
+  },
+  {
+    "segments": {
       "NW": "Field", "N": "City", "NE": "City",
       "W": "Field", "C": "Field", "E": "City",
       "SW": "Field", "S": "Field", "SE": "Field"
     },
     "imagePath": "CastleEdge.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "City", "NE": "City",
+      "W": "Field", "C": "Field", "E": "City",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "CastleEdge.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "City", "NE": "City",
+      "W": "Field", "C": "Field", "E": "City",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "CastleEdge.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "City", "NE": "City",
+      "W": "Field", "C": "Field", "E": "City",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "CastleEdge.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "City", "NE": "City",
+      "W": "Field", "C": "Field", "E": "City",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "CastleEdge.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "City", "NE": "City",
+      "W": "Road", "C": "Road", "E": "City",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "CastleEdgeRoad.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "City", "NE": "City",
+      "W": "Road", "C": "Road", "E": "City",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "CastleEdgeRoad.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "City", "NE": "City",
+      "W": "Road", "C": "Road", "E": "City",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "CastleEdgeRoad.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "City", "NE": "City",
+      "W": "Road", "C": "Road", "E": "City",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "CastleEdgeRoad.png"
   },
   {
     "segments": {
@@ -131,9 +491,65 @@
     "segments": {
       "NW": "City", "N": "City", "NE": "City",
       "W": "City", "C": "City", "E": "City",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "CastleCenterSide.png"
+  },
+  {
+    "segments": {
+      "NW": "City", "N": "City", "NE": "City",
+      "W": "City", "C": "City", "E": "City",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "CastleCenterSide.png"
+  },
+  {
+    "segments": {
+      "NW": "City", "N": "City", "NE": "City",
+      "W": "City", "C": "City", "E": "City",
+      "SW": "Field", "S": "Field", "SE": "Field"
+    },
+    "imagePath": "CastleCenterSide.png"
+  },
+  {
+    "segments": {
+      "NW": "City", "N": "City", "NE": "City",
+      "W": "City", "C": "City", "E": "City",
       "SW": "Field", "S": "Road", "SE": "Field"
     },
     "imagePath": "CastleCenterEntry.png"
+  },
+  {
+    "segments": {
+      "NW": "City", "N": "City", "NE": "City",
+      "W": "City", "C": "City", "E": "City",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "CastleCenterEntry.png"
+  },
+  {
+    "segments": {
+      "NW": "City", "N": "City", "NE": "City",
+      "W": "City", "C": "City", "E": "City",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "CastleCenterEntry.png"
+  },
+  {
+    "segments": {
+      "NW": "City", "N": "City", "NE": "City",
+      "W": "City", "C": "City", "E": "City",
+      "SW": "City", "S": "City", "SE": "City"
+    },
+    "imagePath": "CastleCenter.png"
+  },
+  {
+    "segments": {
+      "NW": "Field", "N": "Field", "NE": "Field",
+      "W": "Field", "C": "RoadEnd", "E": "Field",
+      "SW": "Field", "S": "Road", "SE": "Field"
+    },
+    "imagePath": "RoadEnd.png"
   },
   {
     "segments": {
