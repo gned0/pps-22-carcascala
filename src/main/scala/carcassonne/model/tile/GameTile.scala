@@ -132,8 +132,19 @@ case class GameTile(
     SE -> NE
   )
 
+/** Companion object for GameTile.
+ *
+ * Provides factory methods for creating GameTile instances and
+ * implicit JSON Format for GameTile serialization and deserialization.
+ */
 object GameTile:
 
+  /** Creates a random GameTile.
+   *
+   * Generates a tile with random segment types and a random image path.
+   *
+   * @return A new GameTile instance with randomly assigned segments and image.
+   */
   def createRandomTile(): GameTile =
     val segments = TileSegment.values.map { segment =>
       val segmentType = Random.nextInt(3) match {
@@ -147,6 +158,13 @@ object GameTile:
     val imagePath = s"RandomTile${Random.nextInt(10)}.png"
     new GameTile(segments, imagePath)
 
+  /** Creates the starting tile for the game.
+   *
+   * Generates a predefined tile that is by default used to start the game,
+   * according to the game's official rules.
+   *
+   * @return A new GameTile instance representing the starting tile.
+   */
   def createStartTile(): GameTile =
     GameTile(
       Map(
@@ -163,15 +181,28 @@ object GameTile:
       "CastleSideRoad.png"
     )
 
+  /** Implicit JSON Format for GameTile.
+   *
+   * Provides methods to convert GameTile to and from JSON.
+   */
   implicit val gameTileFormat: Format[GameTile] = new Format[GameTile] {
+    /** Reads a JSON value and converts it to a GameTile.
+     *
+     * @param json The JSON value to read from.
+     * @return A JsResult containing the GameTile if successful, or a JsError if not.
+     */
     def reads(json: JsValue): JsResult[GameTile] = for {
       segments <- (json \ "segments").validate[Map[TileSegment, SegmentType]]
       imagePath <- (json \ "imagePath").validate[String]
     } yield GameTile(segments, imagePath)
 
+    /** Writes a GameTile as a JSON value.
+     *
+     * @param gameTile The GameTile to convert to JSON.
+     * @return A JsValue representing the GameTile.
+     */
     def writes(gameTile: GameTile): JsValue = Json.obj(
       "segments" -> gameTile.segments,
       "imagePath" -> gameTile.imagePath
     )
   }
-
