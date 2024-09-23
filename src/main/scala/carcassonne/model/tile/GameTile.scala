@@ -7,9 +7,21 @@ import play.api.libs.json.*
 
 import scala.util.Random
 
+/** Represents the different segments of a tile in the Carcassonne game.
+ * Each tile has nine segments: four edges, four corners, and a center.
+ * Each segment corresponds to a specific part of the tile:
+ * - N, E, S, W: North, East, South, West edges
+ * - NE, SE, SW, NW: Northeast, Southeast, Southwest, Northwest corners
+ * - C: Center of the tile
+ */
 enum TileSegment:
   case N, NE, E, SE, S, SW, W, NW, C
 
+  /** Returns the set of adjacent segments for the current segment.
+   *
+   * @return A Set of TileSegment that are adjacent to a given segment, according
+   *         to the game's official rules.
+   */
   def adjacentSegments: Set[TileSegment] = this match
     case N => Set(NW, NE, C)
     case NE => Set(N, E)
@@ -21,22 +33,40 @@ enum TileSegment:
     case NW => Set(W, N)
     case C => Set(N, E, S, W)
 
+/** Companion object for TileSegment.
+ *
+ * Contains implicit JSON Format for TileSegment serialization and deserialization.
+ */
 object TileSegment:
 
+  /** Implicit JSON Format for TileSegment.
+   *
+   * Provides methods to convert TileSegment to and from JSON.
+   */
   implicit val tileSegmentFormat: Format[TileSegment] = new Format[TileSegment] {
+    /** Reads a JSON value and converts it to a TileSegment.
+     *
+     * @param json The JSON value to read from.
+     * @return A JsResult containing the TileSegment if successful, or a JsError if not.
+     */
     def reads(json: JsValue): JsResult[TileSegment] = json.as[String] match {
-      case "N"  => JsSuccess(N)
+      case "N" => JsSuccess(N)
       case "NE" => JsSuccess(NE)
-      case "E"  => JsSuccess(E)
+      case "E" => JsSuccess(E)
       case "SE" => JsSuccess(SE)
-      case "S"  => JsSuccess(S)
+      case "S" => JsSuccess(S)
       case "SW" => JsSuccess(SW)
-      case "W"  => JsSuccess(W)
+      case "W" => JsSuccess(W)
       case "NW" => JsSuccess(NW)
-      case "C"  => JsSuccess(C)
+      case "C" => JsSuccess(C)
       case other => JsError(s"Unknown tile segment: $other")
     }
 
+    /** Writes a TileSegment as a JSON value.
+     *
+     * @param tileSegment The TileSegment to convert to JSON.
+     * @return A JsValue representing the TileSegment.
+     */
     def writes(tileSegment: TileSegment): JsValue = JsString(tileSegment.toString)
   }
 
