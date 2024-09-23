@@ -8,6 +8,8 @@ import play.api.libs.json.*
  * `City`: A city segment.
  * `Road`: A road segment.
  * `Field`: A field segment.
+ * `Monastery`: A monastery segment.
+ * `RoadEnd`: A road end segment.
  */
 enum SegmentType:
   case City, Road, Field, Monastery, RoadEnd
