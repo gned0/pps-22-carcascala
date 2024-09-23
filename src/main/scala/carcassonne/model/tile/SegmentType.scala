@@ -3,13 +3,13 @@ package carcassonne.model.tile
 import play.api.libs.json.*
 
 /**
- * Represents the different types of edges that can be found on a tile.
- *
- * `City`: A city segment.
- * `Road`: A road segment.
- * `Field`: A field segment.
- * `Monastery`: A monastery segment.
- * `RoadEnd`: A road end segment.
+ * Represents the different types of segments that can be found on a tile.
+ * Each segment tile has one type, which can be one of the following:
+ *  `City`: A city segment.
+ *  `Road`: A road segment.
+ *  `Field`: A field segment.
+ *  `Monastery`: A monastery segment.
+ *  `RoadEnd`: A road end segment.
  */
 enum SegmentType:
   case City, Road, Field, Monastery, RoadEnd
