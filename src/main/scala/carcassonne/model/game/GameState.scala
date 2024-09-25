@@ -126,5 +126,5 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
 
   def getBoard: CarcassonneBoard = board
 
-  def createScoreboard(): Map[Player, Int] =
+  private def createScoreboard(): Map[Player, Int] =
     players.map(player => player -> player.getScore).toMap
