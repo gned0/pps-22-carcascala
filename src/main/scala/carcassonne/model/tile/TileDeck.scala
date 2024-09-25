@@ -7,6 +7,7 @@ import play.api.libs.json.*
 import scala.io.Source
 import scala.util.Random
 import scala.collection.immutable.LazyList
+import scala.io.Source.fromInputStream
 
 /** Represents a deck of tiles in the Carcassonne game.
  *
@@ -29,7 +30,7 @@ trait TileDeck:
  */
 object TileDeck:
   
-  private val defaultConfigFilePath: String = "src/main/resources/deck.json"
+  private val defaultConfigFilePath: String = "/deck.json"
 
   /** Creates a new TileDeck instance.
    *
@@ -48,9 +49,10 @@ object TileDeck:
    *  @return A LazyList of GameTile objects.
    */
   private def loadTiles(configFilePath: String): LazyList[GameTile] =
-    val source = Source.fromFile(configFilePath)
+    val source = fromInputStream(getClass.getResourceAsStream(configFilePath))
     try
-      LazyList.from(Json.parse(source.mkString).validate[List[GameTile]].getOrElse(List.empty))
+      val jsonString = source.getLines().mkString
+      LazyList.from(Json.parse(jsonString).validate[List[GameTile]].getOrElse(List.empty))
     finally
       source.close()
 

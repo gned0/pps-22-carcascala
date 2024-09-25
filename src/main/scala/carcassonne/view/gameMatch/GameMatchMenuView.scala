@@ -84,8 +84,8 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
       font = Font.font(DefaultFontName, FontWeight.Bold, TitleFontSize)
     })
 
-  val rotateClockwise: StackPane = createRotateButtons(s"../../../rotateClockwise.png")
-  val rotateCounterClockwise: StackPane = createRotateButtons(s"../../../rotateCounterClockwise.png")
+  val rotateClockwise: StackPane = createRotateButtons(s"rotateClockwise.png")
+  val rotateCounterClockwise: StackPane = createRotateButtons(s"rotateCounterClockwise.png")
   val skipFollowerPlacement: Button = new Button("Skip Placement"):
     alignment = Pos.TopCenter
 
@@ -145,7 +145,7 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
             prefWidth = TileImageSize * 0.50
             prefHeight = TileImageSize * 0.50
           ,
-          new ImageView(new Image(getClass.getResource(imagePath).toExternalForm)):
+          new ImageView(new Image(imagePath)):
             alignment = Pos.Center
             fitWidth = TileImageSize * 0.40
             fitHeight = TileImageSize * 0.40
@@ -238,7 +238,7 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
   override def tileDrawn(tile: GameTile): Unit =
     setUpButtons(false, None)
     Logger.log("MENU VIEW", "Tile drawn")
-    val tileImage = new ImageView(new Image(getClass.getResource(s"../../../tiles/${tile.imagePath}").toExternalForm)):
+    val tileImage = new ImageView(new Image(s"tiles/${tile.imagePath}")):
       fitWidth = TileImageSize
       fitHeight = TileImageSize
       preserveRatio = true

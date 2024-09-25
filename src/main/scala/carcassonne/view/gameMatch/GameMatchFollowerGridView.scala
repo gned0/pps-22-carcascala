@@ -48,7 +48,7 @@ class GameMatchFollowerGridView(
     /**
      * The outline image view of the follower.
      */
-    val followerOutline = new ImageView(new Image(getClass.getResource("../../../follower.png").toExternalForm)):
+    val followerOutline = new ImageView(new Image("follower.png")):
       fitWidth = (drawnTileImage.fitWidth.toDouble - 5) / 3.3
       fitHeight = (drawnTileImage.fitHeight.toDouble - 5) / 3.3
       preserveRatio = true
@@ -56,7 +56,7 @@ class GameMatchFollowerGridView(
     /**
      * The filled image view of the follower.
      */
-    val filledFollower = new ImageView(new Image(getClass.getResource("../../../follower_filled.png").toExternalForm)):
+    val filledFollower = new ImageView(new Image("follower_filled.png")):
       fitWidth = (drawnTileImage.fitWidth.toDouble - 5) / 3.3
       fitHeight = (drawnTileImage.fitHeight.toDouble - 5) / 3.3
       opacity = 0.5

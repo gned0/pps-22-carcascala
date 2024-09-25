@@ -9,7 +9,7 @@ trait ObserverGameMenuView:
   
   private var _drawnTile: (GameTile, ImageView) = (GameTile.createStartTile(),
     new ImageView(
-      new Image(getClass.getResource("../../../tiles/" + GameTile.createStartTile().imagePath).toExternalForm)
+      new Image("tiles/" + GameTile.createStartTile().imagePath)
     ):
       fitWidth = 100
       fitHeight = 100

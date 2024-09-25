@@ -40,6 +40,6 @@ class TileDeckSuite extends AnyFunSuite with Matchers {
 
   test("TileDeck should throw an exception if the config file does not exist") {
     val nonExistentConfigFile = "non-existent-file.json"
-    an [java.io.FileNotFoundException] should be thrownBy TileDeck(nonExistentConfigFile)
+    an [java.lang.NullPointerException] should be thrownBy TileDeck(nonExistentConfigFile)
   }
 }
