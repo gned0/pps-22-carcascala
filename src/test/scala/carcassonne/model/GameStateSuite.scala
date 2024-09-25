@@ -46,7 +46,7 @@ class GameStateSuite extends AnyFunSuite with Matchers {
     player1.getScore shouldBe 12
     player1.getFollowers shouldBe 7
 
-    val followerTiles = map.getTileMap.get.filter((_, tile) => tile.followerMap.nonEmpty)
+    val followerTiles = map.getTileMap.get.filter((_, tile) => tile.getFollowerMap.nonEmpty)
     followerTiles.size shouldBe 0
   }
 
@@ -81,7 +81,7 @@ class GameStateSuite extends AnyFunSuite with Matchers {
     player1.getScore shouldBe 3
     player1.getFollowers shouldBe 7
 
-    val followerTiles = map.getTileMap.get.filter((_, tile) => tile.followerMap.nonEmpty)
+    val followerTiles = map.getTileMap.get.filter((_, tile) => tile.getFollowerMap.nonEmpty)
     followerTiles.size shouldBe 0
   }
 
@@ -136,7 +136,7 @@ class GameStateSuite extends AnyFunSuite with Matchers {
     player1.getScore shouldBe 9
     player1.getFollowers shouldBe 7
 
-    val followerTiles = map.getTileMap.get.filter((_, tile) => tile.followerMap.nonEmpty)
+    val followerTiles = map.getTileMap.get.filter((_, tile) => tile.getFollowerMap.nonEmpty)
     followerTiles.size shouldBe 0
   }
 
@@ -189,7 +189,7 @@ class GameStateSuite extends AnyFunSuite with Matchers {
     player1.getScore shouldBe 6
     player1.getFollowers shouldBe 7
 
-    val followerTiles = map.getTileMap.get.filter((_, tile) => tile.followerMap.nonEmpty)
+    val followerTiles = map.getTileMap.get.filter((_, tile) => tile.getFollowerMap.nonEmpty)
     followerTiles.size shouldBe 0
   }
 
@@ -227,7 +227,7 @@ class GameStateSuite extends AnyFunSuite with Matchers {
     player1.getScore shouldBe 0
     player1.getFollowers shouldBe 6
 
-    val followerTiles = map.getTileMap.get.filter((_, tile) => tile.followerMap.nonEmpty)
+    val followerTiles = map.getTileMap.get.filter((_, tile) => tile.getFollowerMap.nonEmpty)
     followerTiles.size shouldBe 1
   }
 
@@ -261,7 +261,7 @@ class GameStateSuite extends AnyFunSuite with Matchers {
     player1.getScore shouldBe 0
     player1.getFollowers shouldBe 6
 
-    val followerTiles = map.getTileMap.get.filter((_, tile) => tile.followerMap.nonEmpty)
+    val followerTiles = map.getTileMap.get.filter((_, tile) => tile.getFollowerMap.nonEmpty)
     followerTiles.size shouldBe 1
   }
 
@@ -311,7 +311,7 @@ class GameStateSuite extends AnyFunSuite with Matchers {
     player1.getScore shouldBe 0
     player1.getFollowers shouldBe 6
 
-    val followerTiles = map.getTileMap.get.filter((_, tile) => tile.followerMap.nonEmpty)
+    val followerTiles = map.getTileMap.get.filter((_, tile) => tile.getFollowerMap.nonEmpty)
     followerTiles.size shouldBe 1
   }
 
@@ -364,7 +364,7 @@ class GameStateSuite extends AnyFunSuite with Matchers {
     player1.getScore shouldBe 0
     player1.getFollowers shouldBe 6
 
-    val followerTiles = map.getTileMap.get.filter((_, tile) => tile.followerMap.nonEmpty)
+    val followerTiles = map.getTileMap.get.filter((_, tile) => tile.getFollowerMap.nonEmpty)
     followerTiles.size shouldBe 1
   }
 

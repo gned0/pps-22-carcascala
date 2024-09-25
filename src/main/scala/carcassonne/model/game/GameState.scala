@@ -58,7 +58,7 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
           case (segment, _) if {
                 val connectedFeature = board.getConnectedFeature(position, segment)
                 connectedFeature.nonEmpty &&
-                !connectedFeature.exists { case (pos, seg) => board.getTile(pos).get.followerMap.contains(seg) }
+                !connectedFeature.exists { case (pos, seg) => board.getTile(pos).get.getFollowerMap.contains(seg) }
               } =>
             segment
         }.toList
@@ -66,9 +66,9 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
 
   def calculateScore(endGame: Boolean): Unit =
     val followerTiles = board.getTileMap.get
-      .filter((_, tile) => tile.followerMap.nonEmpty)
+      .filter((_, tile) => tile.getFollowerMap.nonEmpty)
     followerTiles.foreach((position, tile) =>
-      tile.followerMap.foreach((segment, playerID) =>
+      tile.getFollowerMap.foreach((segment, playerID) =>
         players
           .filter(p => p.playerId == playerID)
           .map(p =>

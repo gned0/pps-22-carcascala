@@ -56,21 +56,26 @@ object CarcassonneBoard:
 
     def placeFollower(position: Position, segment: TileSegment, player: Player): Boolean =
       if (player.getFollowers == 0) return false
-      if (getTile(position).isDefined && getTile(position).get.followerMap.contains(segment)) return false
 
-      val connectedFeature = getConnectedFeature(position, segment)
+      val tileOption = getTile(position)
+      tileOption match
+        case Some(tile) if tile.getFollowerMap.contains(segment) =>
+          false
+        case Some(tile) =>
+          val connectedFeature = getConnectedFeature(position, segment)
 
-      val isFeatureOccupied = connectedFeature.exists { case (pos, seg) =>
-        getTile(pos).get.followerMap.contains(seg)
-      }
+          val isFeatureOccupied = connectedFeature.exists { case (pos, seg) =>
+            getTile(pos).exists(_.getFollowerMap.contains(seg))
+          }
 
-      if (isFeatureOccupied) return false
-
-      getTile(position).get.followerMap = getTile(position).get.followerMap.updated(segment, player.playerId)
-      true
+          if (!isFeatureOccupied) {
+            tile.placeFollower(segment, player.playerId)
+            true
+          } else false
+        case None => false
 
     def removeFollower(gameTile: GameTile): Boolean =
-      gameTile.followerMap = Map.empty
+      gameTile.getFollowerMap.keys.foreach(gameTile.removeFollower)
       true
 
     def getConnectedFeature(startPosition: Position, startSegment: TileSegment): Set[(Position, TileSegment)] =

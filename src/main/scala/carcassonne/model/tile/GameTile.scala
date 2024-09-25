@@ -81,8 +81,16 @@ case class GameTile(
                      imagePath: String
                    ):
 
-  var followerMap: Map[TileSegment, Int] = Map.empty
+  private var followerMap: Map[TileSegment, Int] = Map.empty
 
+  def placeFollower(segment: TileSegment, playerId: Int): Unit =
+    followerMap = followerMap.updated(segment, playerId)
+
+  def removeFollower(segment: TileSegment): Unit =
+    followerMap = followerMap - segment
+  
+  def getFollowerMap: Map[TileSegment, Int] = followerMap
+  
   /**
    * Rotates the tile 90 degrees clockwise.
    *
