@@ -2,27 +2,42 @@ package carcassonne.view.applicationStart
 
 import carcassonne.observers.subjects.view.SubjectStarterView
 import scalafx.application.Platform
+import scalafx.geometry.Pos.{Center, TopCenter}
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Scene
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.*
-import scalafx.scene.layout.{GridPane, HBox, VBox}
+import scalafx.scene.layout.{GridPane, HBox, StackPane, VBox}
+import scalafx.scene.text.Font
 import scalafx.stage.Stage
 
-class GameStarterView(switchMainGameView: List[String] => Unit) extends VBox
+class GameStarterView(switchMainGameView: List[String] => Unit) extends StackPane
   with SubjectStarterView {
 
-  private val startGameButton = new Button("Start Game")
-  private val exitGameButton = new Button("Exit Game")
+  private val startGameButton = new Button("Start Game"):
+    alignment = Center
+    minWidth = 100
+    minHeight = 70
+    font = Font("Arial", 18)
+    padding = Insets(5)
+  private val exitGameButton = new Button("Exit Game"):
+    alignment = Center
+    minWidth = 100
+    minHeight = 70
+    font = Font("Arial", 18)
+    padding = Insets(5)
 
   startGameButton.onMouseClicked = _ => showPlayerSetupDialog()
   exitGameButton.onMouseClicked = _ => Platform.exit()
 
-  private val buttonBox = new HBox(10) // 10 pixels of spacing between buttons
-  buttonBox.children.addAll(startGameButton, exitGameButton)
-  buttonBox.alignment = Pos.Center // Center the buttons in the HBox
+  private val verticalButtonBox = new VBox(10) // 10 pixels of spacing between buttons
+  verticalButtonBox.children.addAll(startGameButton, exitGameButton)
+  verticalButtonBox.alignment = Pos.Center // Center the buttons in the HBox
 
-  this.children = buttonBox
+//  this.children = Seq(startGameButton, exitGameButton)
+  this.children = verticalButtonBox
+  this.padding = Insets(10)
+  StackPane.setAlignment(verticalButtonBox, Pos.Center)
 
   private def showPlayerSetupDialog(): Unit = {
     val playerSetupStage = new Stage {

@@ -19,7 +19,7 @@ import scalafx.scene.layout.{GridPane, HBox, Priority, Region, StackPane, VBox}
 
 class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimaryStage {
   title = "CarcaScala"
-  scene = new Scene(850, 600):
+  scene = new Scene(1280, 720):
     root = gameViewContainer
 
   // Pass a function that accepts a List[String]
