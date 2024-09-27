@@ -7,5 +7,5 @@ import scalafx.geometry.Insets
 
 class GameViewContainer extends StackPane {
   this.alignment = Center
-  this.background = new Background(Array(new BackgroundFill(SFXColor.getCustomSFXColor(117, 177, 31, 1), CornerRadii.Empty, Insets.Empty)))
+  this.background = new Background(Array(new BackgroundFill(SFXColor.getCustomSFXColor(43, 190, 244, 1), CornerRadii.Empty, Insets.Empty)))
 }

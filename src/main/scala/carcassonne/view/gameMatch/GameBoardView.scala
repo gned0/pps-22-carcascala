@@ -17,13 +17,13 @@ import scalafx.scene.transform.Scale
 class GameBoardView extends StackPane:
 
   /** Initial X position of the mouse when pressed. */
-  private var initialX: Double = 0.0
+  private var initialX: Double = -115.0
 
   /** Initial Y position of the mouse when pressed. */
   private var initialY: Double = 0.0
 
   /** Current zoom factor of the game board. */
-  private var zoomFactor: Double = 1.0
+  private var zoomFactor: Double = 1.1
 
   /** Increment value for zooming in and out. */
   private val zoomIncrement: Double = 0.1
@@ -54,6 +54,9 @@ class GameBoardView extends StackPane:
 
     this.translateX = this.translateX.value + offsetX
     this.translateY = this.translateY.value + offsetY
+
+    println(this.translateX)
+    println(this.translateY)
 
     initialX = event.sceneX
     initialY = event.sceneY
@@ -93,6 +96,11 @@ class GameBoardView extends StackPane:
   // Align the game board to the center of the stack pane.
   StackPane.setAlignment(this, Pos.Center)
 
-  this.background = new Background(Array(new BackgroundFill(SFXColor.getCustomSFXColor(180, 239, 104, 1), CornerRadii.Empty, Insets.Empty)))
+  this.background = new Background(Array(new BackgroundFill(SFXColor.getCustomSFXColor(97, 204, 246, 1), CornerRadii.Empty, Insets.Empty)))
 
   this.hgrow = Priority.Always
+
+  this.translateX = this.translateX.value + initialX
+  this.translateY = this.translateY.value + initialY
+  this.scaleX = zoomFactor
+  this.scaleY = zoomFactor
