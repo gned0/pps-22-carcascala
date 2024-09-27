@@ -42,7 +42,7 @@ class GameStarterView(switchMainGameView: List[String] => Unit) extends StackPan
   private def showPlayerSetupDialog(): Unit = {
     val playerSetupStage = new Stage {
       title = "Player Setup"
-      scene = new Scene {
+      scene = new Scene(240, 280) {
         root = createPlayerSetupPane()
       }
     }
