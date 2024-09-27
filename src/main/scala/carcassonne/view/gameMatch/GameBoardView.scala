@@ -93,6 +93,6 @@ class GameBoardView extends StackPane:
   // Align the game board to the center of the stack pane.
   StackPane.setAlignment(this, Pos.Center)
 
-  this.background = new Background(Array(new BackgroundFill(Color.DarkSlateGrey, CornerRadii.Empty, Insets.Empty)))
+  this.background = new Background(Array(new BackgroundFill(SFXColor.getCustomSFXColor(180, 239, 104, 1), CornerRadii.Empty, Insets.Empty)))
 
   this.hgrow = Priority.Always

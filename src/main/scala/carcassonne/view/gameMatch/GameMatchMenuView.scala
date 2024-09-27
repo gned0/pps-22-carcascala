@@ -126,6 +126,7 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
   this.alignment = Pos.TopCenter
   this.maxWidth = 250
   this.background = new Background(Array(new BackgroundFill(BackgroundColor, CornerRadii.Empty, Insets.Empty)))
+  this.border = new Border(new BorderStroke(Color.Black, BorderStrokeStyle.Solid, CornerRadii.Empty, BorderWidths(3)))
   this.spacing = PaneSpacing
   this.vgrow = Always
   this.hgrow = Never
