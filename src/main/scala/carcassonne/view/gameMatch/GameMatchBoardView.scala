@@ -128,15 +128,6 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
     tilesOption.foreach { tiles =>
       if isTilePlaced then
         placeTile(position, getDrawnTile._2)
-        println(this.width)
-        println(this.height)
-//        println()
-//        println(this.prefWidth)
-//        println(this.prefHeight)
-//        println()
-//        println(this.maxWidth)
-//        println(this.maxHeight)
-        println()
         createNewPlaceholders(tiles, position)
     }
 

@@ -10,8 +10,10 @@ import carcassonne.view.GameViewContainer
 import carcassonne.view.applicationStart.GameStarterView
 import scalafx.Includes.*
 import scalafx.application.JFXApp3
-import scalafx.geometry.Insets
+import scalafx.geometry.{Insets, Pos}
 import scalafx.geometry.Pos.{CenterRight, TopCenter}
+import scalafx.scene.control.Button
+import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.{Node, Scene}
 import scalafx.scene.input.{MouseEvent, ScrollEvent}
 import scalafx.scene.layout.Priority.{Always, Never}
@@ -32,12 +34,22 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
         alignment = TopCenter
         padding = Insets(5, 0, 15, 0)
     )
-    StackPane.setAlignment(gameMenu, CenterRight)
+    val centerButton = new Button():
+      graphic = new ImageView(new Image("recenter.png")):
+        preserveRatio = true
+        fitHeight = 50
+        fitWidth = 50
+      prefWidth = 50
+      prefHeight = 50
+      margin = Insets(15)
 
-    val gameBoard = GameBoardView()
+    StackPane.setAlignment(gameMenu, CenterRight)
+    StackPane.setAlignment(centerButton, Pos.TopLeft)
+
+    val gameBoard = GameBoardView(centerButton)
     val boardView = GameMatchBoardView(() => gameEndedSwitchView())
 
-    gameBoard.children = boardView
+    gameBoard.children.add(boardView)
     
     gameMenu.addObserver(boardView)
     
@@ -51,7 +63,9 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
     game.addObserverMenu(gameMenu)
     GameController(game, boardView).initialize()
 
-    this.setMainView(Seq(gameBoard, gameMenu))
+    this.setMainView(Seq(
+      gameBoard, gameMenu, centerButton)
+    )
   }
 
   def gameEndedSwitchView(): Unit =

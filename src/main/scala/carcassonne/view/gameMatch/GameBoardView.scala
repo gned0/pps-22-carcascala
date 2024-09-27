@@ -7,6 +7,7 @@ import scalafx.scene.input.{MouseEvent, ScrollEvent}
 import scalafx.scene.layout.*
 import scalafx.scene.paint.Color
 import carcassonne.util.Color as SFXColor
+import scalafx.scene.control.Button
 import scalafx.scene.transform.Scale
 
 /**
@@ -14,7 +15,7 @@ import scalafx.scene.transform.Scale
  * This class extends `StackPane` and provides functionality for handling mouse events
  * such as dragging and zooming.
  */
-class GameBoardView extends StackPane:
+class GameBoardView(centerButton: Button) extends StackPane:
 
   /** Initial X position of the mouse when pressed. */
   private var initialX: Double = -115.0
@@ -54,9 +55,6 @@ class GameBoardView extends StackPane:
 
     this.translateX = this.translateX.value + offsetX
     this.translateY = this.translateY.value + offsetY
-
-    println(this.translateX)
-    println(this.translateY)
 
     initialX = event.sceneX
     initialY = event.sceneY
@@ -104,3 +102,12 @@ class GameBoardView extends StackPane:
   this.translateY = this.translateY.value + initialY
   this.scaleX = zoomFactor
   this.scaleY = zoomFactor
+  
+  this.centerButton.onMouseClicked = _ =>
+    initialX = -115
+    initialY = 0
+    zoomFactor = 1.1
+    this.translateX = initialX
+    this.translateY = initialY
+    this.scaleX = zoomFactor
+    this.scaleY = zoomFactor
