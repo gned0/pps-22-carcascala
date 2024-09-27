@@ -78,7 +78,13 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
 
   private val scoreboard: VBox = new VBox():
     alignment = Pos.TopCenter
+    padding = Insets(5, 0, 15, 0)
     spacing = 5
+    border = new Border(
+      new BorderStroke(
+        Color.Black, BorderStrokeStyle.Solid, CornerRadii.Empty, BorderWidths.Default
+      )
+    )
     children = Seq(new Text("Scoreboard:") {
       fill = Color.White
       font = Font.font(DefaultFontName, FontWeight.Bold, TitleFontSize)
