@@ -124,6 +124,7 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     scoreboard
   )
   this.alignment = Pos.TopCenter
+  this.minWidth = 250
   this.maxWidth = 250
   this.background = new Background(Array(new BackgroundFill(BackgroundColor, CornerRadii.Empty, Insets.Empty)))
   this.border = new Border(new BorderStroke(Color.Black, BorderStrokeStyle.Solid, CornerRadii.Empty, BorderWidths(3)))

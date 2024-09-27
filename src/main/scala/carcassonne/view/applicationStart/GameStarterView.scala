@@ -7,6 +7,7 @@ import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Scene
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.*
+import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.layout.{GridPane, HBox, StackPane, VBox}
 import scalafx.scene.text.Font
 import scalafx.stage.Stage
@@ -14,6 +15,12 @@ import scalafx.stage.Stage
 class GameStarterView(switchMainGameView: List[String] => Unit) extends StackPane
   with SubjectStarterView {
 
+  private val gameLogo = new ImageView(new Image("carcaScala.png")):
+    preserveRatio = true
+    fitWidth = 700
+    fitHeight = 600
+    alignment = TopCenter
+    padding = Insets(0, 0, 50, 0)
   private val startGameButton = new Button("Start Game"):
     alignment = Center
     minWidth = 100
@@ -31,7 +38,7 @@ class GameStarterView(switchMainGameView: List[String] => Unit) extends StackPan
   exitGameButton.onMouseClicked = _ => Platform.exit()
 
   private val verticalButtonBox = new VBox(10) // 10 pixels of spacing between buttons
-  verticalButtonBox.children.addAll(startGameButton, exitGameButton)
+  verticalButtonBox.children.addAll(gameLogo, startGameButton, exitGameButton)
   verticalButtonBox.alignment = Pos.Center // Center the buttons in the HBox
 
 //  this.children = Seq(startGameButton, exitGameButton)
