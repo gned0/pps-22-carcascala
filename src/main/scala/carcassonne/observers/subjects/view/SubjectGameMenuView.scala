@@ -27,3 +27,6 @@ trait SubjectGameMenuView:
     
   def notifySkipTurn(position: Option[Position]): Unit =
     observers.foreach(_.skipFollowerPlacement(position))
+    
+  def notifyEndGameEarly(): Unit =
+    observers.foreach(_.endGameEarly())

@@ -29,3 +29,5 @@ trait ObserverGameMenuView:
     _drawnTile = drawnTile
   
   def skipFollowerPlacement(position: Option[Position]): Unit
+  
+  def endGameEarly(): Unit

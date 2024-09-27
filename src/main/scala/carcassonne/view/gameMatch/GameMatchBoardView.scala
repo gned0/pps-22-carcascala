@@ -182,3 +182,6 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
   override def skipFollowerPlacement(position: Option[Position]): Unit =
     if position.nonEmpty then removeFollowerGridPane(position.get)
     notifySkipFollowerPlacement()
+
+  override def endGameEarly(): Unit =
+    gameEndedSwitchView()

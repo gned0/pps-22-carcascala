@@ -94,6 +94,12 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
   val rotateCounterClockwise: StackPane = createRotateButtons(s"rotateCounterClockwise.png")
   val skipFollowerPlacement: Button = new Button("Skip Placement"):
     alignment = Pos.TopCenter
+    
+  val endGameButton: Button = new Button("End Game"):
+    alignment = Pos.Center
+    padding = Insets(5)
+    font = Font("Arial", 18)
+    onMouseClicked = _ => notifyEndGameEarly()
 
   this.children = Seq(
     new VBox():
@@ -128,6 +134,8 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
       )
     ,
     scoreboard
+    ,
+    endGameButton
   )
   this.alignment = Pos.TopCenter
   this.minWidth = 250
