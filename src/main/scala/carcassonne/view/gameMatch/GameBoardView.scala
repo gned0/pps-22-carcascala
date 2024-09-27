@@ -6,6 +6,8 @@ import scalafx.scene.image.Image
 import scalafx.scene.input.{MouseEvent, ScrollEvent}
 import scalafx.scene.layout.*
 import scalafx.scene.paint.Color
+import carcassonne.util.Color as SFXColor
+import scalafx.scene.transform.Scale
 
 /**
  * Represents the game board view in the Carcassonne game.
@@ -30,7 +32,7 @@ class GameBoardView extends StackPane:
   private val minZoom: Double = 0.5
 
   /** Maximum zoom level allowed. */
-  private val maxZoom: Double = 4.0
+  private val maxZoom: Double = 3.0
 
   /**
    * Handles the mouse pressed event to record the initial mouse position.
@@ -67,6 +69,13 @@ class GameBoardView extends StackPane:
     else
       Math.max(zoomFactor - zoomIncrement, minZoom) // Zoom out
 
+    if zoomFactor > 1 && zoomFactor != maxZoom then
+      this.prefWidth  = this.width.value - this.width.value * zoomFactor
+      this.prefHeight = this.height.value - this.height.value * zoomFactor
+    else if zoomFactor < 1  && zoomFactor != minZoom then
+      this.prefWidth = this.width.value + this.width.value * zoomFactor
+      this.prefHeight = this.height.value + this.height.value * zoomFactor
+
     this.scaleX = zoomFactor
     this.scaleY = zoomFactor
 
@@ -83,3 +92,7 @@ class GameBoardView extends StackPane:
 
   // Align the game board to the center of the stack pane.
   StackPane.setAlignment(this, Pos.Center)
+
+  this.background = new Background(Array(new BackgroundFill(Color.DarkSlateGrey, CornerRadii.Empty, Insets.Empty)))
+
+  this.hgrow = Priority.Always

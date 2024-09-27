@@ -13,6 +13,7 @@ import scalafx.scene.{Cursor, Node}
 import scalafx.scene.input.{MouseButton, MouseEvent}
 import scalafx.scene.layout.{Background, BackgroundFill, Border, BorderStroke, BorderStrokeStyle, BorderWidths, CornerRadii, GridPane, Priority, Region}
 import scalafx.Includes.*
+import scalafx.scene.layout.Priority.Always
 import scalafx.scene.paint.Color
 
 /**
@@ -29,8 +30,10 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
   this.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
   this.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
   this.setMaxSize(Double.MaxValue, Double.MaxValue)
-  GridPane.setHgrow(this, Priority.Always)
-  GridPane.setVgrow(this, Priority.Always)
+  this.hgrow = Always
+  this.vgrow = Always
+//  GridPane.setHgrow(this, Priority.Always)
+//  GridPane.setVgrow(this, Priority.Always)
 
 //  this.prefWidth = 600
 //  this.prefHeight = 400
@@ -125,6 +128,15 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
     tilesOption.foreach { tiles =>
       if isTilePlaced then
         placeTile(position, getDrawnTile._2)
+        println(this.width)
+        println(this.height)
+//        println()
+//        println(this.prefWidth)
+//        println(this.prefHeight)
+//        println()
+//        println(this.maxWidth)
+//        println(this.maxHeight)
+        println()
         createNewPlaceholders(tiles, position)
     }
 

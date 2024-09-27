@@ -11,7 +11,7 @@ import carcassonne.view.applicationStart.GameStarterView
 import scalafx.Includes.*
 import scalafx.application.JFXApp3
 import scalafx.geometry.Insets
-import scalafx.geometry.Pos.TopCenter
+import scalafx.geometry.Pos.{CenterRight, TopCenter}
 import scalafx.scene.{Node, Scene}
 import scalafx.scene.input.{MouseEvent, ScrollEvent}
 import scalafx.scene.layout.Priority.{Always, Never}
@@ -32,17 +32,15 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
         alignment = TopCenter
         padding = Insets(5, 0, 15, 0)
     )
+    StackPane.setAlignment(gameMenu, CenterRight)
 
     val gameBoard = GameBoardView()
     val boardView = GameMatchBoardView(() => gameEndedSwitchView())
+
     gameBoard.children = boardView
     
     gameMenu.addObserver(boardView)
-
-    // Set HGrow priorities
-    HBox.setHgrow(gameBoard, Priority.Always)
-    HBox.setHgrow(gameMenu, Priority.Never)
-
+    
     val playersWithColors = PlayerColor.assignColors(playerNames)
     val players = playersWithColors.zipWithIndex.map {
       case ((name, color), index) => Player(index, name, color)

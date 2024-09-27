@@ -10,7 +10,7 @@ import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Cursor
 import scalafx.scene.control.Button
 import scalafx.scene.image.{Image, ImageView}
-import scalafx.scene.layout.Priority.Always
+import scalafx.scene.layout.Priority.{Always, Never}
 import scalafx.scene.layout.{Background, BackgroundFill, Border, BorderStroke, BorderStrokeStyle, BorderWidths, CornerRadii, GridPane, HBox, Region, StackPane, VBox}
 import scalafx.scene.paint.Color
 import carcassonne.util.Color as CarcaColor
@@ -124,11 +124,13 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox
     scoreboard
   )
   this.alignment = Pos.TopCenter
-  this.prefWidth = 250
+  this.maxWidth = 250
   this.background = new Background(Array(new BackgroundFill(BackgroundColor, CornerRadii.Empty, Insets.Empty)))
   this.spacing = PaneSpacing
   this.vgrow = Always
+  this.hgrow = Never
   this.padding = Insets(10)
+  
 
   /**
    * Creates the Stackpane for the rotate tiles buttons
