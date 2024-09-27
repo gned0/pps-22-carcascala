@@ -7,7 +7,20 @@ import carcassonne.model.scalaprolog.ScalaPrologEngine.{*, given}
 import carcassonne.model.tile.TileSegment
 import carcassonne.util.Position
 
+/**
+ * A class responsible for processing Prolog queries to determine the completion of specific 
+ * features (cities, roads, monasteries).
+ * It interacts with the Prolog engine using game data and Prolog clauses.
+ */
 class PrologProcessing:
+
+  /**
+   * Checks if a city feature is completed.
+   *
+   * @param map               The `CarcassonneBoard` containing the game state.
+   * @param connectedFeatures The set of positions and segments representing the city.
+   * @return                  `true` if the city is completed, `false` otherwise.
+   */
   def checkCityCompleted(map: CarcassonneBoard, connectedFeatures: Set[(Position, TileSegment)]): Boolean =
     val tiles = map.getTileMap.get.map((position, gametile) => stringifyTile(position, gametile)).mkString("\n")
     val engine: Term => LazyList[Term] = mkPrologEngine(
@@ -37,6 +50,13 @@ class PrologProcessing:
     else
       true
 
+  /**
+   * Checks if a road feature is completed in the Carcassonne game board.
+   *
+   * @param map               The `CarcassonneBoard` containing the game state.
+   * @param connectedFeatures The set of positions and segments representing the road.
+   * @return                  `true` if the road is completed, `false` otherwise.
+   */
   def checkRoadCompleted(map: CarcassonneBoard, connectedFeatures: Set[(Position, TileSegment)]): Boolean =
     val tiles = map.getTileMap.get.map((position, gametile) => stringifyTile(position, gametile)).mkString("\n")
     val engine: Term => LazyList[Term] = mkPrologEngine(
@@ -64,6 +84,13 @@ class PrologProcessing:
     else
       true
 
+  /**
+   * Checks if a monastery feature is completed in the Carcassonne game board.
+   *
+   * @param map               The `CarcassonneBoard` containing the game state.
+   * @param connectedFeatures The set of positions and segments representing the monastery.
+   * @return                  `true` if the monastery is completed, `false` otherwise.
+   */
   def checkMonasteryCompleted(map: CarcassonneBoard, connectedFeatures: Set[(Position, TileSegment)]): Boolean =
     val tiles = map.getTileMap.get.map((position, gametile) => stringifyTile(position, gametile)).mkString("\n")
     val engine: Term => LazyList[Term] = mkPrologEngine(
@@ -84,5 +111,3 @@ class PrologProcessing:
       false
     else
       true
-
-
