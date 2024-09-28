@@ -13,9 +13,15 @@ import scalafx.scene.layout.{GridPane, HBox, StackPane, VBox}
 import scalafx.scene.text.{Font, Text}
 import scalafx.stage.Stage
 
+/** A view for starting the game, providing options to start, learn how to play, or exit.
+ *
+ * @param switchMainGameView
+ *   A function to switch to the main game view with a list of player names.
+ */
 class GameStarterView(switchMainGameView: List[String] => Unit) extends StackPane
   with SubjectStarterView:
 
+  /** The game logo image view. */
   private val gameLogo = new ImageView(new Image("carcaScala.png")):
     preserveRatio = true
     fitWidth = 700
@@ -23,10 +29,16 @@ class GameStarterView(switchMainGameView: List[String] => Unit) extends StackPan
     alignment = TopCenter
     padding = Insets(0, 0, 50, 0)
 
+  /** Button to start the game, which shows the player setup dialog. */
   private val startGameButton = createButton("Start Game", showPlayerSetupDialog())
+
+  /** Button to show how to play the game. */
   private val howToPlayButton = createButton("How To Play", showHowToPlayDialog())
+
+  /** Button to exit the game. */
   private val exitGameButton = createButton("Exit Game", Platform.exit())
 
+  /** A vertical box containing the game logo and buttons. */
   private val verticalButtonBox = new VBox(10):
     children.addAll(gameLogo, startGameButton, howToPlayButton, exitGameButton)
     alignment = Pos.Center
@@ -35,6 +47,15 @@ class GameStarterView(switchMainGameView: List[String] => Unit) extends StackPan
   this.padding = Insets(10)
   StackPane.setAlignment(verticalButtonBox, Pos.Center)
 
+  /** Creates a button with the specified text and action.
+   *
+   * @param text
+   *   The text to display on the button.
+   * @param action
+   *   The action to perform when the button is clicked.
+   * @return
+   *   A new button with the specified text and action.
+   */
   private def createButton(text: String, action: => Unit): Button =
     new Button(text):
       alignment = Center
@@ -44,6 +65,7 @@ class GameStarterView(switchMainGameView: List[String] => Unit) extends StackPan
       padding = Insets(5)
       onMouseClicked = _ => action
 
+  /** Shows the player setup dialog. */
   private def showPlayerSetupDialog(): Unit =
     val playerSetupStage = new Stage:
       title = "Player Setup"
@@ -51,6 +73,11 @@ class GameStarterView(switchMainGameView: List[String] => Unit) extends StackPan
         root = createPlayerSetupPane()
     playerSetupStage.showAndWait()
 
+  /** Creates the player setup pane.
+   *
+   * @return
+   *   A VBox containing the player setup controls.
+   */
   private def createPlayerSetupPane(): VBox =
     val playerNames = List.fill(5)(new TextField:
       promptText = "Enter player name"
@@ -61,7 +88,7 @@ class GameStarterView(switchMainGameView: List[String] => Unit) extends StackPan
       value = 2
       onAction = _ =>
         val selectedCount = value.value
-        playerNames.zipWithIndex.foreach((textField, index) => 
+        playerNames.zipWithIndex.foreach((textField, index) =>
           (textField, index) match
             case (textField, index) => textField.visible = index < selectedCount
         )
@@ -96,6 +123,7 @@ class GameStarterView(switchMainGameView: List[String] => Unit) extends StackPan
           )
       )
 
+  /** Shows the how to play dialog. */
   private def showHowToPlayDialog(): Unit =
     val howToPlayStage = new Stage:
       title = "How To Play"
@@ -103,6 +131,13 @@ class GameStarterView(switchMainGameView: List[String] => Unit) extends StackPan
         root = createHowToPlayPane(this)
     howToPlayStage.showAndWait()
 
+  /** Creates the how to play pane.
+   *
+   * @param howToPlayStage
+   *   The scene for the how to play stage.
+   * @return
+   *   A ScrollPane containing the how to play content.
+   */
   private def createHowToPlayPane(howToPlayStage: Scene): ScrollPane =
     val contentBox = new VBox:
       margin = Insets(10)
