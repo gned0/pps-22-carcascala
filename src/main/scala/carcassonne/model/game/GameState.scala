@@ -29,7 +29,7 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
   def drawTile(): Unit =
     deck.draw() match
       case Some(tile) =>
-        notifyTileDrawn(tile)
+        notifyTileDrawn(tile, deck.getTileCount)
       case None =>
         calculateScore(true)
         notifyGameEnded(players)
