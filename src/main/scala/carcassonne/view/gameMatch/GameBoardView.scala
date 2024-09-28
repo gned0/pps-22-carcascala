@@ -7,18 +7,11 @@ import scalafx.scene.input.{MouseEvent, ScrollEvent}
 import scalafx.scene.layout.*
 import scalafx.scene.paint.Color
 import carcassonne.util.Color as SFXColor
+import carcassonne.view.gameMatch.GameBoardView.{initialX, initialY, maxZoom, minZoom, zoomFactor, zoomIncrement}
 import scalafx.scene.control.Button
 import scalafx.scene.transform.Scale
 
-/**
- * Represents the game board view in the Carcassonne game.
- * This class extends `StackPane` and provides functionality for handling mouse events
- * such as dragging and zooming.
- *
- * @param centerButton The button used to center the game board.
- */
-class GameBoardView(centerButton: Button) extends StackPane:
-
+object GameBoardView:
   /** Initial X position of the mouse when pressed. */
   private var initialX: Double = -115.0
 
@@ -36,6 +29,15 @@ class GameBoardView(centerButton: Button) extends StackPane:
 
   /** Maximum zoom level allowed. */
   private val maxZoom: Double = 3.0
+
+/**
+ * Represents the game board view in the Carcassonne game.
+ * This class extends `StackPane` and provides functionality for handling mouse events
+ * such as dragging and zooming.
+ *
+ * @param centerButton The button used to center the game board.
+ */
+class GameBoardView(centerButton: Button) extends StackPane:
 
   /**
    * Handles the mouse pressed event to record the initial mouse position.
