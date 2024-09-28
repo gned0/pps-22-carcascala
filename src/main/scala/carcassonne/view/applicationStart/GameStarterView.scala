@@ -79,9 +79,10 @@ class GameStarterView(switchMainGameView: List[String] => Unit) extends StackPan
    *   A VBox containing the player setup controls.
    */
   private def createPlayerSetupPane(): VBox =
-    val playerNames = List.fill(5)(new TextField:
-      promptText = "Enter player name"
-      visible = false
+    val playerNames = List.fill(5)(
+      new TextField():
+        promptText = "Enter player name"
+        visible = false
     )
 
     val playerCountComboBox = new ComboBox[Int](2 to 5):
