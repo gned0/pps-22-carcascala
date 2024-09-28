@@ -14,6 +14,8 @@ import scalafx.scene.transform.Scale
  * Represents the game board view in the Carcassonne game.
  * This class extends `StackPane` and provides functionality for handling mouse events
  * such as dragging and zooming.
+ *
+ * @param centerButton The button used to center the game board.
  */
 class GameBoardView(centerButton: Button) extends StackPane:
 
@@ -82,27 +84,33 @@ class GameBoardView(centerButton: Button) extends StackPane:
 
     event.consume()
 
-  // Set the minimum size of the game board to its preferred size.
+  // Set minimum size of the game board view
   this.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
 
-  // Set the preferred size of the game board.
+  // Set preferred size of the game board view
   this.setPrefSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
 
-  // Set the maximum size of the game board to the maximum possible value.
+  // Set maximum size of the game board view
   this.setMaxSize(Double.MaxValue, Double.MaxValue)
 
-  // Align the game board to the center of the stack pane.
+  // Align the game board view to the center of the stack pane
   StackPane.setAlignment(this, Pos.Center)
 
+  // Set the background color of the game board view
   this.background = new Background(Array(new BackgroundFill(SFXColor.getCustomSFXColor(97, 204, 246, 1), CornerRadii.Empty, Insets.Empty)))
 
+  // Allow the game board view to grow horizontally
   this.hgrow = Priority.Always
 
+  // Initialize the translation and scaling of the game board view
   this.translateX = this.translateX.value + initialX
   this.translateY = this.translateY.value + initialY
   this.scaleX = zoomFactor
   this.scaleY = zoomFactor
-  
+
+  /**
+   * Handles the mouse clicked event on the center button to reset the game board view.
+   */
   this.centerButton.onMouseClicked = _ =>
     initialX = -115
     initialY = 0
