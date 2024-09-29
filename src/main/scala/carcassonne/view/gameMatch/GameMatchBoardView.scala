@@ -25,11 +25,7 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
   with ObserverGameMenuView
   with SubjectGameMatchView
   with ObserverGameMatchBoard:
-
-  // Set the minimum, preferred, and maximum sizes for the grid pane
-  this.setMinSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE)
-  this.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE)
-  this.setMaxSize(Double.MaxValue, Double.MaxValue)
+  
   this.hgrow = Always
   this.vgrow = Always
   this.alignment = Pos.Center
