@@ -63,13 +63,13 @@ object GameMatchMenuView:
   val TileRotationAngle = 90
 
   /** Default background color for tile rotation buttons */
-  val defaultRotateButtonsBackground = new Background(
-    Array(new BackgroundFill(CarcaColor.getCustomSFXColor(220, 220, 220, 1), new CornerRadii(10), Insets.Empty))
+  val defaultRotateButtonsBackground = Background(
+    Array(BackgroundFill(CarcaColor.getCustomSFXColor(220, 220, 220, 1), CornerRadii(10), Insets.Empty))
   )
 
   /** Background color for disabled tile rotation buttons */
-  val disabledRotateButtonsBackground = new Background(
-    Array(new BackgroundFill(CarcaColor.getCustomSFXColor(100, 100, 100, 1), new CornerRadii(10), Insets.Empty))
+  val disabledRotateButtonsBackground = Background(
+    Array(BackgroundFill(CarcaColor.getCustomSFXColor(100, 100, 100, 1), CornerRadii(10), Insets.Empty))
   )
 
   /** Coordinates for the tile borders */
@@ -82,10 +82,10 @@ object GameMatchMenuView:
   )
 
 /** Represents the game match menu view in the Carcassonne game.
-  *
-  * @param drawnTilePane
-  *   The pane where the drawn tile is displayed.
-  */
+ *
+ * @param drawnTilePane
+ *   The pane where the drawn tile is displayed.
+ */
 class GameMatchMenuView(drawnTilePane: GridPane) extends VBox with SubjectGameMenuView with ObserverGameMatchMenu:
 
   private val playerText: Text = new Text("Current Player: "):
@@ -102,30 +102,30 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox with SubjectGameMe
     alignment = Pos.TopCenter
     padding = Insets(5, 0, 15, 0)
     spacing = 5
-    border = new Border(
-      new BorderStroke(
+    border = Border(
+      BorderStroke(
         Color.Black,
         BorderStrokeStyle.Solid,
         CornerRadii.Empty,
         BorderWidths.Default
       )
     )
-    children = Seq(new Text("Scoreboard:") {
-      fill = Color.White
-      font = Font.font(DefaultFontName, FontWeight.Bold, TitleFontSize)
-    })
+  children = Seq(new Text("Scoreboard:"):
+    fill = Color.White
+    font = Font.font(DefaultFontName, FontWeight.Bold, TitleFontSize)
+  )
 
   private val remainingTiles: VBox = new VBox():
     alignment = Pos.TopCenter
     padding = Insets(5, 0, 15, 0)
     spacing = 5
-    children = Seq(new Text("Remaining tiles:") {
+    children = Seq(new Text("Remaining tiles:"):
       fill = Color.White
       font = Font.font(DefaultFontName, FontWeight.Bold, FollowerFontSize)
-    })
+    )
 
-  val rotateClockwise: StackPane = createRotateButtons(s"rotateClockwise.png")
-  val rotateCounterClockwise: StackPane = createRotateButtons(s"rotateCounterClockwise.png")
+  val rotateClockwise: StackPane = createRotateButtons("rotateClockwise.png")
+  val rotateCounterClockwise: StackPane = createRotateButtons("rotateCounterClockwise.png")
   val skipFollowerPlacement: Button = new Button("Skip Placement"):
     alignment = Pos.TopCenter
 
@@ -138,9 +138,9 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox with SubjectGameMe
   this.children = Seq(
     new VBox():
       alignment = Pos.TopCenter
-      this.padding = Insets(15, 5, 15, 5)
-      border = new Border(
-        new BorderStroke(
+      padding = Insets(15, 5, 15, 5)
+      border = Border(
+        BorderStroke(
           Color.Black,
           BorderStrokeStyle.Solid,
           CornerRadii.Empty,
@@ -151,9 +151,9 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox with SubjectGameMe
     ,
     new VBox():
       alignment = Pos.TopCenter
-      this.padding = Insets(15, 5, 15, 5)
-      border = new Border(
-        new BorderStroke(
+      padding = Insets(15, 5, 15, 5)
+      border = Border(
+        BorderStroke(
           Color.Black,
           BorderStrokeStyle.Solid,
           CornerRadii.Empty,
@@ -181,18 +181,18 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox with SubjectGameMe
   this.alignment = Pos.TopCenter
   this.minWidth = 250
   this.maxWidth = 250
-  this.background = new Background(Array(new BackgroundFill(BackgroundColor, CornerRadii.Empty, Insets.Empty)))
-  this.border = new Border(new BorderStroke(Color.Black, BorderStrokeStyle.Solid, CornerRadii.Empty, BorderWidths(3)))
+  this.background = Background(Array(BackgroundFill(BackgroundColor, CornerRadii.Empty, Insets.Empty)))
+  this.border = Border(BorderStroke(Color.Black, BorderStrokeStyle.Solid, CornerRadii.Empty, BorderWidths(3)))
   this.spacing = PaneSpacing
   this.vgrow = Always
   this.hgrow = Never
   this.padding = Insets(10)
 
   /** Creates the Stackpane for the rotate tiles buttons
-    *
-    * @param imagePath
-    *   The image to show on screen
-    */
+   *
+   * @param imagePath
+   *   The image to show on screen
+   */
   private def createRotateButtons(imagePath: String): StackPane =
     new StackPane():
       prefWidth = TileImageSize * 0.50
@@ -202,30 +202,29 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox with SubjectGameMe
           prefWidth = TileImageSize * 0.50
           prefHeight = TileImageSize * 0.50
         ,
-        new ImageView(new Image(imagePath)):
+        new ImageView(Image(imagePath)):
           alignment = Pos.Center
           fitWidth = TileImageSize * 0.40
           fitHeight = TileImageSize * 0.40
           preserveRatio = true
       )
-
       background = defaultRotateButtonsBackground
       onMouseEntered = _ =>
-        this.background = new Background(Array(new BackgroundFill(Color.White, new CornerRadii(10), Insets.Empty)))
+        this.background = Background(Array(BackgroundFill(Color.White, CornerRadii(10), Insets.Empty)))
         this.cursor = Cursor.Hand
       onMouseExited = _ =>
         this.background = defaultRotateButtonsBackground
         this.cursor = Cursor.Default
 
   /** Rotates the drawn tile.
-    *
-    * @param tile
-    *   The tile to be rotated.
-    * @param tileImage
-    *   The image view of the tile.
-    * @param clockwise
-    *   Whether to rotate clockwise.
-    */
+   *
+   * @param tile
+   *   The tile to be rotated.
+   * @param tileImage
+   *   The image view of the tile.
+   * @param clockwise
+   *   Whether to rotate clockwise.
+   */
   private def rotateDrawnTile(tile: GameTile, tileImage: ImageView, clockwise: Boolean): Unit =
     tileImage.rotate = tileImage.getRotate + (if clockwise then TileRotationAngle else -TileRotationAngle)
     setUpTile(
@@ -235,23 +234,23 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox with SubjectGameMe
     Logger.log("MENU VIEW", s"Drawn tile rotated ${if clockwise then "clockwise" else "counterclockwise"}")
 
   /** Redraws the tile on the pane.
-    *
-    * @param tile
-    *   The tile to be redrawn.
-    * @param tileImage
-    *   The image view of the tile.
-    */
+   *
+   * @param tile
+   *   The tile to be redrawn.
+   * @param tileImage
+   *   The image view of the tile.
+   */
   private def redrawTile(tile: GameTile, tileImage: ImageView): Unit =
     drawnTilePane.getChildren.clear()
     addDrawnTilePaneElements(tile, tileImage)
 
   /** Sets up the tile and its image view.
-    *
-    * @param tile
-    *   The tile to be set up.
-    * @param tileImage
-    *   The image view of the tile.
-    */
+   *
+   * @param tile
+   *   The tile to be set up.
+   * @param tileImage
+   *   The image view of the tile.
+   */
   private def setUpTile(tile: GameTile, tileImage: ImageView): Unit =
     setDrawnTile(tile, tileImage)
     redrawTile(tile, tileImage)
@@ -260,42 +259,42 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox with SubjectGameMe
     rotateCounterClockwise.onMouseClicked = _ => rotateDrawnTile(tile, tileImage, clockwise = false)
 
   /** Adds elements to the drawn tile pane.
-    *
-    * @param tile
-    *   The tile to be added.
-    * @param tileImage
-    *   The image view of the tile.
-    */
+   *
+   * @param tile
+   *   The tile to be added.
+   * @param tileImage
+   *   The image view of the tile.
+   */
   private def addDrawnTilePaneElements(tile: GameTile, tileImage: ImageView): Unit =
     drawnTilePane.add(
-      new Text(s"North: \n${tile.segments(TileSegment.N)}"),
+      Text(s"North: \n${tile.segments(TileSegment.N)}"),
       TileBorderCoordinates("North")._1,
       TileBorderCoordinates("North")._2
     )
     drawnTilePane.add(
-      new Text(s"East: \n${tile.segments(TileSegment.E)}"),
+      Text(s"East: \n${tile.segments(TileSegment.E)}"),
       TileBorderCoordinates("East")._1,
       TileBorderCoordinates("East")._2
     )
     drawnTilePane.add(
-      new Text(s"South: \n${tile.segments(TileSegment.S)}"),
+      Text(s"South: \n${tile.segments(TileSegment.S)}"),
       TileBorderCoordinates("South")._1,
       TileBorderCoordinates("South")._2
     )
     drawnTilePane.add(
-      new Text(s"West: \n${tile.segments(TileSegment.W)}"),
+      Text(s"West: \n${tile.segments(TileSegment.W)}"),
       TileBorderCoordinates("West")._1,
       TileBorderCoordinates("West")._2
     )
     drawnTilePane.add(tileImage, TileBorderCoordinates("Center")._1, TileBorderCoordinates("Center")._2)
 
   /** Sets up the buttons for rotation and skipping follower placement.
-    *
-    * @param activateRotation
-    *   Whether to activate rotation buttons.
-    * @param position
-    *   The position of the tile.
-    */
+   *
+   * @param activateRotation
+   *   Whether to activate rotation buttons.
+   * @param position
+   *   The position of the tile.
+   */
   private def setUpButtons(activateRotation: Boolean, position: Option[Position]): Unit =
     skipFollowerPlacement.onMouseClicked = _ => notifySkipTurn(position)
     if activateRotation then
@@ -308,29 +307,29 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox with SubjectGameMe
     rotateCounterClockwise.disable = activateRotation
 
   /** Handles the event when a tile is drawn.
-    *
-    * @param tile
-    *   The drawn tile.
-    */
+   *
+   * @param tile
+   *   The drawn tile.
+   */
   override def tileDrawn(tile: GameTile, tilesCount: Int): Unit =
     setUpButtons(false, None)
     Logger.log("MENU VIEW", "Tile drawn")
-    val tileImage = new ImageView(new Image(s"tiles/${tile.imagePath}")):
+    val tileImage = new ImageView(Image(s"tiles/${tile.imagePath}")):
       fitWidth = TileImageSize
       fitHeight = TileImageSize
       preserveRatio = true
     setUpTile(tile, tileImage)
     remainingTiles.children.clear()
-    remainingTiles.children.add(new Text(s"Remaining tiles: $tilesCount") {
+    remainingTiles.children.add(new Text(s"Remaining tiles: $tilesCount"):
       fill = Color.White
       font = Font.font(DefaultFontName, FontWeight.Bold, TitleFontSize)
-    })
+    )
 
   /** Handles the event when the player changes.
-    *
-    * @param player
-    *   The new current player.
-    */
+   *
+   * @param player
+   *   The new current player.
+   */
   override def playerChanged(player: Player): Unit =
     setCurrentPlayer(player)
     playerText.text = s"Current Player: ${player.name}"
@@ -339,24 +338,24 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox with SubjectGameMe
     followerNumber.fill = player.getSFXColor
 
   /** Handles the event when available follower positions are updated.
-    *
-    * @param availSegments
-    *   The available segments for follower placement.
-    * @param position
-    *   The position of the tile.
-    */
+   *
+   * @param availSegments
+   *   The available segments for follower placement.
+   * @param position
+   *   The position of the tile.
+   */
   override def availableFollowerPositions(availSegments: List[TileSegment], position: Position): Unit =
     setUpButtons(true, Some(position))
 
   override def updateScoreboard(scores: Map[Player, Int]): Unit =
     scoreboard.children.clear()
-    scoreboard.children.add(new Text("Scoreboard:") {
+    scoreboard.children.add(new Text("Scoreboard:"):
       fill = Color.White
       font = Font.font(DefaultFontName, FontWeight.Bold, TitleFontSize)
-    })
-    scores.foreach { case (player, score) =>
-      scoreboard.children.add(new Text(s"${player.name}: $score") {
+    )
+    scores.foreach { (player, score) =>
+      scoreboard.children.add(new Text(s"${player.name}: $score"):
         fill = player.getSFXColor
         font = Font.font(DefaultFontName, FontWeight.Normal, FollowerFontSize)
-      })
+      )
     }
