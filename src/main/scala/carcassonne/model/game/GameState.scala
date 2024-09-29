@@ -11,21 +11,35 @@ import carcassonne.util.{Logger, Position}
 
 import scala.annotation.tailrec
 import scala.collection.mutable
+import scala.util.{Try, Success, Failure}
 
 object GameState:
   private val MinPlayers = 2
 
+/**
+ * Represents the state of the game.
+ *
+ * @param players the list of players participating in the game
+ * @param board the game board
+ * @param deck the deck of tiles
+ */
 class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoard(), deck: TileDeck = TileDeck())
-    extends SubjectGameMatch:
-  require(
-    players.length >= GameState.MinPlayers,
-    s"At least ${GameState.MinPlayers} players are required to start the game."
-  )
+  extends SubjectGameMatch:
+
+  require(players.length >= GameState.MinPlayers, s"At least ${GameState.MinPlayers} players are required to start the game.")
 
   private var currentPlayerIndex: Int = 0
 
+  /**
+   * Gets the current player.
+   *
+   * @return the current player
+   */
   private def currentPlayer: Player = players(currentPlayerIndex)
 
+  /**
+   * Draws a tile from the deck.
+   */
   def drawTile(): Unit =
     deck.draw() match
       case Some(tile) =>
@@ -34,50 +48,74 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
         calculateScore(true)
         notifyGameEnded(players)
 
+  /**
+   * Places a tile on the board.
+   *
+   * @param gameTile the tile to place
+   * @param position the position to place the tile
+   * @return true if the tile was placed successfully, false otherwise
+   */
   def placeTile(gameTile: GameTile, position: Position): Boolean =
     val isTilePlaced = board.placeTile(gameTile, position)
     notifyIsTilePlaced(isTilePlaced, position)
     isTilePlaced
 
+  /**
+   * Places a follower on a tile segment.
+   *
+   * @param position the position of the tile
+   * @param segment the segment of the tile
+   * @param player the player placing the follower
+   * @return true if the follower was placed successfully, false otherwise
+   */
   def placeFollower(position: Position, segment: TileSegment, player: Player): Boolean =
     if board.placeFollower(position, segment, player) then
       player.placeFollower()
       Logger.log(
-        s"GAMESTATE",
-        s"Player: " + player.name + " placed a follower on tile: " + board.getTile(position) +
-          " on segment: " + segment
+        "GAMESTATE",
+        s"Player: ${player.name} placed a follower on tile: ${board.getTile(position)} on segment: $segment"
       )
       true
     else false
 
+  /**
+   * Sends available follower positions for a given tile and position.
+   *
+   * @param gameTile the tile to check
+   * @param position the position of the tile
+   */
   def sendAvailableFollowerPositions(gameTile: GameTile, position: Position): Unit =
     val segmentMap = currentPlayer.getFollowers match
       case 0 => List.empty[TileSegment]
       case _ =>
         gameTile.segments.collect {
           case (segment, _) if {
-                val connectedFeature = board.getConnectedFeature(position, segment)
-                connectedFeature.nonEmpty &&
-                !connectedFeature.exists { case (pos, seg) => board.getTile(pos).get.getFollowerMap.contains(seg) }
-              } =>
+            val connectedFeature = board.getConnectedFeature(position, segment)
+            connectedFeature.nonEmpty &&
+              !connectedFeature.exists { case (pos, seg) => board.getTile(pos).get.getFollowerMap.contains(seg) }
+          } =>
             segment
         }.toList
     notifyAvailableFollowerPositions(segmentMap, position)
 
+  /**
+   * Calculates the score for the players.
+   *
+   * @param endGame whether the game has ended
+   */
   def calculateScore(endGame: Boolean): Unit =
     val followerTiles = board.getTileMap.get
       .filter((_, tile) => tile.getFollowerMap.nonEmpty)
     followerTiles.foreach((position, tile) =>
       tile.getFollowerMap.foreach((segment, playerID) =>
         players
-          .filter(p => p.playerId == playerID)
-          .map(p =>
+          .filter(_.playerId == playerID)
+          .foreach { p =>
             tile.segments(segment) match
               case Road =>
                 val score = ScoreCalculator().calculateRoadPoints(segment, position, board, endGame)
                 if score != 0 then
-//              if PrologProcessing().checkRoadCompleted(board, board.getConnectedFeature(position, segment)) then
-                  println("Road: " + score)
+                  println(s"Road: $score")
                   p.addScore(score)
                   p.returnFollower()
                   board.removeFollower(board.getTile(position).get)
@@ -85,8 +123,7 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
               case City =>
                 val score = ScoreCalculator().calculateCityPoints(segment, position, board, endGame)
                 if score != 0 then
-//              if PrologProcessing().checkCityCompleted(board, board.getConnectedFeature(position, segment)) then
-                  println("City: " + score)
+                  println(s"City: $score")
                   p.addScore(score)
                   p.returnFollower()
                   board.removeFollower(board.getTile(position).get)
@@ -94,8 +131,7 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
               case Monastery =>
                 val score = ScoreCalculator().calculateMonasteryPoints(segment, position, board, endGame)
                 if score != 0 then
-//              if PrologProcessing().checkMonasteryCompleted(board, board.getConnectedFeature(position, segment)) then
-                  println("Monastery: " + score)
+                  println(s"Monastery: $score")
                   p.addScore(score)
                   p.returnFollower()
                   board.removeFollower(board.getTile(position).get)
@@ -104,28 +140,49 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
                 if endGame then
                   val score = ScoreCalculator().calculateFieldPoints(segment, position, board)
                   if score != 0 then
-                    println("Field: " + score)
+                    println(s"Field: $score")
                     p.addScore(score)
                     p.returnFollower()
                     board.removeFollower(board.getTile(position).get)
                     notifyScoreCalculated(position, tile)
-          )
+          }
       )
     )
     notifyScoreboardUpdated(createScoreboard())
 
+  /**
+   * Advances to the next player.
+   */
   def nextPlayer(): Unit =
     currentPlayerIndex = (currentPlayerIndex + 1) % players.length
     notifyPlayerChanged(currentPlayer)
 
+  /**
+   * Initializes the first player and places the start tile.
+   */
   def initializeFirstPlayer(): Unit =
     notifyPlayerChanged(currentPlayer)
     notifyScoreboardUpdated(createScoreboard())
     placeTile(GameTile.createStartTile(), Position(500, 500))
 
+  /**
+   * Gets the list of players.
+   *
+   * @return the list of players
+   */
   def getPlayers: List[Player] = players
 
+  /**
+   * Gets the game board.
+   *
+   * @return the game board
+   */
   def getBoard: CarcassonneBoard = board
 
+  /**
+   * Creates a scoreboard mapping players to their scores.
+   *
+   * @return a map of players to their scores
+   */
   private def createScoreboard(): Map[Player, Int] =
     players.map(player => player -> player.getScore).toMap
