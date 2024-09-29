@@ -1,10 +1,7 @@
 package carcassonne.model.tile
 
 import carcassonne.model.tile.SegmentType.{City, Field, Road}
-import carcassonne.model.tile.TileSegment
-import carcassonne.model.tile.TileSegment.*
 import play.api.libs.json.*
-
 import scala.util.Random
 
 /** Represents the different segments of a tile in the Carcassonne game.
@@ -43,102 +40,88 @@ object TileSegment:
    *
    * Provides methods to convert TileSegment to and from JSON.
    */
-  implicit val tileSegmentFormat: Format[TileSegment] = new Format[TileSegment] {
-    /** Reads a JSON value and converts it to a TileSegment.
-     *
-     * @param json The JSON value to read from.
-     * @return A JsResult containing the TileSegment if successful, or a JsError if not.
-     */
-    def reads(json: JsValue): JsResult[TileSegment] = json.as[String] match {
-      case "N" => JsSuccess(N)
-      case "NE" => JsSuccess(NE)
-      case "E" => JsSuccess(E)
-      case "SE" => JsSuccess(SE)
-      case "S" => JsSuccess(S)
-      case "SW" => JsSuccess(SW)
-      case "W" => JsSuccess(W)
-      case "NW" => JsSuccess(NW)
-      case "C" => JsSuccess(C)
+  given Format[TileSegment] with
+    def reads(json: JsValue): JsResult[TileSegment] = json.as[String] match
+      case "N" => JsSuccess(TileSegment.N)
+      case "NE" => JsSuccess(TileSegment.NE)
+      case "E" => JsSuccess(TileSegment.E)
+      case "SE" => JsSuccess(TileSegment.SE)
+      case "S" => JsSuccess(TileSegment.S)
+      case "SW" => JsSuccess(TileSegment.SW)
+      case "W" => JsSuccess(TileSegment.W)
+      case "NW" => JsSuccess(TileSegment.NW)
+      case "C" => JsSuccess(TileSegment.C)
       case other => JsError(s"Unknown tile segment: $other")
-    }
 
-    /** Writes a TileSegment as a JSON value.
-     *
-     * @param tileSegment The TileSegment to convert to JSON.
-     * @return A JsValue representing the TileSegment.
-     */
     def writes(tileSegment: TileSegment): JsValue = JsString(tileSegment.toString)
-  }
 
-/**
- * Represents a tile in the game.
+/** Represents a tile in the game.
  *
  * @param segments A map representing all the segments of the tile and their types.
  * @param imagePath The path to the image representing this tile.
  */
-case class GameTile(
-                     segments: Map[TileSegment, SegmentType],
-                     imagePath: String
-                   ):
+case class GameTile(segments: Map[TileSegment, SegmentType], imagePath: String):
 
   private var followerMap: Map[TileSegment, Int] = Map.empty
 
+  /** Places a follower on a specific segment of the tile.
+   *
+   * @param segment The segment where the follower is to be placed.
+   * @param playerId The ID of the player placing the follower.
+   */
   def placeFollower(segment: TileSegment, playerId: Int): Unit =
     followerMap = followerMap.updated(segment, playerId)
 
+  /** Removes a follower from a specific segment of the tile.
+   *
+   * @param segment The segment from which the follower is to be removed.
+   */
   def removeFollower(segment: TileSegment): Unit =
-    followerMap = followerMap - segment
-  
+    followerMap = followerMap.removed(segment)
+
+  /** Retrieves the current map of followers on the tile.
+   *
+   * @return A map where keys are segments and values are player IDs.
+   */
   def getFollowerMap: Map[TileSegment, Int] = followerMap
-  
-  /**
-   * Rotates the tile 90 degrees clockwise.
+
+  /** Rotates the tile 90 degrees clockwise.
    *
    * @return A new GameTile instance with segments rotated clockwise.
    */
   def rotateClockwise: GameTile =
-    GameTile(
-      rotateSegments(segments, rotateClockwiseMapping),
-      imagePath
-    )
+    GameTile(segments.map { case (segment, segmentType) => rotateClockwiseMapping(segment) -> segmentType }, imagePath)
 
-  /**
-   * Rotates the tile 90 degrees counter-clockwise.
+  /** Rotates the tile 90 degrees counter-clockwise.
    *
    * @return A new GameTile instance with segments rotated counter-clockwise.
    */
   def rotateCounterClockwise: GameTile =
-    GameTile(
-      rotateSegments(segments, rotateCounterClockwiseMapping),
-      imagePath
-    )
+    GameTile(segments.map { case (segment, segmentType) => rotateCounterClockwiseMapping(segment) -> segmentType }, imagePath)
 
-  private def rotateSegments(matrix: Map[TileSegment, SegmentType], mapping: Map[TileSegment, TileSegment]): Map[TileSegment, SegmentType] =
-    matrix.map { case (segment, segmentType) => mapping.getOrElse(segment, segment) -> segmentType }
+  private val rotateClockwiseMapping: PartialFunction[TileSegment, TileSegment] = {
+    case TileSegment.NW => TileSegment.NE
+    case TileSegment.N => TileSegment.E
+    case TileSegment.NE => TileSegment.SE
+    case TileSegment.W => TileSegment.N
+    case TileSegment.C => TileSegment.C
+    case TileSegment.E => TileSegment.S
+    case TileSegment.SW => TileSegment.NW
+    case TileSegment.S => TileSegment.W
+    case TileSegment.SE => TileSegment.SW
+  }
 
-  private val rotateClockwiseMapping: Map[TileSegment, TileSegment] = Map(
-    NW -> NE,
-    N -> E,
-    NE -> SE,
-    W -> N,
-    C -> C,
-    E -> S,
-    SW -> NW,
-    S -> W,
-    SE -> SW
-  )
-
-  private val rotateCounterClockwiseMapping: Map[TileSegment, TileSegment] = Map(
-    NW -> SW,
-    N -> W,
-    NE -> NW,
-    W -> S,
-    C -> C,
-    E -> N,
-    SW -> SE,
-    S -> E,
-    SE -> NE
-  )
+  private val rotateCounterClockwiseMapping: PartialFunction[TileSegment, TileSegment] = {
+    case TileSegment.NW => TileSegment.SW
+    case TileSegment.N => TileSegment.W
+    case TileSegment.NE => TileSegment.NW
+    case TileSegment.W => TileSegment.S
+    case TileSegment.C => TileSegment.C
+    case TileSegment.E => TileSegment.N
+    case TileSegment.SW => TileSegment.SE
+    case TileSegment.S => TileSegment.E
+    case TileSegment.SE => TileSegment.NE
+  }
 
 /** Companion object for GameTile.
  *
@@ -155,16 +138,15 @@ object GameTile:
    */
   def createRandomTile(): GameTile =
     val segments = TileSegment.values.map { segment =>
-      val segmentType = Random.nextInt(3) match {
+      val segmentType = Random.nextInt(3) match
         case 0 => City
         case 1 => Road
         case 2 => Field
-      }
       segment -> segmentType
     }.toMap
 
     val imagePath = s"RandomTile${Random.nextInt(10)}.png"
-    new GameTile(segments, imagePath)
+    GameTile(segments, imagePath)
 
   /** Creates the starting tile for the game.
    *
@@ -176,15 +158,15 @@ object GameTile:
   def createStartTile(): GameTile =
     GameTile(
       Map(
-        NW -> Field,
-        N -> City,
-        NE -> Field,
-        W -> Road,
-        C -> Road,
-        E -> Road,
-        SW -> Field,
-        S -> Field,
-        SE -> Field
+        TileSegment.NW -> Field,
+        TileSegment.N -> City,
+        TileSegment.NE -> Field,
+        TileSegment.W -> Road,
+        TileSegment.C -> Road,
+        TileSegment.E -> Road,
+        TileSegment.SW -> Field,
+        TileSegment.S -> Field,
+        TileSegment.SE -> Field
       ),
       "CastleSideRoad.png"
     )
@@ -193,24 +175,13 @@ object GameTile:
    *
    * Provides methods to convert GameTile to and from JSON.
    */
-  implicit val gameTileFormat: Format[GameTile] = new Format[GameTile] {
-    /** Reads a JSON value and converts it to a GameTile.
-     *
-     * @param json The JSON value to read from.
-     * @return A JsResult containing the GameTile if successful, or a JsError if not.
-     */
-    def reads(json: JsValue): JsResult[GameTile] = for {
+  given Format[GameTile] with
+    def reads(json: JsValue): JsResult[GameTile] = for
       segments <- (json \ "segments").validate[Map[TileSegment, SegmentType]]
       imagePath <- (json \ "imagePath").validate[String]
-    } yield GameTile(segments, imagePath)
+    yield GameTile(segments, imagePath)
 
-    /** Writes a GameTile as a JSON value.
-     *
-     * @param gameTile The GameTile to convert to JSON.
-     * @return A JsValue representing the GameTile.
-     */
     def writes(gameTile: GameTile): JsValue = Json.obj(
       "segments" -> gameTile.segments,
       "imagePath" -> gameTile.imagePath
     )
-  }
