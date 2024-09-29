@@ -149,7 +149,7 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
       GameMatchFollowerGridView(
         availSegments,
         getDrawnTile._2,
-        getCurrentPlayer,
+        getCurrentPlayer.get,
         position,
         notifyFollowerPlacement,
         createNewPlaceholders

@@ -7,8 +7,13 @@ import carcassonne.util.Position
 /**
  * A trait representing an observer for the game map.
  *
- * @tparam S the type of the subject being observed
+ * This trait defines the contract for observing changes in the game map, such as switching the main game view.
  */
 trait ObserverStarterView:
 
+  /**
+   * Switches the main game view.
+   *
+   * This method is invoked to switch the current view to the main game view.
+   */
   def switchMainGameView(): Unit
