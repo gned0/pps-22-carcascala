@@ -241,7 +241,7 @@ class TestObserverFollower extends ObserverGameMatchBoard {
   def getAvailSegments: List[TileSegment] = availSegments
 
   // ignored methods
-  def isTilePlaced(isTilePlaced: Boolean, tiles: Option[Map[Position, GameTile]], position: Position): Unit = ()
+  def isTilePlaced(isTilePlaced: Boolean, position: Position): Unit = ()
 
   def gameEnded(players: List[Player]): Unit = ()
 

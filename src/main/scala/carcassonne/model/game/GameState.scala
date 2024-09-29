@@ -36,7 +36,7 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
 
   def placeTile(gameTile: GameTile, position: Position): Boolean =
     val isTilePlaced = board.placeTile(gameTile, position)
-    notifyIsTilePlaced(isTilePlaced, board.getTileMap, position)
+    notifyIsTilePlaced(isTilePlaced, position)
     isTilePlaced
 
   def placeFollower(position: Position, segment: TileSegment, player: Player): Boolean =

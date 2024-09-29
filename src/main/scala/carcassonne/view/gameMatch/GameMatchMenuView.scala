@@ -5,37 +5,13 @@ import carcassonne.model.tile.{GameTile, TileSegment}
 import carcassonne.observers.observers.model.ObserverGameMatchMenu
 import carcassonne.observers.subjects.view.SubjectGameMenuView
 import carcassonne.util.{Logger, Position}
-import carcassonne.view.gameMatch.GameMatchMenuView.{
-  BackgroundColor,
-  DefaultFontName,
-  FollowerFontSize,
-  PaneSpacing,
-  TileBorderCoordinates,
-  TileImageSize,
-  TileRotationAngle,
-  TitleFontSize,
-  defaultRotateButtonsBackground,
-  disabledRotateButtonsBackground
-}
+import carcassonne.view.gameMatch.GameMatchMenuView.*
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.Cursor
 import scalafx.scene.control.Button
 import scalafx.scene.image.{Image, ImageView}
 import scalafx.scene.layout.Priority.{Always, Never}
-import scalafx.scene.layout.{
-  Background,
-  BackgroundFill,
-  Border,
-  BorderStroke,
-  BorderStrokeStyle,
-  BorderWidths,
-  CornerRadii,
-  GridPane,
-  HBox,
-  Region,
-  StackPane,
-  VBox
-}
+import scalafx.scene.layout.*
 import scalafx.scene.paint.Color
 import carcassonne.util.Color as CarcaColor
 import scalafx.scene.text.{Font, FontWeight, Text}

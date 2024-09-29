@@ -23,13 +23,11 @@ trait SubjectGameMatch:
   /** Notifies all observers that a tile has been placed.
     * @param isTilePlaced
     *   whether the tile was successfully placed
-    * @param tiles
-    *   the current state of the game map tiles
     * @param position
     *   the position where the tile was placed
     */
-  def notifyIsTilePlaced(isTilePlaced: Boolean, tiles: Option[Map[Position, GameTile]], position: Position): Unit =
-    observersBoardView.foreach(_.isTilePlaced(isTilePlaced, tiles, position))
+  def notifyIsTilePlaced(isTilePlaced: Boolean, position: Position): Unit =
+    observersBoardView.foreach(_.isTilePlaced(isTilePlaced, position))
 
   def notifyTileDrawn(tileDrawn: GameTile, tilesCount: Int): Unit =
     observersMenuView.foreach(_.tileDrawn(tileDrawn, tilesCount))

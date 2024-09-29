@@ -24,7 +24,8 @@ class GameMatchFollowerGridView(
                                  drawnTileImage: ImageView,
                                  currentPlayer: Player,
                                  position: Position,
-                                 notifyFollowerPlacement: (Position, TileSegment, Player) => Unit
+                                 notifyFollowerPlacement: (Position, TileSegment, Player) => Unit,
+                                 createNewPlaceholders: Position => Unit
                                ) extends StackPane:
 
   /**
@@ -34,7 +35,6 @@ class GameMatchFollowerGridView(
   private val followerGrid = new GridPane:
     hgap = 0
     vgap = 0
-    padding = Insets(0)
     alignment = Pos.Center
     prefWidth = drawnTileImage.fitHeight.toDouble
     prefHeight = drawnTileImage.fitHeight.toDouble
@@ -100,6 +100,7 @@ class GameMatchFollowerGridView(
       filledFollower.onMouseExited = null
       filledFollower.effect = currentPlayer.getPlayerColor
       notifyFollowerPlacement(position, segment, currentPlayer)
+      createNewPlaceholders(position)
       followerGrid.getChildren.removeIf(node =>
         GridPane.getColumnIndex(node) != x || GridPane.getRowIndex(node) != y
       )
@@ -115,8 +116,5 @@ class GameMatchFollowerGridView(
       , x, y)
   }
 
-  // Set the maximum width and height of the StackPane
-  this.maxWidth = 10
-  this.maxHeight = 10
   // Add the drawn tile image and the follower grid to the StackPane
   this.children = Seq(drawnTileImage, followerGrid)

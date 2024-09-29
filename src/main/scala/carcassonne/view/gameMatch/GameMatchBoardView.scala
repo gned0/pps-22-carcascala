@@ -25,7 +25,7 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
   with ObserverGameMenuView
   with SubjectGameMatchView
   with ObserverGameMatchBoard:
-  
+
   this.hgrow = Always
   this.vgrow = Always
   this.alignment = Pos.Center
@@ -45,16 +45,19 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
   /**
    * Creates new placeholder tiles around the specified position.
    *
-   * @param tiles The current map of tiles on the board.
    * @param position The position around which new placeholders should be created.
    */
-  private def createNewPlaceholders(tiles: Map[Position, GameTile], position: Position): Unit =
+  private def createNewPlaceholders(position: Position): Unit =
     Seq(position.x - 1, position.x + 1).foreach { posX =>
-      if !tiles.contains(Position(posX, position.y)) then
+      if !this.getChildren.exists(node =>
+        getColumnIndex(node) == posX && getRowIndex(node) == position.y
+      ) then
         createPlaceholderTile(Position(posX, position.y))
     }
     Seq(position.y - 1, position.y + 1).foreach { posY =>
-      if !tiles.contains(Position(position.x, posY)) then
+      if !this.getChildren.exists(node =>
+        getColumnIndex(node) == position.x && getRowIndex(node) == posY
+      ) then
         createPlaceholderTile(Position(position.x, posY))
     }
 
@@ -110,17 +113,13 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
    * Updates the board when a tile is placed.
    *
    * @param isTilePlaced Indicates whether the tile was successfully placed.
-   * @param tilesOption An optional map of the current tiles on the board.
    * @param position The position where the tile was placed.
    */
   override def isTilePlaced(isTilePlaced: Boolean,
-                            tilesOption: Option[Map[Position, GameTile]],
                             position: Position): Unit =
-    tilesOption.foreach { tiles =>
-      if isTilePlaced then
-        placeTile(position, getDrawnTile._2)
-        createNewPlaceholders(tiles, position)
-    }
+    if isTilePlaced then
+      placeTile(position, getDrawnTile._2)
+      if position.equals(Position(500, 500)) then createNewPlaceholders(position)
 
   /**
    * Handles the end of the game.
@@ -152,7 +151,8 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
         getDrawnTile._2,
         getCurrentPlayer,
         position,
-        notifyFollowerPlacement
+        notifyFollowerPlacement,
+        createNewPlaceholders
       )
     )
 
@@ -172,6 +172,7 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
    */
   override def skipFollowerPlacement(position: Option[Position]): Unit =
     position.foreach(removeFollowerGridPane)
+    createNewPlaceholders(position.get)
     notifySkipFollowerPlacement()
 
   /**
