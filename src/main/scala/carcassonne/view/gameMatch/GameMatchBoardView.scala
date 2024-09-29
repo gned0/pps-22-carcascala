@@ -171,8 +171,8 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
    * @param position The position of the tile on the board.
    */
   override def skipFollowerPlacement(position: Option[Position]): Unit =
+    if position.isDefined then createNewPlaceholders(position.get)
     position.foreach(removeFollowerGridPane)
-    createNewPlaceholders(position.get)
     notifySkipFollowerPlacement()
 
   /**
