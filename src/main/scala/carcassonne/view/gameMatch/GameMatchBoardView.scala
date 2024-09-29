@@ -32,11 +32,6 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
   this.setMaxSize(Double.MaxValue, Double.MaxValue)
   this.hgrow = Always
   this.vgrow = Always
-//  GridPane.setHgrow(this, Priority.Always)
-//  GridPane.setVgrow(this, Priority.Always)
-
-//  this.prefWidth = 600
-//  this.prefHeight = 400
   this.alignment = Pos.Center
 
   /**
@@ -84,13 +79,13 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
         new BorderWidths(1)
       ))
       onMouseEntered = _ =>
-        this.background = new Background(Array( 
+        this.background = new Background(Array(
           new BackgroundFill(
             Color.DarkGray,
             CornerRadii.Empty,
             Insets.Empty
-        ))
-      )
+          ))
+        )
         this.cursor = Cursor.Hand
       onMouseExited = _ =>
         this.background = Background.Empty
@@ -107,7 +102,7 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
   private def removeFollowerGridPane(position: Position): Unit =
     this.getChildrenUnmodifiable.toArray
       .collectFirst {
-        case child: javafx.scene.Node if getColumnIndex(child) == position.x && 
+        case child: javafx.scene.Node if getColumnIndex(child) == position.x &&
           getRowIndex(child) == position.y => child
       }
       .collect {
@@ -122,8 +117,8 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
    * @param tilesOption An optional map of the current tiles on the board.
    * @param position The position where the tile was placed.
    */
-  override def isTilePlaced(isTilePlaced: Boolean, 
-                            tilesOption: Option[Map[Position, GameTile]], 
+  override def isTilePlaced(isTilePlaced: Boolean,
+                            tilesOption: Option[Map[Position, GameTile]],
                             position: Position): Unit =
     tilesOption.foreach { tiles =>
       if isTilePlaced then
@@ -139,7 +134,7 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
   override def gameEnded(players: List[Player]): Unit =
     GameEndView(players).popupStage.show()
     gameEndedSwitchView()
-  
+
   /**
    * Updates the current player.
    *
@@ -180,8 +175,11 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
    * @param position The position of the tile on the board.
    */
   override def skipFollowerPlacement(position: Option[Position]): Unit =
-    if position.nonEmpty then removeFollowerGridPane(position.get)
+    position.foreach(removeFollowerGridPane)
     notifySkipFollowerPlacement()
 
+  /**
+   * Ends the game early and switches the view.
+   */
   override def endGameEarly(): Unit =
     gameEndedSwitchView()
