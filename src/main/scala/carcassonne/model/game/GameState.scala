@@ -15,6 +15,7 @@ import scala.util.{Try, Success, Failure}
 
 object GameState:
   private val MinPlayers = 2
+  private val MaxPlayers = 5
 
 /**
  * Represents the state of the game.
@@ -27,6 +28,7 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
   extends SubjectGameMatch:
 
   require(players.length >= GameState.MinPlayers, s"At least ${GameState.MinPlayers} players are required to start the game.")
+  require(players.length <= GameState.MaxPlayers, s"No more than ${GameState.MaxPlayers} players are allowed in the game.")
 
   private var currentPlayerIndex: Int = 0
 
