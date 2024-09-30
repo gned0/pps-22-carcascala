@@ -1,5 +1,6 @@
 package carcassonne
 
+import carcassonne.util.Logger
 import carcassonne.view.GameViewContainer
 import scalafx.application.JFXApp3
 
@@ -14,4 +15,5 @@ object CarcassonneApp extends JFXApp3:
    * Initializes the model, view, and controller, and sets up the primary stage.
    */
   override def start(): Unit =
+    Logger.activateLogger()
     GameStage(GameViewContainer())
