@@ -35,13 +35,14 @@ class GameMatchFollowerGridView(
   private val followerGrid = new GridPane:
     hgap = 0
     vgap = 0
+    padding = Insets(0)
     alignment = Pos.Center
-    prefWidth = drawnTileImage.fitHeight.toDouble
+    prefWidth = drawnTileImage.fitWidth.toDouble
     prefHeight = drawnTileImage.fitHeight.toDouble
 
     // Define column and row constraints to divide the grid into 3 equal parts
-    columnConstraints ++= Seq.fill(3)(ColumnConstraints(100 / 3.0))
-    rowConstraints ++= Seq.fill(3)(RowConstraints(100 / 3.0))
+    columnConstraints ++= Seq.fill(3)(ColumnConstraints(drawnTileImage.fitWidth.toDouble / 3.2))
+    rowConstraints ++= Seq.fill(3)(RowConstraints(drawnTileImage.fitHeight.toDouble / 3.2))
 
   /**
    * Initializes the follower placement options on the grid.
@@ -115,6 +116,11 @@ class GameMatchFollowerGridView(
         children = Seq(followerOutline, filledFollower)
       , x, y)
   }
+
+
+  this.minWidth = 100
+  this.minHeight = 100
+
 
   // Add the drawn tile image and the follower grid to the StackPane
   this.children = Seq(drawnTileImage, followerGrid)
