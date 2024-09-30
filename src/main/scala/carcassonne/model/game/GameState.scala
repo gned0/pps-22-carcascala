@@ -115,40 +115,44 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
               case Road =>
                 val score = ScoreCalculator().calculateRoadPoints(segment, position, board, endGame)
                 if score != 0 then
-                  println(s"Road: $score")
-                  p.addScore(score)
-                  p.returnFollower()
-                  board.removeFollower(board.getTile(position).get)
-                  notifyScoreCalculated(position, tile)
+                  Logger.log(s"GAMESTATE SCORE", s"Player ${p.name} scored -> Road: $score")
+                  finalizeScoreCalcuation(p, position, tile, score)
               case City =>
                 val score = ScoreCalculator().calculateCityPoints(segment, position, board, endGame)
                 if score != 0 then
-                  println(s"City: $score")
-                  p.addScore(score)
-                  p.returnFollower()
-                  board.removeFollower(board.getTile(position).get)
-                  notifyScoreCalculated(position, tile)
+                  Logger.log(s"GAMESTATE SCORE", s"Player ${p.name} scored -> City: $score")
+                  finalizeScoreCalcuation(p, position, tile, score)
               case Monastery =>
                 val score = ScoreCalculator().calculateMonasteryPoints(segment, position, board, endGame)
                 if score != 0 then
-                  println(s"Monastery: $score")
-                  p.addScore(score)
-                  p.returnFollower()
-                  board.removeFollower(board.getTile(position).get)
-                  notifyScoreCalculated(position, tile)
+                  Logger.log(s"GAMESTATE SCORE", s"Player ${p.name} scored -> Monastery: $score")
+                  finalizeScoreCalcuation(p, position, tile, score)
               case Field =>
                 if endGame then
                   val score = ScoreCalculator().calculateFieldPoints(segment, position, board)
                   if score != 0 then
-                    println(s"Field: $score")
-                    p.addScore(score)
-                    p.returnFollower()
-                    board.removeFollower(board.getTile(position).get)
-                    notifyScoreCalculated(position, tile)
+                    Logger.log(s"GAMESTATE SCORE", s"Player ${p.name} scored -> Field: $score")
+                    finalizeScoreCalcuation(p, position, tile, score)
           }
       )
     )
     notifyScoreboardUpdated(createScoreboard())
+
+
+  /**
+   * Finalizes the score calculation for a player for a particular feature by giving the score to the player,
+   * adding back its follower, removing the follower from the board and notifying a score has been calculated.
+   *
+   * @param player the player who obtained the score for the follower place on a feature
+   * @param position the position of the tile where the follower was placed
+   * @param tile the tile of the tile where the follower was placed
+   * @param score the score calculated
+   */
+  private def finalizeScoreCalcuation(player: Player, position: Position, tile: GameTile, score: Int): Unit =
+    player.addScore(score)
+    player.returnFollower()
+    board.removeFollower(board.getTile(position).get)
+    notifyScoreCalculated(position, tile)
 
   /**
    * Advances to the next player.
