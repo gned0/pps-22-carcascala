@@ -13,7 +13,7 @@ lazy val root = (project in file("."))
     libraryDependencies += "it.unibo.alice.tuprolog" % "tuprolog" % "3.3.0",
 
     // Scoverage settings
-    coverageExcludedPackages := "src.main.scala.carcassonne.view.*",
+    coverageExcludedPackages := """carcassonne.view.*""",
 
     libraryDependencies ++= {
       // Determine OS version of JavaFX binaries
