@@ -4,6 +4,8 @@ import carcassonne.model.board.CarcassonneBoard
 import carcassonne.model.tile.{SegmentType, TileSegment}
 import carcassonne.util.Position
 
+import scala.annotation.nowarn
+
 
 /**
  * Class responsible for calculating scores in the Carcassonne game.
@@ -242,7 +244,8 @@ class ScoreCalculator:
                 if connectedCityFeatures.intersect(visited).isEmpty then
                   visited ++= connectedCityFeatures
                   if isCityFinished(connectedCityFeatures, map) then result += 1
-              case _ =>
+              case _ => ()
+              
     result
 
   /**

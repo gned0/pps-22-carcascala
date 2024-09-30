@@ -11,7 +11,6 @@ import scalafx.scene.layout.Region
  * This trait defines the contract for observing changes in the game view, such as tile placements,
  * follower placements, and skipping follower placements.
  *
- * @tparam S the type of the subject being observed
  */
 trait ObserverGameMatchView:
 

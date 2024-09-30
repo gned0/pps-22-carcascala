@@ -10,7 +10,6 @@ import carcassonne.util.Position
  * This trait defines the contract for observing changes in the game map, such as tile placements,
  * game end events, player changes, available follower positions, and score calculations.
  *
- * @tparam S the type of the subject being observed
  */
 trait ObserverGameMatchBoard:
 
