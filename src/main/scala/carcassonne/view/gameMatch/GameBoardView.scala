@@ -3,7 +3,7 @@ package carcassonne.view.gameMatch
 import scalafx.Includes.*
 import scalafx.geometry.{Insets, Pos}
 import scalafx.scene.image.Image
-import scalafx.scene.input.{MouseEvent, ScrollEvent}
+import scalafx.scene.input.{MouseButton, MouseEvent, ScrollEvent}
 import scalafx.scene.layout.*
 import scalafx.scene.paint.Color
 import carcassonne.util.Color as SFXColor
@@ -42,18 +42,16 @@ class GameBoardView(centerButton: Button) extends StackPane:
   /**
    * Handles the mouse pressed event to record the initial mouse position.
    *
-   * @param event The mouse event.
    */
-  this.onMousePressed = (event: MouseEvent) =>
+  this.onMousePressed = (event: MouseEvent) => if event.button == MouseButton.Secondary then
     initialX = event.sceneX
     initialY = event.sceneY
 
   /**
    * Handles the mouse dragged event to translate the game board based on mouse movement.
    *
-   * @param event The mouse event.
    */
-  this.onMouseDragged = (event: MouseEvent) =>
+  this.onMouseDragged = (event: MouseEvent) => if event.button == MouseButton.Secondary then
     val offsetX = event.sceneX - initialX
     val offsetY = event.sceneY - initialY
 
@@ -66,7 +64,6 @@ class GameBoardView(centerButton: Button) extends StackPane:
   /**
    * Handles the scroll event to zoom in and out of the game board.
    *
-   * @param event The scroll event.
    */
   this.onScroll = (event: ScrollEvent) =>
     zoomFactor = if event.deltaY > 0 then
