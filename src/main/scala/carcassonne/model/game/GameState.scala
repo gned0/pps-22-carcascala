@@ -116,23 +116,24 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
                 val score = ScoreCalculator().calculateRoadPoints(segment, position, board, endGame)
                 if score != 0 then
                   Logger.log(s"GAMESTATE SCORE", s"Player ${p.name} scored -> Road: $score")
-                  finalizeScoreCalcuation(p, position, tile, score)
+                  finalizeScoreCalculation(p, position, tile, score)
               case City =>
                 val score = ScoreCalculator().calculateCityPoints(segment, position, board, endGame)
                 if score != 0 then
                   Logger.log(s"GAMESTATE SCORE", s"Player ${p.name} scored -> City: $score")
-                  finalizeScoreCalcuation(p, position, tile, score)
+                  finalizeScoreCalculation(p, position, tile, score)
               case Monastery =>
                 val score = ScoreCalculator().calculateMonasteryPoints(segment, position, board, endGame)
                 if score != 0 then
                   Logger.log(s"GAMESTATE SCORE", s"Player ${p.name} scored -> Monastery: $score")
-                  finalizeScoreCalcuation(p, position, tile, score)
+                  finalizeScoreCalculation(p, position, tile, score)
               case Field =>
                 if endGame then
                   val score = ScoreCalculator().calculateFieldPoints(segment, position, board)
                   if score != 0 then
                     Logger.log(s"GAMESTATE SCORE", s"Player ${p.name} scored -> Field: $score")
-                    finalizeScoreCalcuation(p, position, tile, score)
+                    finalizeScoreCalculation(p, position, tile, score)
+              case _ => throw new IllegalArgumentException("Invalid segment type")
           }
       )
     )
@@ -148,7 +149,7 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
    * @param tile the tile of the tile where the follower was placed
    * @param score the score calculated
    */
-  private def finalizeScoreCalcuation(player: Player, position: Position, tile: GameTile, score: Int): Unit =
+  private def finalizeScoreCalculation(player: Player, position: Position, tile: GameTile, score: Int): Unit =
     player.addScore(score)
     player.returnFollower()
     board.removeFollower(board.getTile(position).get)
