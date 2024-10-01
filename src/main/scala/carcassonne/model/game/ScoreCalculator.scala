@@ -2,7 +2,8 @@ package carcassonne.model.game
 
 import carcassonne.model.board.CarcassonneBoard
 import carcassonne.model.tile.{SegmentType, TileSegment}
-import carcassonne.util.{ScoreAdjacencyPositions, Position}
+import carcassonne.util.Position
+import carcassonne.util.adjacency.ScoreAdjacencyPositions
 
 import scala.annotation.nowarn
 

@@ -1,8 +1,12 @@
-package carcassonne.util
+package carcassonne.util.adjacency
 
-import carcassonne.model.tile.TileSegment.{NW, N, NE, W, C, E, SW, S, SE}
+import carcassonne.model.tile.TileSegment.{C, E, N, NE, NW, S, SE, SW, W}
 import carcassonne.model.tile.{SegmentType, TileSegment}
+import carcassonne.util.Position
 
+/**
+ * Utility class for calculating adjacent positions and segments for calculating connected features.
+ */
 object ConnectedFeaturesAdjacencyPositions:
 
   /**

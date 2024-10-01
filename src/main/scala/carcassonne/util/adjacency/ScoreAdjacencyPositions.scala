@@ -1,8 +1,12 @@
-package carcassonne.util
+package carcassonne.util.adjacency
 
 import carcassonne.model.tile.TileSegment
-import carcassonne.model.tile.TileSegment._
+import carcassonne.model.tile.TileSegment.*
+import carcassonne.util.Position
 
+/**
+ * Utility class for calculating adjacent positions and segments for scoring purposes.
+ */
 class ScoreAdjacencyPositions:
   /**
    * Gets the adjacent tiles and segments for a given position and segment.

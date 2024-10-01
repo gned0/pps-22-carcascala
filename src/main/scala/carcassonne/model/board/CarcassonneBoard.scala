@@ -7,7 +7,7 @@ import carcassonne.model.tile.TileSegment
 import carcassonne.model.tile.TileSegment._
 import carcassonne.model.tile.{GameTile, SegmentType, TileSegment}
 import carcassonne.util.{Logger, Position}
-import carcassonne.util.ConnectedFeaturesAdjacencyPositions.*
+import carcassonne.util.adjacency.ConnectedFeaturesAdjacencyPositions.*
 
 import scala.collection.mutable
 import scala.util.{Try, Success, Failure}
