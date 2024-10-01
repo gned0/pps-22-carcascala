@@ -18,4 +18,4 @@ The implemented digital version is based off of the main release of the board ga
 ### Play the game
 In order to play the game, one can download the available jar in the release tab, but requires Java SE 17 or newer. Generally speaking in order to run the game the steps are as follows:
  1. Download and install [Java SE 17](https://www.oracle.com/de/java/technologies/javase-downloads.html) or a newer version, based on your OS of preference.
- 2. Download and run the [latest executable]() either by double clicking or using the appropriate commands to run a jar file on a command line/prompt.
+ 2. Download and run the latest executable from the latest [release page](https://github.com/gned0/pps-22-carcascala/releases/) either by double clicking or using the appropriate commands to run a jar file on a command line/prompt.
