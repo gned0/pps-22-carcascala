@@ -30,6 +30,7 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
   title = "CarcaScala"
   scene = new Scene(1280, 720):
     root = gameViewContainer
+    icons.add(new Image("CarcaScala-Logo-64x64.png"))
 
   gameViewContainer.children = new GameStarterView(playerNames => switchMainGameView(playerNames))
 
