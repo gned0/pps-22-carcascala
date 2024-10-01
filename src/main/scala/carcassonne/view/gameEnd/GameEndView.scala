@@ -19,12 +19,11 @@ class GameEndView(players: List[Player]):
         spacing = 10
         alignment = Pos.TopCenter
         children = createPlayerScoreLabels(players) :+
-            new Button("Close"):
-              alignment = Pos.BottomCenter
-              onAction = _ => popupStage.close()
+          new Button("Close"):
+            alignment = Pos.BottomCenter
+            onAction = _ => popupStage.close()
 
   // Function to create a label for each player showing their score
   private def createPlayerScoreLabels(players: List[Player]): Seq[Label] =
-    players.map ( player =>
-      new Label(s"${player.name}: ${player.getScore}") // Assuming Player has `name` and `score` fields
+    players.map(player => new Label(s"${player.name}: ${player.getScore}") // Assuming Player has `name` and `score` fields
     )

@@ -38,9 +38,8 @@ class PlayerSuite extends AnyFunSuite with Matchers {
     val player = Player(1, "Alice", Color.Red)
 
     // Place all followers
-    for (_ <- 1 to 7) {
+    for (_ <- 1 to 7)
       player.placeFollower() should be(true)
-    }
 
     // Now all followers are placed
     player.placeFollower() should be(false)

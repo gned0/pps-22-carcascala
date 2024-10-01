@@ -21,11 +21,11 @@ import scalafx.scene.layout.{GridPane, HBox, Priority, Region, StackPane, VBox}
 import scala.util.{Success, Failure}
 import scala.concurrent.ExecutionContext.Implicits.global
 
-/**
- * Represents the primary stage of the Carcassonne game application.
- *
- * @param gameViewContainer The container for the game views.
- */
+/** Represents the primary stage of the Carcassonne game application.
+  *
+  * @param gameViewContainer
+  *   The container for the game views.
+  */
 class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimaryStage:
   title = "CarcaScala"
   scene = new Scene(1280, 720):
@@ -34,11 +34,11 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
 
   gameViewContainer.children = new GameStarterView(playerNames => switchMainGameView(playerNames))
 
-  /**
-   * Switches the main game view to the game match view.
-   *
-   * @param playerNames The list of player names.
-   */
+  /** Switches the main game view to the game match view.
+    *
+    * @param playerNames
+    *   The list of player names.
+    */
   def switchMainGameView(playerNames: List[String]): Unit =
     val gameMenu = GameMatchMenuView(
       new GridPane:
@@ -65,7 +65,7 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
     gameMenu.addObserver(boardView)
 
     val playersWithColors = PlayerColor.assignColors(playerNames)
-    val players = playersWithColors.zipWithIndex.map( tuple =>
+    val players = playersWithColors.zipWithIndex.map(tuple =>
       tuple match
         case ((name, color), index) =>
           Player(index, name, color)
@@ -76,20 +76,17 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
     game.addObserverMenu(gameMenu)
     GameController(game, boardView).initialize()
 
-    this.setMainView(Seq(
-      gameBoard, gameMenu, centerButton)
-    )
+    this.setMainView(Seq(gameBoard, gameMenu, centerButton))
 
-  /**
-   * Switches the view to the game starter view when the game ends.
-   */
+  /** Switches the view to the game starter view when the game ends.
+    */
   def gameEndedSwitchView(): Unit =
     this.setMainView(Seq(new GameStarterView(playerNames => switchMainGameView(playerNames))))
 
-  /**
-   * Sets the main view of the game stage.
-   *
-   * @param views The sequence of views to be set as the main view.
-   */
+  /** Sets the main view of the game stage.
+    *
+    * @param views
+    *   The sequence of views to be set as the main view.
+    */
   private def setMainView(views: Seq[Node]): Unit =
     gameViewContainer.children = views

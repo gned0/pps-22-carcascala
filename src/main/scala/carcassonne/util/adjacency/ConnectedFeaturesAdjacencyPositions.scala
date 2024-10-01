@@ -19,64 +19,71 @@ object ConnectedFeaturesAdjacencyPositions:
     * @return
     *   a set of positions and segments representing adjacent city tile segments
     */
-  def adjacentStrictTileSegments(segment: TileSegment, 
-                                 tilePosition: Position, 
-                                 segmentType: SegmentType): Set[(Position, TileSegment)] =
+  def adjacentStrictTileSegments(segment: TileSegment, tilePosition: Position, segmentType: SegmentType): Set[(Position, TileSegment)] =
     segment match
-      case NW => Set(
-        (tilePosition, N),
-        (tilePosition, W),
-        (Position(tilePosition.x - 1, tilePosition.y), NE),
-        (Position(tilePosition.x, tilePosition.y - 1), SW)
-      )
-      case N => Set(
-        (tilePosition, NW),
-        (tilePosition, C),
-        (tilePosition, NE),
-        (Position(tilePosition.x, tilePosition.y - 1), S)
-      )
-      case NE => Set(
-        (tilePosition, N),
-        (tilePosition, E),
-        (Position(tilePosition.x + 1, tilePosition.y), NW),
-        (Position(tilePosition.x, tilePosition.y - 1), SE)
-      )
-      case W => Set(
-        (tilePosition, NW),
-        (tilePosition, C),
-        (tilePosition, SW),
-        (Position(tilePosition.x - 1, tilePosition.y), E)
-      )
-      case C => Set(
-        (tilePosition, N),
-        (tilePosition, W),
-        (tilePosition, E),
-        (tilePosition, S)
-      )
-      case E => Set(
-        (tilePosition, NE),
-        (tilePosition, C),
-        (tilePosition, SE),
-        (Position(tilePosition.x + 1, tilePosition.y), W)
-      )
-      case SW => Set(
-        (tilePosition, W),
-        (tilePosition, S),
-        (Position(tilePosition.x - 1, tilePosition.y), SE),
-        (Position(tilePosition.x, tilePosition.y + 1), NW)
-      )
-      case S => Set(
-        (tilePosition, SW),
-        (tilePosition, C),
-        (tilePosition, SE),
-        (Position(tilePosition.x, tilePosition.y + 1), TileSegment.N)
-      )
-      case SE => Set(
-        (tilePosition, E),
-        (tilePosition, S),
-        (Position(tilePosition.x + 1, tilePosition.y), SW),
-        (Position(tilePosition.x, tilePosition.y + 1), NE)
-      )
+      case NW =>
+        Set(
+          (tilePosition, N),
+          (tilePosition, W),
+          (Position(tilePosition.x - 1, tilePosition.y), NE),
+          (Position(tilePosition.x, tilePosition.y - 1), SW)
+        )
+      case N =>
+        Set(
+          (tilePosition, NW),
+          (tilePosition, C),
+          (tilePosition, NE),
+          (Position(tilePosition.x, tilePosition.y - 1), S)
+        )
+      case NE =>
+        Set(
+          (tilePosition, N),
+          (tilePosition, E),
+          (Position(tilePosition.x + 1, tilePosition.y), NW),
+          (Position(tilePosition.x, tilePosition.y - 1), SE)
+        )
+      case W =>
+        Set(
+          (tilePosition, NW),
+          (tilePosition, C),
+          (tilePosition, SW),
+          (Position(tilePosition.x - 1, tilePosition.y), E)
+        )
+      case C =>
+        Set(
+          (tilePosition, N),
+          (tilePosition, W),
+          (tilePosition, E),
+          (tilePosition, S)
+        )
+      case E =>
+        Set(
+          (tilePosition, NE),
+          (tilePosition, C),
+          (tilePosition, SE),
+          (Position(tilePosition.x + 1, tilePosition.y), W)
+        )
+      case SW =>
+        Set(
+          (tilePosition, W),
+          (tilePosition, S),
+          (Position(tilePosition.x - 1, tilePosition.y), SE),
+          (Position(tilePosition.x, tilePosition.y + 1), NW)
+        )
+      case S =>
+        Set(
+          (tilePosition, SW),
+          (tilePosition, C),
+          (tilePosition, SE),
+          (Position(tilePosition.x, tilePosition.y + 1), TileSegment.N)
+        )
+      case SE =>
+        Set(
+          (tilePosition, E),
+          (tilePosition, S),
+          (Position(tilePosition.x + 1, tilePosition.y), SW),
+          (Position(tilePosition.x, tilePosition.y + 1), NE)
+        )
 
   /** Retrieves adjacent segments in diagonal.
     *
@@ -89,45 +96,52 @@ object ConnectedFeaturesAdjacencyPositions:
     * @return
     *   a set of positions and segments representing adjacent segments within the current tile
     */
-  def adjacentSegmentsDiagonal(segment: TileSegment, 
-                               tilePosition: Position, 
-                               segmentType: SegmentType): Set[(Position, TileSegment)] =
+  def adjacentSegmentsDiagonal(segment: TileSegment, tilePosition: Position, segmentType: SegmentType): Set[(Position, TileSegment)] =
     segment match
-      case NW => Set(
-        (Position(tilePosition.x - 1, tilePosition.y - 1), SE),
-        (tilePosition, C)
-      )
-      case N => Set(
-        (tilePosition, W),
-        (tilePosition, E)
-      )
-      case NE => Set(
-        (Position(tilePosition.x + 1, tilePosition.y - 1), SW),
-        (tilePosition, C)
-      )
-      case W => Set(
-        (tilePosition, N),
-        (tilePosition, S)
-      )
-      case C => Set(
-        (tilePosition, NE),
-        (tilePosition, NE),
-        (tilePosition, SE),
-        (tilePosition, SE)
-       )
-      case E => Set(
-        (tilePosition, N),
-        (tilePosition, S)
-      )
-      case SW => Set(
-        (Position(tilePosition.x - 1, tilePosition.y + 1), NE),
-        (tilePosition, C)
-      )
-      case S => Set(
-        (tilePosition, W),
-        (tilePosition, E)
-      )
-      case SE => Set(
-        (Position(tilePosition.x + 1, tilePosition.y + 1), NW),
-        (tilePosition, C)
-      )
+      case NW =>
+        Set(
+          (Position(tilePosition.x - 1, tilePosition.y - 1), SE),
+          (tilePosition, C)
+        )
+      case N =>
+        Set(
+          (tilePosition, W),
+          (tilePosition, E)
+        )
+      case NE =>
+        Set(
+          (Position(tilePosition.x + 1, tilePosition.y - 1), SW),
+          (tilePosition, C)
+        )
+      case W =>
+        Set(
+          (tilePosition, N),
+          (tilePosition, S)
+        )
+      case C =>
+        Set(
+          (tilePosition, NE),
+          (tilePosition, NE),
+          (tilePosition, SE),
+          (tilePosition, SE)
+        )
+      case E =>
+        Set(
+          (tilePosition, N),
+          (tilePosition, S)
+        )
+      case SW =>
+        Set(
+          (Position(tilePosition.x - 1, tilePosition.y + 1), NE),
+          (tilePosition, C)
+        )
+      case S =>
+        Set(
+          (tilePosition, W),
+          (tilePosition, E)
+        )
+      case SE =>
+        Set(
+          (Position(tilePosition.x + 1, tilePosition.y + 1), NW),
+          (tilePosition, C)
+        )

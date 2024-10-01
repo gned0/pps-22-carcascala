@@ -30,51 +30,45 @@ object GameBoardView:
   /** Maximum zoom level allowed. */
   private val maxZoom: Double = 3.0
 
-/**
- * Represents the game board view in the Carcassonne game.
- * This class extends `StackPane` and provides functionality for handling mouse events
- * such as dragging and zooming.
- *
- * @param centerButton The button used to center the game board.
- */
+/** Represents the game board view in the Carcassonne game. This class extends `StackPane` and provides functionality for handling mouse events such as dragging and
+  * zooming.
+  *
+  * @param centerButton
+  *   The button used to center the game board.
+  */
 class GameBoardView(centerButton: Button) extends StackPane:
 
-  /**
-   * Handles the mouse pressed event to record the initial mouse position.
-   *
-   */
-  this.onMousePressed = (event: MouseEvent) => if event.button == MouseButton.Secondary then
-    initialX = event.sceneX
-    initialY = event.sceneY
+  /** Handles the mouse pressed event to record the initial mouse position.
+    */
+  this.onMousePressed = (event: MouseEvent) =>
+    if event.button == MouseButton.Secondary then
+      initialX = event.sceneX
+      initialY = event.sceneY
 
-  /**
-   * Handles the mouse dragged event to translate the game board based on mouse movement.
-   *
-   */
-  this.onMouseDragged = (event: MouseEvent) => if event.button == MouseButton.Secondary then
-    val offsetX = event.sceneX - initialX
-    val offsetY = event.sceneY - initialY
+  /** Handles the mouse dragged event to translate the game board based on mouse movement.
+    */
+  this.onMouseDragged = (event: MouseEvent) =>
+    if event.button == MouseButton.Secondary then
+      val offsetX = event.sceneX - initialX
+      val offsetY = event.sceneY - initialY
 
-    this.translateX = this.translateX.value + offsetX
-    this.translateY = this.translateY.value + offsetY
+      this.translateX = this.translateX.value + offsetX
+      this.translateY = this.translateY.value + offsetY
 
-    initialX = event.sceneX
-    initialY = event.sceneY
+      initialX = event.sceneX
+      initialY = event.sceneY
 
-  /**
-   * Handles the scroll event to zoom in and out of the game board.
-   *
-   */
+  /** Handles the scroll event to zoom in and out of the game board.
+    */
   this.onScroll = (event: ScrollEvent) =>
-    zoomFactor = if event.deltaY > 0 then
-      Math.min(zoomFactor + zoomIncrement, maxZoom) // Zoom in
-    else
-      Math.max(zoomFactor - zoomIncrement, minZoom) // Zoom out
+    zoomFactor =
+      if event.deltaY > 0 then Math.min(zoomFactor + zoomIncrement, maxZoom) // Zoom in
+      else Math.max(zoomFactor - zoomIncrement, minZoom) // Zoom out
 
     if zoomFactor > 1 && zoomFactor != maxZoom then
-      this.prefWidth  = this.width.value - this.width.value * zoomFactor
+      this.prefWidth = this.width.value - this.width.value * zoomFactor
       this.prefHeight = this.height.value - this.height.value * zoomFactor
-    else if zoomFactor < 1  && zoomFactor != minZoom then
+    else if zoomFactor < 1 && zoomFactor != minZoom then
       this.prefWidth = this.width.value + this.width.value * zoomFactor
       this.prefHeight = this.height.value + this.height.value * zoomFactor
 
@@ -107,9 +101,8 @@ class GameBoardView(centerButton: Button) extends StackPane:
   this.scaleX = zoomFactor
   this.scaleY = zoomFactor
 
-  /**
-   * Handles the mouse clicked event on the center button to reset the game board view.
-   */
+  /** Handles the mouse clicked event on the center button to reset the game board view.
+    */
   this.centerButton.onMouseClicked = _ =>
     initialX = -115
     initialY = 0

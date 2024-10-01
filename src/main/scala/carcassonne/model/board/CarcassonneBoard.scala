@@ -212,9 +212,8 @@ object CarcassonneBoard:
 
           segmentType match
             case Road | City =>
-              getAdjacentRoadCitiesTileSegments(segment, position, segmentType).foreach((adjPosition, adjSegment) =>
-                if !visited.contains((adjPosition, adjSegment)) then dfs(adjPosition, adjSegment)
-              )
+              getAdjacentRoadCitiesTileSegments(segment, position, segmentType)
+                .foreach((adjPosition, adjSegment) => if !visited.contains((adjPosition, adjSegment)) then dfs(adjPosition, adjSegment))
             case _ =>
               getAdjacentTileSegments(segment, position, segmentType).foreach((adjPosition, adjSegment) =>
                 if !visited.contains((adjPosition, adjSegment)) then dfs(adjPosition, adjSegment)
@@ -264,11 +263,10 @@ object CarcassonneBoard:
         segmentType
       )
 
-    /** Filters the given set of adjacent positions and segments to include only those that match the specified segment
-      * type.
+    /** Filters the given set of adjacent positions and segments to include only those that match the specified segment type.
       *
-      * This method takes a set of adjacent positions and segments and filters it to include only those positions and
-      * segments where the segment type of the tile at the adjacent position matches the specified segment type.
+      * This method takes a set of adjacent positions and segments and filters it to include only those positions and segments where the segment type of the tile at the
+      * adjacent position matches the specified segment type.
       *
       * @param adjacencySet
       *   the set of adjacent positions and segments to filter

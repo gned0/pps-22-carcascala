@@ -58,10 +58,10 @@ object GameMatchMenuView:
   )
 
 /** Represents the game match menu view in the Carcassonne game.
- *
- * @param drawnTilePane
- *   The pane where the drawn tile is displayed.
- */
+  *
+  * @param drawnTilePane
+  *   The pane where the drawn tile is displayed.
+  */
 class GameMatchMenuView(drawnTilePane: GridPane) extends VBox with SubjectGameMenuView with ObserverGameMatchMenu:
 
   private val playerText: Text = new Text("Current Player: "):
@@ -165,10 +165,10 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox with SubjectGameMe
   this.padding = Insets(10)
 
   /** Creates the Stackpane for the rotate tiles buttons
-   *
-   * @param imagePath
-   *   The image to show on screen
-   */
+    *
+    * @param imagePath
+    *   The image to show on screen
+    */
   private def createRotateButtons(imagePath: String): StackPane =
     new StackPane():
       prefWidth = TileImageSize * 0.50
@@ -193,14 +193,14 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox with SubjectGameMe
         this.cursor = Cursor.Default
 
   /** Rotates the drawn tile.
-   *
-   * @param tile
-   *   The tile to be rotated.
-   * @param tileImage
-   *   The image view of the tile.
-   * @param clockwise
-   *   Whether to rotate clockwise.
-   */
+    *
+    * @param tile
+    *   The tile to be rotated.
+    * @param tileImage
+    *   The image view of the tile.
+    * @param clockwise
+    *   Whether to rotate clockwise.
+    */
   private def rotateDrawnTile(tile: GameTile, tileImage: ImageView, clockwise: Boolean): Unit =
     tileImage.rotate = tileImage.getRotate + (if clockwise then TileRotationAngle else -TileRotationAngle)
     setUpTile(
@@ -210,23 +210,23 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox with SubjectGameMe
     Logger.log("MENU VIEW", s"Drawn tile rotated ${if clockwise then "clockwise" else "counterclockwise"}")
 
   /** Redraws the tile on the pane.
-   *
-   * @param tile
-   *   The tile to be redrawn.
-   * @param tileImage
-   *   The image view of the tile.
-   */
+    *
+    * @param tile
+    *   The tile to be redrawn.
+    * @param tileImage
+    *   The image view of the tile.
+    */
   private def redrawTile(tile: GameTile, tileImage: ImageView): Unit =
     drawnTilePane.getChildren.clear()
     addDrawnTilePaneElements(tile, tileImage)
 
   /** Sets up the tile and its image view.
-   *
-   * @param tile
-   *   The tile to be set up.
-   * @param tileImage
-   *   The image view of the tile.
-   */
+    *
+    * @param tile
+    *   The tile to be set up.
+    * @param tileImage
+    *   The image view of the tile.
+    */
   private def setUpTile(tile: GameTile, tileImage: ImageView): Unit =
     setDrawnTile(tile, tileImage)
     redrawTile(tile, tileImage)
@@ -235,12 +235,12 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox with SubjectGameMe
     rotateCounterClockwise.onMouseClicked = _ => rotateDrawnTile(tile, tileImage, clockwise = false)
 
   /** Adds elements to the drawn tile pane.
-   *
-   * @param tile
-   *   The tile to be added.
-   * @param tileImage
-   *   The image view of the tile.
-   */
+    *
+    * @param tile
+    *   The tile to be added.
+    * @param tileImage
+    *   The image view of the tile.
+    */
   private def addDrawnTilePaneElements(tile: GameTile, tileImage: ImageView): Unit =
     drawnTilePane.add(
       Text(s"North: \n${tile.segments(TileSegment.N)}"),
@@ -265,12 +265,12 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox with SubjectGameMe
     drawnTilePane.add(tileImage, TileBorderCoordinates("Center")._1, TileBorderCoordinates("Center")._2)
 
   /** Sets up the buttons for rotation and skipping follower placement.
-   *
-   * @param activateRotation
-   *   Whether to activate rotation buttons.
-   * @param position
-   *   The position of the tile.
-   */
+    *
+    * @param activateRotation
+    *   Whether to activate rotation buttons.
+    * @param position
+    *   The position of the tile.
+    */
   private def setUpButtons(activateRotation: Boolean, position: Option[Position]): Unit =
     skipFollowerPlacement.onMouseClicked = _ => notifySkipTurn(position)
     if activateRotation then
@@ -283,10 +283,10 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox with SubjectGameMe
     rotateCounterClockwise.disable = activateRotation
 
   /** Handles the event when a tile is drawn.
-   *
-   * @param tile
-   *   The drawn tile.
-   */
+    *
+    * @param tile
+    *   The drawn tile.
+    */
   override def tileDrawn(tile: GameTile, tilesCount: Int): Unit =
     setUpButtons(false, None)
     Logger.log("MENU VIEW", "Tile drawn")
@@ -302,10 +302,10 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox with SubjectGameMe
     )
 
   /** Handles the event when the player changes.
-   *
-   * @param player
-   *   The new current player.
-   */
+    *
+    * @param player
+    *   The new current player.
+    */
   override def playerChanged(player: Player): Unit =
     setCurrentPlayer(player)
     playerText.text = s"Current Player: ${player.name}"
@@ -314,12 +314,12 @@ class GameMatchMenuView(drawnTilePane: GridPane) extends VBox with SubjectGameMe
     followerNumber.fill = player.getSFXColor
 
   /** Handles the event when available follower positions are updated.
-   *
-   * @param availSegments
-   *   The available segments for follower placement.
-   * @param position
-   *   The position of the tile.
-   */
+    *
+    * @param availSegments
+    *   The available segments for follower placement.
+    * @param position
+    *   The position of the tile.
+    */
   override def availableFollowerPositions(availSegments: List[TileSegment], position: Position): Unit =
     setUpButtons(true, Some(position))
 

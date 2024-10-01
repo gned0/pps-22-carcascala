@@ -13,8 +13,7 @@ import carcassonne.model.scalaprolog.PrologProcessing.*
 
 class ScalaPrologSuite extends AnyFunSuite with Matchers:
 
-
-  test("Test check City feature complete"){
+  test("Test check City feature complete") {
     val deck = TileDeck()
     val map = CarcassonneBoard()
     val player1 = Player(0, "test", Color.Red)
@@ -85,11 +84,10 @@ class ScalaPrologSuite extends AnyFunSuite with Matchers:
     )
     map.placeTile(tile4, Position(11, 11))
 
-
     game.placeFollower(Position(11, 10), TileSegment.S, player1)
     val connectedFeatures = map.getConnectedFeature(Position(11, 10), TileSegment.S)
     val completed = checkCityCompleted(map, connectedFeatures)
-    completed should be (true)
+    completed should be(true)
 
     game.placeFollower(Position(10, 10), TileSegment.E, player1)
     val connectedFeatures2 = map.getConnectedFeature(Position(10, 10), TileSegment.E)
@@ -194,5 +192,3 @@ class ScalaPrologSuite extends AnyFunSuite with Matchers:
     val completed2 = checkMonasteryCompleted(map, connectedFeatures2)
     completed2 should be(false)
   }
-
-
