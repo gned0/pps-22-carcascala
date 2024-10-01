@@ -65,9 +65,11 @@ class GameStage(gameViewContainer: GameViewContainer) extends JFXApp3.PrimarySta
     gameMenu.addObserver(boardView)
 
     val playersWithColors = PlayerColor.assignColors(playerNames)
-    val players = playersWithColors.zipWithIndex.map{ case ((name, color), index) =>
-      Player(index, name, color)
-    }
+    val players = playersWithColors.zipWithIndex.map( tuple =>
+      tuple match
+        case ((name, color), index) =>
+          Player(index, name, color)
+    )
 
     val game = GameState(players)
     game.addObserverBoard(boardView)

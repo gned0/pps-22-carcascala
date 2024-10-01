@@ -48,7 +48,7 @@ class GameMatchFollowerGridView(
    * Initializes the follower placement options on the grid.
    * For each available segment, it creates an outline and a filled follower image.
    */
-  availSegments.foreach { segment =>
+  availSegments.foreach( segment =>
     /**
      * The outline image view of the follower.
      * This is displayed as a placeholder where a follower can be placed.
@@ -115,7 +115,7 @@ class GameMatchFollowerGridView(
       new StackPane:
         children = Seq(followerOutline, filledFollower)
       , x, y)
-  }
+  )
 
 
   this.minWidth = 100

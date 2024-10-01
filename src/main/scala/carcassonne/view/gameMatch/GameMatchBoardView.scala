@@ -48,18 +48,18 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
    * @param position The position around which new placeholders should be created.
    */
   private def createNewPlaceholders(position: Position): Unit =
-    Seq(position.x - 1, position.x + 1).foreach { posX =>
+    Seq(position.x - 1, position.x + 1).foreach ( posX =>
       if !this.getChildren.exists(node =>
         getColumnIndex(node) == posX && getRowIndex(node) == position.y
       ) then
         createPlaceholderTile(Position(posX, position.y))
-    }
-    Seq(position.y - 1, position.y + 1).foreach { posY =>
+    )
+    Seq(position.y - 1, position.y + 1).foreach ( posY =>
       if !this.getChildren.exists(node =>
         getColumnIndex(node) == position.x && getRowIndex(node) == posY
       ) then
         createPlaceholderTile(Position(position.x, posY))
-    }
+    )
 
   /**
    * Creates a placeholder tile at the specified position.
@@ -100,13 +100,15 @@ class GameMatchBoardView(gameEndedSwitchView: () => Unit) extends GridPane
    */
   private def removeFollowerGridPane(position: Position): Unit =
     this.getChildrenUnmodifiable.toArray
-      .collectFirst {
-        case child: javafx.scene.Node if getColumnIndex(child) == position.x &&
-          getRowIndex(child) == position.y => child
-      }
-      .collect {
-        case stackPane: javafx.scene.layout.StackPane => stackPane.getChildren.remove(1)
-      }
+      .collectFirst ( child =>
+        child match
+          case child: javafx.scene.Node if getColumnIndex(child) == position.x &&
+            getRowIndex(child) == position.y => child
+      )
+      .collect ( stackPane =>
+        stackPane match
+          case stackPane: javafx.scene.layout.StackPane => stackPane.getChildren.remove(1)
+      )
       .getOrElse(println("No element or other type of element"))
 
   /**

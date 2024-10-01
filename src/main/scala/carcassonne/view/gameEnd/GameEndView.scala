@@ -10,7 +10,7 @@ import scalafx.scene.control.{Button, Label}
 import scalafx.scene.layout.VBox
 import scalafx.stage.{Modality, Stage}
 
-class GameEndView(players: List[Player]) {
+class GameEndView(players: List[Player]):
   val popupStage: Stage = new Stage:
     initModality(Modality.ApplicationModal) // This makes the pop-up modal (blocking interaction with the main window)
     title = "Game Over"
@@ -24,9 +24,7 @@ class GameEndView(players: List[Player]) {
               onAction = _ => popupStage.close()
 
   // Function to create a label for each player showing their score
-  private def createPlayerScoreLabels(players: List[Player]): Seq[Label] = {
-    players.map { player =>
+  private def createPlayerScoreLabels(players: List[Player]): Seq[Label] =
+    players.map ( player =>
       new Label(s"${player.name}: ${player.getScore}") // Assuming Player has `name` and `score` fields
-    }
-  }
-}
+    )
