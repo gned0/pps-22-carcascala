@@ -1,6 +1,7 @@
 package carcassonne.util
 
 import carcassonne.model.tile.TileSegment
+import carcassonne.model.tile.TileSegment._
 
 class AdjacencyPositions:
   /**
@@ -11,27 +12,27 @@ class AdjacencyPositions:
    * @return a list of adjacent positions and segments
    */
   def getAdjacentCityTilesAndSegments(position: Position,
-                                          segment: TileSegment): List[(Option[Position], TileSegment)] =
+                                      segment: TileSegment): List[(Option[Position], TileSegment)] =
     segment match
-      case TileSegment.N => List((Some(Position(position.x, position.y - 1)), TileSegment.S))
-      case TileSegment.S => List((Some(Position(position.x, position.y + 1)), TileSegment.N))
-      case TileSegment.E => List((Some(Position(position.x + 1, position.y)), TileSegment.W))
-      case TileSegment.W => List((Some(Position(position.x - 1, position.y)), TileSegment.E))
-      case TileSegment.NE => List(
-        (Some(Position(position.x, position.y - 1)), TileSegment.S),
-        (Some(Position(position.x + 1, position.y)), TileSegment.W)
+      case N => List((Some(Position(position.x, position.y - 1)), S))
+      case S => List((Some(Position(position.x, position.y + 1)), N))
+      case E => List((Some(Position(position.x + 1, position.y)), W))
+      case W => List((Some(Position(position.x - 1, position.y)), E))
+      case NE => List(
+        (Some(Position(position.x, position.y - 1)), S),
+        (Some(Position(position.x + 1, position.y)), W)
       )
-      case TileSegment.NW => List(
-        (Some(Position(position.x, position.y - 1)), TileSegment.S),
-        (Some(Position(position.x - 1, position.y)), TileSegment.E)
+      case NW => List(
+        (Some(Position(position.x, position.y - 1)), S),
+        (Some(Position(position.x - 1, position.y)), E)
       )
-      case TileSegment.SE => List(
-        (Some(Position(position.x, position.y + 1)), TileSegment.N),
-        (Some(Position(position.x + 1, position.y)), TileSegment.W)
+      case SE => List(
+        (Some(Position(position.x, position.y + 1)), N),
+        (Some(Position(position.x + 1, position.y)), W)
       )
-      case TileSegment.SW => List(
-        (Some(Position(position.x, position.y + 1)), TileSegment.N),
-        (Some(Position(position.x - 1, position.y)), TileSegment.E)
+      case SW => List(
+        (Some(Position(position.x, position.y + 1)), N),
+        (Some(Position(position.x - 1, position.y)), E)
       )
       case _ => List()
 
@@ -43,12 +44,12 @@ class AdjacencyPositions:
    * @return a list of adjacent positions and segments
    */
   def getAdjacentRoadTilesAndSegments(position: Position,
-                                              segment: TileSegment): List[(Option[Position], TileSegment)] =
+                                      segment: TileSegment): List[(Option[Position], TileSegment)] =
     segment match
-      case TileSegment.N => List((Some(Position(position.x, position.y - 1)), TileSegment.S))
-      case TileSegment.S => List((Some(Position(position.x, position.y + 1)), TileSegment.N))
-      case TileSegment.E => List((Some(Position(position.x + 1, position.y)), TileSegment.W))
-      case TileSegment.W => List((Some(Position(position.x - 1, position.y)), TileSegment.E))
+      case N => List((Some(Position(position.x, position.y - 1)), S))
+      case S => List((Some(Position(position.x, position.y + 1)), N))
+      case E => List((Some(Position(position.x + 1, position.y)), W))
+      case W => List((Some(Position(position.x - 1, position.y)), E))
       case _ => List()
 
   /**
@@ -59,47 +60,47 @@ class AdjacencyPositions:
    * @return a list of adjacent positions and segments
    */
   def getAdjacentFieldSegments(position: Position,
-                                       segment: TileSegment): List[(Option[Position], TileSegment)] =
+                               segment: TileSegment): List[(Option[Position], TileSegment)] =
     segment match
-      case TileSegment.N => List(
-        (Some(position), TileSegment.NW),
-        (Some(position), TileSegment.NE),
-        (Some(position), TileSegment.C)
+      case N => List(
+        (Some(position), NW),
+        (Some(position), NE),
+        (Some(position), C)
       )
-      case TileSegment.S => List(
-        (Some(position), TileSegment.SW),
-        (Some(position), TileSegment.SE),
-        (Some(position), TileSegment.C)
+      case S => List(
+        (Some(position), SW),
+        (Some(position), SE),
+        (Some(position), C)
       )
-      case TileSegment.E => List(
-        (Some(position), TileSegment.NE),
-        (Some(position), TileSegment.SE),
-        (Some(position), TileSegment.C)
+      case E => List(
+        (Some(position), NE),
+        (Some(position), SE),
+        (Some(position), C)
       )
-      case TileSegment.W => List(
-        (Some(position), TileSegment.NW),
-        (Some(position), TileSegment.SW),
-        (Some(position), TileSegment.C)
+      case W => List(
+        (Some(position), NW),
+        (Some(position), SW),
+        (Some(position), C)
       )
-      case TileSegment.NW => List(
-        (Some(position), TileSegment.N),
-        (Some(position), TileSegment.W)
+      case NW => List(
+        (Some(position), N),
+        (Some(position), W)
       )
-      case TileSegment.NE => List(
-        (Some(position), TileSegment.N),
-        (Some(position), TileSegment.E)
+      case NE => List(
+        (Some(position), N),
+        (Some(position), E)
       )
-      case TileSegment.SW => List(
-        (Some(position), TileSegment.W),
-        (Some(position), TileSegment.S)
+      case SW => List(
+        (Some(position), W),
+        (Some(position), S)
       )
-      case TileSegment.SE => List(
-        (Some(position), TileSegment.E),
-        (Some(position), TileSegment.S)
+      case SE => List(
+        (Some(position), E),
+        (Some(position), S)
       )
-      case TileSegment.C => List(
-        (Some(position), TileSegment.N),
-        (Some(position), TileSegment.E),
-        (Some(position), TileSegment.S),
-        (Some(position), TileSegment.W)
+      case C => List(
+        (Some(position), N),
+        (Some(position), E),
+        (Some(position), S),
+        (Some(position), W)
       )
