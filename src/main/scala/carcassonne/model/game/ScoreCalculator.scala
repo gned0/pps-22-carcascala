@@ -2,7 +2,7 @@ package carcassonne.model.game
 
 import carcassonne.model.board.CarcassonneBoard
 import carcassonne.model.tile.{SegmentType, TileSegment}
-import carcassonne.util.{AdjacencyPositions, Position}
+import carcassonne.util.{ScoreAdjacencyPositions, Position}
 
 import scala.annotation.nowarn
 
@@ -10,7 +10,7 @@ import scala.annotation.nowarn
 /**
  * Class responsible for calculating scores in the Carcassonne game.
  */
-class ScoreCalculator:
+object ScoreCalculator:
 
   /**
    * Calculates the points for a city feature.
@@ -52,7 +52,7 @@ class ScoreCalculator:
   private def isCityFinished(connectedFeatures: Set[(Position, TileSegment)], 
                              map: CarcassonneBoard): Boolean =
     connectedFeatures.forall { (pos, segment) =>
-      AdjacencyPositions().getAdjacentCityTilesAndSegments(pos, segment).forall {
+      ScoreAdjacencyPositions().getAdjacentCityTilesAndSegments(pos, segment).forall {
         case (Some(connectedPos), adjSegment) =>
           map.getTile(connectedPos).exists(_.segments(adjSegment) == SegmentType.City)
         case _ => false
@@ -98,7 +98,7 @@ class ScoreCalculator:
   private def isRoadFinished(connectedFeatures: Set[(Position, TileSegment)], 
                              map: CarcassonneBoard): Boolean =
     connectedFeatures.forall { (tile, segment) =>
-      AdjacencyPositions().getAdjacentRoadTilesAndSegments(tile, segment).forall {
+      ScoreAdjacencyPositions().getAdjacentRoadTilesAndSegments(tile, segment).forall {
         case (Some(connectedPos), adjSegment) =>
           map.getTile(connectedPos).exists(_.segments(adjSegment) == SegmentType.Road)
         case _ => false
@@ -187,7 +187,7 @@ class ScoreCalculator:
     var result = 0
     var visited: Set[(Position, TileSegment)] = Set.empty
     for (tile, segment) <- connectedFeatures do
-      for (adjPos, adjSegment) <- AdjacencyPositions().getAdjacentFieldSegments(tile, segment) do
+      for (adjPos, adjSegment) <- ScoreAdjacencyPositions().getAdjacentFieldSegments(tile, segment) do
         adjPos match
           case Some(connectedPos) if map.getTile(connectedPos).nonEmpty =>
             map.getTile(connectedPos).get.segments(adjSegment) match

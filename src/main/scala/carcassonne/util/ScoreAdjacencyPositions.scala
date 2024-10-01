@@ -2,7 +2,7 @@ package carcassonne.util
 
 import carcassonne.model.tile.TileSegment
 
-class AdjacencyPositions:
+class ScoreAdjacencyPositions:
   /**
    * Gets the adjacent tiles and segments for a given position and segment.
    *

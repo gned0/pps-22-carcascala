@@ -12,7 +12,7 @@ import carcassonne.util.Position
  * features (cities, roads, monasteries).
  * It interacts with the Prolog engine using game data and Prolog clauses.
  */
-class PrologProcessing:
+object PrologProcessing:
 
   /**
    * Checks if a city feature is completed.
@@ -34,12 +34,14 @@ class PrologProcessing:
           neighbor(sw, [(0,  1, n), (-1,  0, e)]).
           neighbor(s, [(0,  1, n)]).
           neighbor(se, [(0,  1, n), (1,  0, w)]).
+          neighbor(c, []).
           get_value_tile(Segment, [(Segment, Value) | _], Value).
           get_value_tile(Segment, [_ | Tail], Value) :- get_value_tile(Segment, Tail, Value).
           is_city_segment(X, Y, Segment) :- tile(X, Y, TerrainMap), get_value_tile(Segment, TerrainMap, city).
           city_completed([(X, Y, Segment) | []]) :- check_current_tile([(X, Y, Segment)]), !.
           city_completed([(X, Y, Segment) | Tail]) :- Tail = [_|_], check_current_tile([(X, Y, Segment)]), city_completed(Tail), !.
           check_current_tile([(X, Y, Segment)]) :- neighbor(Segment, ReturnedNeighbor), check_neighbor(X, Y, ReturnedNeighbor).
+          check_neighbor(X, Y, []) :- !.
           check_neighbor(X, Y, [(DX, DY, NSegment) | []]) :- check_current_neighbor(X, Y, [(DX, DY, NSegment)]), !.
           check_neighbor(X, Y, [(DX, DY, NSegment) | Tail]) :- Tail = [_|_], check_current_neighbor(X, Y, [(DX, DY, NSegment)]), check_neighbor(X, Y, Tail), !.
           check_current_neighbor(X, Y, [(DX, DY, NSegment)]) :- NX is X + DX, NY is Y + DY, is_city_segment(NX, NY, NSegment).

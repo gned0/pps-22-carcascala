@@ -9,6 +9,7 @@ import carcassonne.model.tile.{GameTile, SegmentType, TileDeck, TileSegment}
 import carcassonne.util.{Color, Position}
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
+import carcassonne.model.scalaprolog.PrologProcessing.*
 
 class ScalaPrologSuite extends AnyFunSuite with Matchers:
 
@@ -87,12 +88,12 @@ class ScalaPrologSuite extends AnyFunSuite with Matchers:
 
     game.placeFollower(Position(11, 10), TileSegment.S, player1)
     val connectedFeatures = map.getConnectedFeature(Position(11, 10), TileSegment.S)
-    val completed = PrologProcessing().checkCityCompleted(map, connectedFeatures)
+    val completed = checkCityCompleted(map, connectedFeatures)
     completed should be (true)
 
     game.placeFollower(Position(10, 10), TileSegment.E, player1)
     val connectedFeatures2 = map.getConnectedFeature(Position(10, 10), TileSegment.E)
-    val completed2 = PrologProcessing().checkCityCompleted(map, connectedFeatures)
+    val completed2 = checkCityCompleted(map, connectedFeatures)
     completed2 should be(true)
   }
 
@@ -153,7 +154,7 @@ class ScalaPrologSuite extends AnyFunSuite with Matchers:
 
     game.placeFollower(Position(10, 10), TileSegment.E, player1)
     val connectedFeatures = map.getConnectedFeature(Position(10, 10), TileSegment.E)
-    val completed = PrologProcessing().checkRoadCompleted(map, connectedFeatures)
+    val completed = checkRoadCompleted(map, connectedFeatures)
     completed should be(true)
   }
 
@@ -185,12 +186,12 @@ class ScalaPrologSuite extends AnyFunSuite with Matchers:
 
     game.placeFollower(Position(10, 10), TileSegment.C, player1)
     val connectedFeatures = map.getConnectedFeature(Position(10, 10), TileSegment.C)
-    val completed = PrologProcessing().checkMonasteryCompleted(map, connectedFeatures)
+    val completed = checkMonasteryCompleted(map, connectedFeatures)
     completed should be(true)
 
     game.placeFollower(Position(11, 11), TileSegment.C, player1)
     val connectedFeatures2 = map.getConnectedFeature(Position(11, 11), TileSegment.C)
-    val completed2 = PrologProcessing().checkMonasteryCompleted(map, connectedFeatures2)
+    val completed2 = checkMonasteryCompleted(map, connectedFeatures2)
     completed2 should be(false)
   }
 

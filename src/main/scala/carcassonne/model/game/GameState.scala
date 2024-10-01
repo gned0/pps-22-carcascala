@@ -8,6 +8,8 @@ import carcassonne.model.tile.SegmentType.{City, Field, Monastery, Road}
 import carcassonne.model.tile.{GameTile, TileDeck, TileSegment}
 import carcassonne.observers.subjects.model.SubjectGameMatch
 import carcassonne.util.{Logger, Position}
+import carcassonne.model.game.ScoreCalculator.*
+import carcassonne.model.scalaprolog.PrologProcessing.*
 
 import scala.annotation.tailrec
 import scala.collection.mutable
@@ -115,23 +117,23 @@ class GameState(players: List[Player], board: CarcassonneBoard = CarcassonneBoar
           .foreach { p =>
             tile.segments(segment) match
               case Road =>
-                val score = ScoreCalculator().calculateRoadPoints(segment, position, board, endGame)
-                if score != 0 then
+                if checkRoadCompleted(board, board.getConnectedFeature(position, segment)) then
+                  val score = calculateRoadPoints(segment, position, board, endGame)
                   Logger.log(s"GAMESTATE SCORE", s"Player ${p.name} scored -> Road: $score")
                   finalizeScoreCalculation(p, position, tile, score)
               case City =>
-                val score = ScoreCalculator().calculateCityPoints(segment, position, board, endGame)
-                if score != 0 then
+                if checkCityCompleted(board, board.getConnectedFeature(position, segment)) then
+                  val score = calculateCityPoints(segment, position, board, endGame)
                   Logger.log(s"GAMESTATE SCORE", s"Player ${p.name} scored -> City: $score")
                   finalizeScoreCalculation(p, position, tile, score)
               case Monastery =>
-                val score = ScoreCalculator().calculateMonasteryPoints(segment, position, board, endGame)
-                if score != 0 then
+                if checkMonasteryCompleted(board, board.getConnectedFeature(position, segment)) then
+                  val score = calculateMonasteryPoints(segment, position, board, endGame)
                   Logger.log(s"GAMESTATE SCORE", s"Player ${p.name} scored -> Monastery: $score")
                   finalizeScoreCalculation(p, position, tile, score)
               case Field =>
                 if endGame then
-                  val score = ScoreCalculator().calculateFieldPoints(segment, position, board)
+                  val score = calculateFieldPoints(segment, position, board)
                   if score != 0 then
                     Logger.log(s"GAMESTATE SCORE", s"Player ${p.name} scored -> Field: $score")
                     finalizeScoreCalculation(p, position, tile, score)
